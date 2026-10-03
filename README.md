@@ -39,7 +39,19 @@ Le Cluster doit donc etre installe avant ce Core.
 Ne placez jamais les bundles, mots de passe, PCAP ou fichiers `config/*.env`
 dans Git.
 
-## 3. Recuperer Et Verifier Le Bundle OpenSearch
+## 3. Cloner Le Depot Core
+
+```bash
+git clone <URL_DEPOT_OCULOX_CORE> ~/oculox-core
+cd ~/oculox-core
+git status --short
+```
+
+La derniere commande ne doit rien afficher. Utilisez la meme version ou le meme
+tag Oculox sur les trois VM. L'URL sera celle du depot Core publie apres la
+recette locale.
+
+## 4. Recuperer Et Verifier Le Bundle OpenSearch
 
 Le bundle est cree sur la VM Cluster avec :
 
@@ -59,7 +71,7 @@ cd ~/oculox-core
 
 `SHA256SUMS` doit retourner uniquement `OK`.
 
-## 4. Installer Le Core Sans Changer La Procedure
+## 5. Installer Le Core Sans Changer La Procedure
 
 ```bash
 ./oculox install principal \
@@ -133,7 +145,7 @@ lanceur tente une reprise automatique. Sinon, reconnectez la session et lancez :
 
 Ne relancez pas `install` uniquement pour reprendre apres `auth_setup`.
 
-## 5. Verifier Le Core En Basic
+## 6. Verifier Le Core En Basic
 
 ```bash
 ./oculox status
@@ -146,7 +158,7 @@ Tous les conteneurs doivent etre `running` et, lorsqu'un healthcheck existe,
 `healthy`. `./oculox verify clients` doit terminer par
 `CLIENT_CONNECTIVITY_RESULT=PASS`.
 
-## 6. Provisionner Keycloak
+## 7. Provisionner Keycloak
 
 Le provisionnement ne remplace pas encore le mode Basic : il cree le realm,
 les clients, groupes, roles, secrets et le compte administrateur initial.
@@ -186,7 +198,7 @@ Sur le Cluster, configurer ensuite OIDC avant d'activer Dashboards :
 ./oculox cluster validate
 ```
 
-## 7. Activer Le SSO
+## 8. Activer Le SSO
 
 Revenir sur le Core :
 
@@ -209,7 +221,7 @@ retour arriere restent disponibles :
 ./oculox restart dashboards nginx-proxy
 ```
 
-## 8. Creer Les Utilisateurs Humains
+## 9. Creer Les Utilisateurs Humains
 
 Ouvrir `https://<IP_CORE_OU_DNS>/keycloak/admin/`, utiliser le compte initial,
 puis creer chaque utilisateur dans le realm `oculox`. Affecter l'utilisateur a
@@ -224,7 +236,7 @@ Ne donnez pas les roles techniques `oculox_logstash`, `oculox_dashboards` ou
 `oculox_api` aux humains. Exiger le changement du mot de passe initial et
 l'enrolement TOTP lors de la premiere connexion.
 
-## 9. Preparer Un Collecteur
+## 10. Preparer Un Collecteur
 
 ```bash
 mkdir -p ~/oculox-bundles
@@ -236,7 +248,7 @@ sha256sum -c SHA256SUMS
 
 Chaque collecteur doit recevoir son propre bundle.
 
-## 10. Exploitation
+## 11. Exploitation
 
 ```bash
 ./oculox start
