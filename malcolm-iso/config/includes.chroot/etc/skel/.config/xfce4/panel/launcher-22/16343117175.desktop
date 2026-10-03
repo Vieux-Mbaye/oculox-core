@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Malcolm - OpenSearch Dashboards
+Exec=/usr/bin/firefox https://localhost/dashboards/
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/usr/share/icons/hicolor/48x48/dashboards.png
+Categories=Network;
+StartupWMClass=Firefox
+StartupNotify=true
+X-XFCE-Source=file:///usr/share/applications/malcolm-dashboards.desktop

@@ -1,0 +1,161 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-proxy
+  namespace: malcolm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 443
+      protocol: TCP
+      name: https
+    - port: 8443
+      protocol: TCP
+      name: http
+    - port: 9200
+      protocol: TCP
+      name: opensearch
+  selector:
+    app: nginx-proxy
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-proxy-deployment
+  namespace: malcolm
+  labels:
+    app: nginx-proxy
+    role: proxy
+spec:
+  selector:
+    matchLabels:
+      app: nginx-proxy
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-proxy
+        role: proxy
+    spec:
+      containers:
+      - name: nginx-proxy-container
+        image: ghcr.io/idaholab/malcolm/nginx-proxy:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        ports:
+          - name: https
+            protocol: TCP
+            containerPort: 443
+          - name: http
+            protocol: TCP
+            containerPort: 8443
+          - name: opensearch
+            protocol: TCP
+            containerPort: 9200
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: opensearch-env
+          - configMapRef:
+              name: arkime-env
+          - configMapRef:
+              name: dashboards-env
+          - configMapRef:
+              name: upload-common-env
+          - configMapRef:
+              name: netbox-common-env
+          - secretRef:
+              name: keycloak-env
+          - configMapRef:
+              name: auth-common-env
+          - configMapRef:
+              name: nginx-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+        - name: nginx-etc-nginx-volume
+          mountPath: /etc/nginx/configmap
+        - name: nginx-etc-nginx-secret-volume
+          mountPath: /etc/nginx/secretmap
+        - name: nginx-var-local-catrust-volume
+          mountPath: /var/local/ca-trust/configmap
+        - name: nginx-etc-nginx-certs-secret-volume
+          mountPath: /etc/nginx/certs/secretmap
+        - name: nginx-etc-nginx-certs-pem-volume
+          mountPath: /etc/nginx/dhparam/configmap
+        - name: nginx-opensearch-curlrc-secret-volume
+          mountPath: /var/local/curlrc/secretmap
+        - name: nginx-etc-auth-volume
+          mountPath: /etc/nginx/auth
+          subPath: "auth"
+        - name: nginx-etc-auth-default-secret-volume
+          mountPath: /tmp/auth/default/secretmap
+        - name: nginx-runtime-logs-volume
+          mountPath: /var/log/nginx
+          subPath: "nginx"
+      terminationGracePeriodSeconds: 20
+      initContainers:
+      - name: nginx-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/config:auth;/data/runtime-logs:nginx"
+        volumeMounts:
+          - name: nginx-etc-auth-volume
+            mountPath: "/data/config"
+          - name: nginx-runtime-logs-volume
+            mountPath: "/data/runtime-logs"
+      volumes:
+      - name: nginx-etc-nginx-volume
+        configMap:
+          name: etc-nginx
+      - name: nginx-etc-nginx-secret-volume
+        secret:
+          secretName: etc-nginx
+      - name: nginx-var-local-catrust-volume
+        configMap:
+          name: var-local-catrust
+      - name: nginx-etc-nginx-certs-secret-volume
+        secret:
+          secretName: etc-nginx-certs
+      - name: nginx-etc-nginx-certs-pem-volume
+        configMap:
+          name: etc-nginx-certs-pem
+      - name: nginx-opensearch-curlrc-secret-volume
+        secret:
+          secretName: opensearch-curlrc
+      - name: nginx-etc-auth-volume
+        persistentVolumeClaim:
+          claimName: config-claim
+      - name: nginx-etc-auth-default-secret-volume
+        secret:
+          secretName: etc-nginx-auth
+      - name: nginx-runtime-logs-volume
+        persistentVolumeClaim:
+          claimName: runtime-logs-claim

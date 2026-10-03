@@ -1,0 +1,112 @@
+version = 1
+
+[env]
+MALCOLM_REPO_OWNER = "idaholab"
+MALCOLM_REPO_NAME = "Malcolm"
+MALCOLM_REPO_BRANCH = "main"
+
+[[steps]]
+[steps.shell]
+script = '''
+echo "Setting up Malcolm..."
+
+pushd "$HOME"
+touch "$HOME"/.hushlogin
+mkdir -p "$HOME"/.local/bin "$HOME"/.config/procps "$HOME"/.config/systemd/user
+
+git clone --depth=1 --single-branch --recurse-submodules --shallow-submodules -b "$MALCOLM_REPO_BRANCH" "https://github.com/$MALCOLM_REPO_OWNER/$MALCOLM_REPO_NAME"
+
+rm -f "$HOME"/.bashrc \
+      "$HOME"/.bash_aliases \
+      "$HOME"/.bash_functions \
+      "$HOME"/.config/procps/toprc \
+      "$HOME"/.selected_editor \
+      "$HOME"/.tmux.conf \
+      "$HOME"/.vimrc
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/bash.bash_aliases "$HOME"/.bash_aliases
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/bash.bash_functions "$HOME"/.bash_functions
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/skel/.bashrc "$HOME"/.bashrc
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/skel/.config/procps/toprc "$HOME"/.config/procps/toprc
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/skel/.selected_editor "$HOME"/.selected_editor
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/skel/.tmux.conf "$HOME"/.tmux.conf
+ln -s -r "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/skel/.vimrc "$HOME"/.vimrc
+ln -s -r -f "$HOME"/Malcolm/malcolm-iso/config/includes.chroot/etc/skel/.config/systemd/user/*.service "$HOME"/.config/systemd/user/
+
+pushd Malcolm
+sudo python3 ./scripts/install.py --defaults --non-interactive
+sudo usermod -a -G docker "$USER"
+sudo loginctl enable-linger "$USER"
+sudo ln -s -r /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
+sudo sysctl --system
+rm -f ~/Malcolm/.configured
+
+popd
+    cat << 'EOF' >> "$HOME"/.bashrc
+
+# Configure Malcolm on first login
+if [[ $- == *i* ]] && [[ -d ~/Malcolm ]] &&  [[ ! -f ~/Malcolm/.configured ]]; then
+    pushd ~/Malcolm >/dev/null 2>&1
+
+    SETTINGS_FILE="$(mktemp --suffix=.json)"
+    python3 ./scripts/configure --defaults --non-interactive --export-malcolm-config-file "${SETTINGS_FILE}"
+    jq '.configuration.malcolmRestartPolicy = "unless-stopped"
+        | .configuration.autoArkime = true
+        | .configuration.autoSuricata = true
+        | .configuration.autoZeek = true
+        | .configuration.malcolmIcs = true
+        | .configuration.zeekICSBestGuess = true
+        | .configuration.autoOui = true
+        | .configuration.autoFreq = true
+        | .configuration.fileCarveMode = "notcommtxt"
+        | .configuration.filePreserveMode = "quarantined"
+        | .configuration.fileCarveHttpServer = true
+        | .configuration.fileCarveHttpServerZip = true
+        | .configuration.fileCarveHttpServeEncryptKey = "infected"
+        | .configuration.pipelineEnabled = true
+        | .configuration.pipelineWorkers = 1
+        | .configuration.netboxMode = "local"
+        | .configuration.netboxSiteName = "malcolm"
+        | .configuration.netboxLogstashEnrich = true
+        | .configuration.runtimeBin = "docker"' \
+        "${SETTINGS_FILE}" | sponge "${SETTINGS_FILE}"
+    python3 ./scripts/configure --non-interactive --import-malcolm-config-file "${SETTINGS_FILE}"
+    rm -f "${SETTINGS_FILE}"
+
+    # username: analyst
+    # password: M@lc0lm
+    python3 ./scripts/auth_setup \
+        --auth-noninteractive \
+        --auth-admin-username analyst \
+        --auth-admin-password-openssl '$1$owXoS5pf$YesZKhhWS0d3zVUUhdcef0' \
+        --auth-admin-password-htpasswd '$2y$05$a8jiJsLZ1mFnt5srJD3HAOKC8IUaZcOlsqp8txBlmMjW6wUXUtN3S' \
+        --auth-generate-webcerts \
+        --auth-generate-fwcerts \
+        --auth-generate-netbox-passwords \
+        --auth-generate-valkey-password \
+        --auth-generate-postgres-password \
+        --auth-generate-keycloak-db-password \
+        --auth-generate-opensearch-internal-creds
+
+    python3 ./scripts/start
+
+    popd >/dev/null 2>&1
+    clear
+    cat << 'EOT'
+
+To start, stop, restart, etc. Malcolm:
+  Use the control scripts in the "~/Malcolm/scripts/" directory:
+   - start         (start Malcolm)
+   - stop          (stop Malcolm)
+   - restart       (restart Malcolm)
+   - logs          (monitor Malcolm logs)
+   - wipe          (stop Malcolm and clear its database)
+   - auth_setup    (change authentication-related settings)
+
+Malcolm services can be accessed at https://<IP or hostname>/
+
+EOT
+fi
+EOF
+
+popd
+'''

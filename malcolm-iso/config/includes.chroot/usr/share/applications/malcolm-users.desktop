@@ -1,0 +1,11 @@
+Version=1.0
+Name=Malcolm - User Management
+Exec=/usr/local/bin/malcolm-auth-config-browser-launch.sh
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=config-users
+Categories=Network;
+StartupWMClass=Firefox
+StartupNotify=true
+Categories=Network;

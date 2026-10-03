@@ -1,0 +1,281 @@
+{
+  "version": "7.10.0",
+  "objects": [
+    {
+      "id": "32587740-ef88-11e9-b38a-2db3ee640e88",
+      "type": "dashboard",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-04-29T15:49:16.000Z",
+      "version": "WzM2NDEsMV0=",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC",
+        "hits": 0,
+        "description": "",
+        "panelsJSON": "[{\"version\":\"7.10.0\",\"gridData\":{\"h\":30,\"i\":\"1\",\"w\":8,\"x\":0,\"y\":0},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"7.10.0\",\"gridData\":{\"h\":29,\"i\":\"2\",\"w\":48,\"x\":0,\"y\":30},\"panelIndex\":\"2\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"},{\"version\":\"7.10.0\",\"gridData\":{\"h\":8,\"i\":\"3\",\"w\":8,\"x\":8,\"y\":0},\"panelIndex\":\"3\",\"embeddableConfig\":{},\"panelRefName\":\"panel_2\"},{\"version\":\"7.10.0\",\"gridData\":{\"h\":8,\"i\":\"4\",\"w\":32,\"x\":16,\"y\":0},\"panelIndex\":\"4\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"},{\"version\":\"7.10.0\",\"gridData\":{\"h\":22,\"i\":\"5\",\"w\":21,\"x\":27,\"y\":8},\"panelIndex\":\"5\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}},\"table\":null},\"panelRefName\":\"panel_4\"},{\"version\":\"7.10.0\",\"gridData\":{\"h\":22,\"i\":\"6\",\"w\":8,\"x\":8,\"y\":8},\"panelIndex\":\"6\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}},\"panelRefName\":\"panel_5\"},{\"version\":\"7.10.0\",\"gridData\":{\"h\":22,\"i\":\"7\",\"w\":11,\"x\":16,\"y\":8},\"panelIndex\":\"7\",\"embeddableConfig\":{\"table\":null,\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}},\"panelRefName\":\"panel_6\"}]",
+        "optionsJSON": "{\"useMargins\":true}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":\"*\"},\"filter\":[]}"
+        }
+      },
+      "references": [
+        {
+          "name": "panel_0",
+          "type": "visualization",
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3"
+        },
+        {
+          "name": "panel_1",
+          "type": "search",
+          "id": "11884140-ef82-11e9-b38a-2db3ee640e88"
+        },
+        {
+          "name": "panel_2",
+          "type": "visualization",
+          "id": "a0e195c0-ef88-11e9-b38a-2db3ee640e88"
+        },
+        {
+          "name": "panel_3",
+          "type": "visualization",
+          "id": "cf812990-ef88-11e9-b38a-2db3ee640e88"
+        },
+        {
+          "name": "panel_4",
+          "type": "visualization",
+          "id": "ab081a60-ef83-11e9-b38a-2db3ee640e88"
+        },
+        {
+          "name": "panel_5",
+          "type": "visualization",
+          "id": "7b819a40-ef89-11e9-b38a-2db3ee640e88"
+        },
+        {
+          "name": "panel_6",
+          "type": "visualization",
+          "id": "b38de650-ef89-11e9-b38a-2db3ee640e88"
+        }
+      ],
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      }
+    },
+    {
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:25:09.616Z",
+      "version": "Wzg3MiwxXQ==",
+      "attributes": {
+        "title": "Navigation",
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "11884140-ef82-11e9-b38a-2db3ee640e88",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:24:22.188Z",
+      "version": "WzM1NCwxXQ==",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "source.ip",
+          "destination.ip",
+          "destination.port",
+          "zeek.tds_rpc.procedure_name",
+          "zeek.tds_rpc.parameter",
+          "event.id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":\"event.dataset:\\\"tds_rpc\\\"\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "a0e195c0-ef88-11e9-b38a-2db3ee640e88",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:24:22.188Z",
+      "version": "WzM1NSwxXQ==",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC Log Count",
+        "visState": "{\"title\":\"Tabular Data Stream - RPC Log Count\",\"type\":\"metric\",\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":false},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":42}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}}]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "11884140-ef82-11e9-b38a-2db3ee640e88"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "cf812990-ef88-11e9-b38a-2db3ee640e88",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:24:22.188Z",
+      "version": "WzM1NiwxXQ==",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC Log Count Over Time",
+        "visState": "{\"title\":\"Tabular Data Stream - RPC Log Count Over Time\",\"type\":\"histogram\",\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"useNormalizedEsInterval\":true,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{},\"customLabel\":\" \"}}]}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "11884140-ef82-11e9-b38a-2db3ee640e88"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "ab081a60-ef83-11e9-b38a-2db3ee640e88",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:24:22.188Z",
+      "version": "WzM1NywxXQ==",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC Procedure",
+        "visState": "{\"title\":\"Tabular Data Stream - RPC Procedure\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.tds_rpc.procedure_name\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Unknown\",\"customLabel\":\"Procedure\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "11884140-ef82-11e9-b38a-2db3ee640e88"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "7b819a40-ef89-11e9-b38a-2db3ee640e88",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:24:22.188Z",
+      "version": "WzM1OCwxXQ==",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC Source IP",
+        "visState": "{\"title\":\"Tabular Data Stream - RPC Source IP\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"source.ip\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Source IP\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "11884140-ef82-11e9-b38a-2db3ee640e88"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "b38de650-ef89-11e9-b38a-2db3ee640e88",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:24:22.188Z",
+      "version": "WzM1OSwxXQ==",
+      "attributes": {
+        "title": "Tabular Data Stream - RPC Destination IP",
+        "visState": "{\"title\":\"Tabular Data Stream - RPC Destination IP\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"destination.ip\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination IP\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"destination.port\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination Port\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "11884140-ef82-11e9-b38a-2db3ee640e88"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    }
+  ]
+}

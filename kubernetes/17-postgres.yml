@@ -1,0 +1,109 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: malcolm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      protocol: TCP
+      name: postgresql
+  selector:
+    app: postgres
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: malcolm
+  labels:
+    app: postgres
+    role: database
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: postgres
+        role: database
+    spec:
+      containers:
+      - name: postgres-container
+        image: ghcr.io/idaholab/malcolm/postgresql:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        ports:
+          - name: postgresql
+            protocol: TCP
+            containerPort: 5432
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: netbox-common-env
+          - secretRef:
+              name: postgres-env
+        # failureThreshold bounds max pg major-upgrade duration; raise it before upgrading unusually large clusters
+        startupProbe:
+          exec:
+            command:
+              - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 40
+        livenessProbe:
+          exec:
+            command:
+              - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 0
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 20
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: postgres-var-local-catrust-volume
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-volume
+            subPath: postgres
+      terminationGracePeriodSeconds: 60
+      initContainers:
+      - name: postgres-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/config:postgres"
+        volumeMounts:
+          - name: postgres-volume
+            mountPath: "/data/config"
+      volumes:
+        - name: postgres-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: postgres-volume
+          persistentVolumeClaim:
+            claimName: config-claim

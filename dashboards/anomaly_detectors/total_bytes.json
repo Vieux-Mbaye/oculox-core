@@ -1,0 +1,52 @@
+{
+  "name": "total_bytes",
+  "description": "Detect anomalies based on traffic size (sum of network.bytes)",
+  "time_field": "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+  "indices": [
+    "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+  ],
+  "feature_attributes": [
+    {
+      "feature_name": "total_bytes",
+      "feature_enabled": true,
+      "aggregation_query": {
+        "total_bytes": {
+          "sum": {
+            "field": "network.bytes"
+          }
+        }
+      }
+    }
+  ],
+  "filter_query": {
+    "bool": {
+      "filter": [
+        {
+          "exists": {
+            "field": "network.bytes",
+            "boost": 1
+          }
+        }
+      ],
+      "adjust_pure_negative": true,
+      "boost": 1
+    }
+  },
+  "detection_interval": {
+    "period": {
+      "interval": 10,
+      "unit": "Minutes"
+    }
+  },
+  "window_delay": {
+    "period": {
+      "interval": 1,
+      "unit": "Minutes"
+    }
+  },
+  "last_update_time": 1714421906634,
+  "category_field": [
+    "source.ip",
+    "destination.ip"
+  ]
+}

@@ -1,0 +1,108 @@
+repository: cisagov/Malcolm
+title: Malcolm
+offline_mode: false
+malcolm:
+  version: 26.07.1
+description: A powerful, easily deployable network traffic analysis tool suite for network security monitoring
+logo: docs/images/logo/Malcolm_outline_banner_dark.png
+remote_theme: pages-themes/minimal@v0.2.0
+youtube_url: https://www.youtube.com/@MalcolmNetworkTrafficAnalysis
+mastodon:
+  id:
+  url:
+reddit:
+  id:
+  url:
+umami:
+  id:
+  url:
+docs_uri: docs/
+alerting_docs_uri: docs/alerting.html
+anomaly_detection_docs_uri: docs/anomaly-detection.html
+api_docs_uri: docs/api.html
+arkime_docs_uri: docs/arkime.html
+components_docs_uri: docs/components.html
+configuring_docs_uri: docs/malcolm-preparation.html
+contributing_docs_uri: docs/contributing-guide.html
+dashboards_docs_uri: docs/dashboards.html
+download_docs_uri: docs/download.html#DownloadISOs
+hardening_docs_uri: docs/hardening.html
+hedgehog_docs_uri: docs/hedgehog.html
+live_analysis_docs_uri: docs/live-analysis.html
+protocols_docs_uri: docs/protocols.html
+queries_docs_uri: docs/queries-cheat-sheet.html
+quickstart_docs_uri: docs/quickstart.html
+severity_docs_uri: docs/severity.html
+thirdparty_logs_docs_uri: docs/third-party-logs.html
+upload_docs_uri: docs/upload.html
+url:
+github:
+  default_branch: main
+plugins:
+  - jekyll-relative-links
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+show_downloads: true
+relative_links:
+  enabled: true
+  collections: true
+exclude:
+  - .dockerignore
+  - .envrc
+  - .git
+  - .github
+  - .gitignore
+  - .ldap_config_defaults
+  - .opensearch.primary.curlrc
+  - .opensearch.secondary.curlrc
+  - .tmp
+  - .travis.yml
+  - .trigger_workflow_build
+  - api
+  - arkime
+  - arkime-logs
+  - arkime-raw
+  - config
+  - dashboards
+  - docker-compose-dev.yml
+  - docker-compose.yml
+  - Dockerfiles
+  - docs/images/font
+  - docs/images/hedgehog/logo/font
+  - docs/quick-start
+  - docs/slides
+  - docs/stix
+  - docs/web
+  - filescan
+  - file-upload
+  - filebeat
+  - freq-server
+  - Gemfile
+  - Gemfile.lock
+  - htadmin
+  - logstash
+  - malcolm-iso
+  - netbox
+  - nginx
+  - opensearch
+  - opensearch-backup
+  - pcap
+  - pcap-capture
+  - pcap-monitor
+  - scripts
+  - shared
+  - strelka
+  - suricata
+  - suricata-logs
+  - yara
+  - yq
+  - zeek
+  - zeek-logs
+  - "**/*.ai"
+  - "**/*.eps"
+  - "**/*.odg"
+  - "**/*.ppt*"
+  - "**/*.pdf"
+  - "**/*.svg"
+  - "**/*.xcf"

@@ -1,0 +1,642 @@
+{
+  "version": "2.14.0",
+  "objects": [
+    {
+      "id": "29a1b290-eb98-11e9-a384-0fcf32210194",
+      "type": "dashboard",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T19:20:26.330Z",
+      "version": "WzEwMDUsMV0=",
+      "attributes": {
+        "title": "EtherNet/IP",
+        "hits": 0,
+        "description": "Dashboard for Ethernet/IP and CIP Protocols",
+        "panelsJSON": "[{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":37,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":8,\"y\":0,\"w\":9,\"h\":19,\"i\":\"2\"},\"panelIndex\":\"2\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":17,\"y\":0,\"w\":31,\"h\":19,\"i\":\"3\"},\"panelIndex\":\"3\",\"embeddableConfig\":{\"legendOpen\":false,\"vis\":{\"legendOpen\":true}},\"panelRefName\":\"panel_2\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":8,\"y\":19,\"w\":28,\"h\":18,\"i\":\"5bbd48d6-a3e7-4b7e-9c1d-9883d519dc76\"},\"panelIndex\":\"5bbd48d6-a3e7-4b7e-9c1d-9883d519dc76\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":36,\"y\":19,\"w\":12,\"h\":18,\"i\":\"c25cc903-12d2-43af-9841-89bba26a32a9\"},\"panelIndex\":\"c25cc903-12d2-43af-9841-89bba26a32a9\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":1,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_4\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":37,\"w\":12,\"h\":36,\"i\":\"22c810df-21a8-4a5d-a926-78cf2464866a\"},\"panelIndex\":\"22c810df-21a8-4a5d-a926-78cf2464866a\",\"embeddableConfig\":{},\"panelRefName\":\"panel_5\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":12,\"y\":37,\"w\":24,\"h\":18,\"i\":\"2dcb0192-4356-4b59-b1f2-a3e3f677a1ca\"},\"panelIndex\":\"2dcb0192-4356-4b59-b1f2-a3e3f677a1ca\",\"embeddableConfig\":{},\"panelRefName\":\"panel_6\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":36,\"y\":37,\"w\":12,\"h\":18,\"i\":\"a73b04d1-99ec-42e7-858d-5edd5c8ae15a\"},\"panelIndex\":\"a73b04d1-99ec-42e7-858d-5edd5c8ae15a\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":1,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_7\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":12,\"y\":55,\"w\":36,\"h\":18,\"i\":\"a66a1ab3-eeaf-4c7b-a56e-b8663be6ab9f\"},\"panelIndex\":\"a66a1ab3-eeaf-4c7b-a56e-b8663be6ab9f\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":5,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":0,\"direction\":\"asc\"}}},\"panelRefName\":\"panel_8\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":73,\"w\":21,\"h\":18,\"i\":\"a38de599-91bf-4ce0-9ba1-fcdacb57c943\"},\"panelIndex\":\"a38de599-91bf-4ce0-9ba1-fcdacb57c943\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":3,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_9\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":21,\"y\":73,\"w\":27,\"h\":18,\"i\":\"7ccb6ae1-5068-4a2d-b147-2baa12a7ac92\"},\"panelIndex\":\"7ccb6ae1-5068-4a2d-b147-2baa12a7ac92\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":5,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":5,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_10\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":91,\"w\":48,\"h\":19,\"i\":\"bb66342b-bad1-4592-b5cf-18fbe68ec1a2\"},\"panelIndex\":\"bb66342b-bad1-4592-b5cf-18fbe68ec1a2\",\"embeddableConfig\":{},\"panelRefName\":\"panel_11\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":110,\"w\":48,\"h\":13,\"i\":\"faa4d891-2c11-4393-acec-cea800f017e7\"},\"panelIndex\":\"faa4d891-2c11-4393-acec-cea800f017e7\",\"embeddableConfig\":{},\"panelRefName\":\"panel_12\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":123,\"w\":48,\"h\":16,\"i\":\"4608eca0-796d-4482-b62a-887c799e423f\"},\"panelIndex\":\"4608eca0-796d-4482-b62a-887c799e423f\",\"embeddableConfig\":{},\"panelRefName\":\"panel_13\"},{\"version\":\"2.14.0\",\"gridData\":{\"x\":0,\"y\":139,\"w\":48,\"h\":16,\"i\":\"9d193b0a-a8d1-48ad-88cc-16a325686f91\"},\"panelIndex\":\"9d193b0a-a8d1-48ad-88cc-16a325686f91\",\"embeddableConfig\":{},\"panelRefName\":\"panel_14\"}]",
+        "optionsJSON": "{\"useMargins\":true}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":\"*\"},\"filter\":[]}"
+        }
+      },
+      "references": [
+        {
+          "name": "panel_0",
+          "type": "visualization",
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3"
+        },
+        {
+          "name": "panel_1",
+          "type": "visualization",
+          "id": "b2548270-eb98-11e9-a384-0fcf32210194"
+        },
+        {
+          "name": "panel_2",
+          "type": "visualization",
+          "id": "3c2b11d0-eb99-11e9-a384-0fcf32210194"
+        },
+        {
+          "name": "panel_3",
+          "type": "visualization",
+          "id": "c3b30a40-5682-11eb-a702-bff6ecd13bea"
+        },
+        {
+          "name": "panel_4",
+          "type": "visualization",
+          "id": "378fefe0-cab6-11ea-84cd-4f7b1f416f80"
+        },
+        {
+          "name": "panel_5",
+          "type": "visualization",
+          "id": "d3b6e1e0-325d-11ef-8dd5-df3551cbe6ca"
+        },
+        {
+          "name": "panel_6",
+          "type": "visualization",
+          "id": "c291ff30-325d-11ef-8dd5-df3551cbe6ca"
+        },
+        {
+          "name": "panel_7",
+          "type": "visualization",
+          "id": "4ce6e380-cab6-11ea-84cd-4f7b1f416f80"
+        },
+        {
+          "name": "panel_8",
+          "type": "visualization",
+          "id": "6f73cf80-cb7e-11ea-b8b9-778c41cae039"
+        },
+        {
+          "name": "panel_9",
+          "type": "visualization",
+          "id": "fa86bb10-cab0-11ea-84cd-4f7b1f416f80"
+        },
+        {
+          "name": "panel_10",
+          "type": "visualization",
+          "id": "5f626310-ca96-11ea-8578-f3ff6bdd82b2"
+        },
+        {
+          "name": "panel_11",
+          "type": "search",
+          "id": "ca878ac0-c790-11ea-8578-f3ff6bdd82b2"
+        },
+        {
+          "name": "panel_12",
+          "type": "search",
+          "id": "f75bfb80-c790-11ea-8578-f3ff6bdd82b2"
+        },
+        {
+          "name": "panel_13",
+          "type": "search",
+          "id": "972f9f00-c790-11ea-8578-f3ff6bdd82b2"
+        },
+        {
+          "name": "panel_14",
+          "type": "search",
+          "id": "a2d6d220-caaa-11ea-84cd-4f7b1f416f80"
+        }
+      ],
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      }
+    },
+    {
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:47:29.923Z",
+      "version": "Wzg2MCwxXQ==",
+      "attributes": {
+        "title": "Navigation",
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "b2548270-eb98-11e9-a384-0fcf32210194",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4MiwxXQ==",
+      "attributes": {
+        "title": "EtherNet/IP - Log Count",
+        "visState": "{\"title\":\"EtherNet/IP - Log Count\",\"type\":\"metric\",\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":36}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Log Count\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Log Type\"}}]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:(enip* OR cip*)\",\"language\":\"lucene\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "3c2b11d0-eb99-11e9-a384-0fcf32210194",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4MywxXQ==",
+      "attributes": {
+        "title": "EtherNet/IP - Logs Over Time",
+        "visState": "{\"title\":\"EtherNet/IP - Logs Over Time\",\"type\":\"histogram\",\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"\"}}],\"seriesParams\":[{\"show\":\"true\",\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"},\"dimensions\":{\"x\":{\"accessor\":0,\"format\":{\"id\":\"date\",\"params\":{\"pattern\":\"YYYY\"}},\"params\":{\"date\":true,\"interval\":\"P365D\",\"intervalESValue\":365,\"intervalESUnit\":\"d\",\"format\":\"YYYY\",\"bounds\":{\"min\":\"1971-01-14T16:48:06.557Z\",\"max\":\"2021-01-14T16:48:06.557Z\"}},\"label\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER per 365 days\",\"aggType\":\"date_histogram\"},\"y\":[{\"accessor\":2,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}],\"series\":[{\"accessor\":1,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"label\":\"Log Type\",\"aggType\":\"terms\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"useNormalizedEsInterval\":true,\"scaleMetricValues\":false,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{},\"customLabel\":\" \"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Log Type\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":true}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:(enip* OR cip*)\",\"language\":\"lucene\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "c3b30a40-5682-11eb-a702-bff6ecd13bea",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4NCwxXQ==",
+      "attributes": {
+        "title": "Ethernet/IP - Commands",
+        "visState": "{\"title\":\"Ethernet/IP - Commands\",\"type\":\"horizontal_bar\",\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":75,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"normal\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false,\"labels\":{},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"},\"dimensions\":{\"x\":{\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"\"}},\"params\":{},\"label\":\"Command\",\"aggType\":\"terms\"},\"y\":[{\"accessor\":1,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"event.action\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":10,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"\",\"customLabel\":\"Command\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "972f9f00-c790-11ea-8578-f3ff6bdd82b2"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "378fefe0-cab6-11ea-84cd-4f7b1f416f80",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4NSwxXQ==",
+      "attributes": {
+        "title": "EtherNet/IP - Source IP",
+        "visState": "{\"title\":\"EtherNet/IP - Source IP\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"source.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Source IP\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:(\\\"enip\\\" OR \\\"cip\\\" OR \\\"cip_io\\\")\",\"language\":\"lucene\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "d3b6e1e0-325d-11ef-8dd5-df3551cbe6ca",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T19:13:23.709Z",
+      "version": "WzEwMDIsMV0=",
+      "attributes": {
+        "title": "ATT&CK for ICS Tactic - EtherNet/IP and CIP",
+        "visState": "{\"title\":\"ATT&CK for ICS Tactic - EtherNet/IP and CIP\",\"type\":\"horizontal_bar\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"threat.tactic.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"ATT&CK for ICS Tactic\"},\"schema\":\"segment\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"threat.tactic.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"ATT&CK for ICS Tactic\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"group\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":75,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"labels\":{},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"network.protocol:enip\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "065593f0-3257-11ef-8dd5-df3551cbe6ca"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "c291ff30-325d-11ef-8dd5-df3551cbe6ca",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T19:12:54.946Z",
+      "version": "WzEwMDEsMV0=",
+      "attributes": {
+        "title": "ATT&CK for ICS Notices - EtherNet/IP and CIP",
+        "visState": "{\"title\":\"ATT&CK for ICS Notices - EtherNet/IP and CIP\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"threat.tactic.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Tactic\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"threat.technique.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Technique\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.notice.msg\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Notice Message\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":3,\"direction\":\"desc\"}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"network.protocol:enip\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "065593f0-3257-11ef-8dd5-df3551cbe6ca"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "4ce6e380-cab6-11ea-84cd-4f7b1f416f80",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4NywxXQ==",
+      "attributes": {
+        "title": "EtherNet/IP - Destination IP",
+        "visState": "{\"title\":\"EtherNet/IP - Destination IP\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\",\"dimensions\":{\"metrics\":[{\"accessor\":1,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}],\"buckets\":[{\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"label\":\"Source IP\",\"aggType\":\"terms\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"destination.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination IP\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:(\\\"enip\\\" OR \\\"cip\\\" OR \\\"cip_io\\\")\",\"language\":\"lucene\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "6f73cf80-cb7e-11ea-b8b9-778c41cae039",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4NiwxXQ==",
+      "attributes": {
+        "title": "CIP - Device Identity",
+        "visState": "{\"title\":\"CIP - Device Identity\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\",\"dimensions\":{\"metrics\":[{\"accessor\":4,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}],\"buckets\":[{\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"N/A\"}},\"params\":{},\"label\":\"Serial Number\",\"aggType\":\"terms\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.cip_identity.product_name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"N/A\",\"customLabel\":\"Product Name\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.cip_identity.device_type_name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"N/A\",\"customLabel\":\"Device Type\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.cip_identity.vendor_name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"N/A\",\"customLabel\":\"Vendor Name\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.cip_identity.serial_number\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"N/A\",\"customLabel\":\"Serial Number\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.cip_identity.revision\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"N/A\",\"customLabel\":\"Revision Number\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "CIP Identity Results",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "f75bfb80-c790-11ea-8578-f3ff6bdd82b2"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "fa86bb10-cab0-11ea-84cd-4f7b1f416f80",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4OCwxXQ==",
+      "attributes": {
+        "title": "CIP - Services",
+        "visState": "{\"title\":\"CIP - Services\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\",\"dimensions\":{\"metrics\":[{\"accessor\":3,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}],\"buckets\":[{\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"label\":\"Request/Response\",\"aggType\":\"terms\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"event.action\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"CIP Service\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"event.result\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Status\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.cip.direction\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Request/Response\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "CIP Services and Status",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "ca878ac0-c790-11ea-8578-f3ff6bdd82b2"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "5f626310-ca96-11ea-8578-f3ff6bdd82b2",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE4OSwxXQ==",
+      "attributes": {
+        "title": "EtherNet/IP -  Detailed Information",
+        "visState": "{\"title\":\"EtherNet/IP -  Detailed Information\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\",\"dimensions\":{\"metrics\":[{\"accessor\":5,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}],\"buckets\":[{\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"label\":\"Data Length\",\"aggType\":\"terms\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.enip.session_handle\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Session Identifier\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.enip.sender_context\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Sender Context\"}},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"event.action\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"EtherNet/IP Command\"}},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.enip.length\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Data Length\"}},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"event.result\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Status\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "Includes: Session Identifier, Sender Context, EtherNet/IP Command, Data Length, and Status",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "972f9f00-c790-11ea-8578-f3ff6bdd82b2"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "ca878ac0-c790-11ea-8578-f3ff6bdd82b2",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE5MCwxXQ==",
+      "attributes": {
+        "title": "CIP - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "source.ip",
+          "destination.ip",
+          "event.action",
+          "event.result",
+          "zeek.cip.direction",
+          "zeek.cip.cip_sequence_count",
+          "zeek.cip.class_id",
+          "zeek.cip.class_name",
+          "zeek.cip.instance_id",
+          "zeek.cip.packet_correlation_id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"filter\":[],\"query\":{\"query\":\"event.dataset:cip\",\"language\":\"lucene\"},\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "f75bfb80-c790-11ea-8578-f3ff6bdd82b2",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE5MSwxXQ==",
+      "attributes": {
+        "title": "CIP - Identity Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "source.ip",
+          "destination.ip",
+          "zeek.cip_identity.device_type_name",
+          "zeek.cip_identity.product_name",
+          "zeek.cip_identity.vendor_name",
+          "zeek.cip_identity.revision",
+          "zeek.cip_identity.serial_number",
+          "zeek.cip.packet_correlation_id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"filter\":[],\"query\":{\"query\":\"event.dataset:cip_identity\",\"language\":\"lucene\"},\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "972f9f00-c790-11ea-8578-f3ff6bdd82b2",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE5MiwxXQ==",
+      "attributes": {
+        "title": "Ethernet/IP - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "source.ip",
+          "destination.ip",
+          "event.action",
+          "event.result",
+          "zeek.enip.options",
+          "zeek.enip.sender_context",
+          "zeek.enip.session_handle",
+          "zeek.cip.packet_correlation_id",
+          "event.id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"filter\":[],\"query\":{\"query\":\"event.dataset:enip\",\"language\":\"lucene\"},\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "a2d6d220-caaa-11ea-84cd-4f7b1f416f80",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T17:46:29.765Z",
+      "version": "WzE5MywxXQ==",
+      "attributes": {
+        "title": "CIP - IO Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "source.ip",
+          "destination.ip",
+          "zeek.cip_io.connection_id",
+          "zeek.cip_io.sequence_number",
+          "zeek.cip_io.data_length",
+          "zeek.cip.packet_correlation_id",
+          "event.id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"filter\":[],\"query\":{\"query\":\"event.dataset:cip_io\",\"language\":\"lucene\"},\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "065593f0-3257-11ef-8dd5-df3551cbe6ca",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-06-24T18:24:42.158Z",
+      "version": "Wzk4OCwxXQ==",
+      "attributes": {
+        "title": "ACID on ATT&CK for ICS",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "network.protocol",
+          "threat.tactic.name",
+          "threat.technique.name",
+          "zeek.notice.msg",
+          "source.ip",
+          "destination.ip",
+          "zeek.cip.packet_correlation_id",
+          "event.id"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"threat.framework:\\\"MITRE ATT&CK for ICS\\\"\",\"language\":\"lucene\"},\"highlightAll\":false,\"version\":true,\"aggs\":{\"2\":{\"date_histogram\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"fixed_interval\":\"30d\",\"min_doc_count\":1}}},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    }
+  ]
+}

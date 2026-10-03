@@ -1,0 +1,25 @@
+name: dirinit-build-and-push-ghcr
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'Dockerfiles/dirinit.Dockerfile'
+      - 'shared/bin/docker-uid-gid-setup.sh'
+      - '.trigger_workflow_build'
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  docker:
+    uses: ./.github/workflows/docker-build-push-scan.yml
+    permissions:
+      actions: write
+      packages: write
+      contents: read
+      security-events: write
+    with:
+      service: dirinit
+      dockerfile: ./Dockerfiles/dirinit.Dockerfile

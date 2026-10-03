@@ -1,0 +1,84 @@
+---
+# Default OpenSearch Dashboards configuration
+
+server:
+  name: "dashboards"
+  host: "0.0.0.0"
+  basePath: "/dashboards"
+  rewriteBasePath: true
+  maxPayloadBytes: 8388608
+  cors: true
+
+opensearch:
+  hosts: ["${OPENSEARCH_URL}"]
+  username: "_MALCOLM_DASHBOARDS_OPENSEARCH_USER_"
+  password: "_MALCOLM_DASHBOARDS_OPENSEARCH_PASSWORD_"
+  ssl:
+    verificationMode: "_MALCOLM_DASHBOARDS_OPENSEARCH_SSL_VERIFICATION_MODE_"
+    certificateAuthorities:
+      - "/var/local/ca-trust/oculox-opensearch-ca.crt"
+  requestHeadersAllowlist:
+    - "securitytenant"
+    - "Authorization"
+    - "X-Forwarded-For"
+    - "X-Forwarded-User"
+    - "X-Forwarded-Roles"
+  requestTimeout: 180000
+
+opensearch_security:
+  auth:
+    type: "_MALCOLM_DASHBOARDS_AUTH_TYPE_"
+  cookie:
+    name: "oculox_security_authentication"
+    password: "_MALCOLM_DASHBOARDS_COOKIE_PASSWORD_"
+    secure: true
+    isSameSite: "Lax"
+  multitenancy:
+    enabled: false
+    enable_filter: false
+    tenants:
+      enable_global: true
+      enable_private: false
+      preferred: ["Global"]
+
+data_source:
+  enabled: false
+
+opensearchDashboards:
+  branding:
+    applicationTitle: "Oculox Dashboards"
+    useExpandedHeader: false
+    logo:
+      defaultUrl: "/assets/img/logo_Oculox.png"
+      darkModeUrl: "/assets/img/logo_Oculox.png"
+    mark:
+      defaultUrl: "/assets/img/icone_logo.png"
+      darkModeUrl: "/assets/img/icone_logo.png"
+    loadingLogo:
+      defaultUrl: "/assets/img/logo_Oculox.png"
+      darkModeUrl: "/assets/img/logo_Oculox.png"
+    faviconUrl: "/assets/img/icone_logo.png"
+
+
+map:
+  regionmap:
+    includeOpenSearchMapsService: false
+    layers:
+      - name: "World (offline)"
+        url: "/world.geojson"
+        attribution: "https://exploratory.io/maps"
+        fields:
+          - name: "ISO_A2"
+            description: "Country Code"
+          - name: "WB_A2"
+            description: "Country Code2"
+          - name: "NAME"
+            description: "Country Name"
+
+csp:
+  strict: false
+  warnLegacyBrowsers: false
+  rules:
+    - "script-src 'unsafe-eval' 'unsafe-inline' https://www.gstatic.com/ https://d3js.org/ https://cdn.jsdelivr.net/ https://cdnjs.cloudflare.com/ https://cdn.datatables.net/ 'self'"
+    - "worker-src blob: *"
+    - "child-src data: * blob: *"

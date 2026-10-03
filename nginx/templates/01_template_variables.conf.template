@@ -1,0 +1,33 @@
+map ${DOLLAR}host ${DOLLAR}sessions_index {
+  default "$MALCOLM_NETWORK_INDEX_PATTERN";
+}
+
+map ${DOLLAR}host ${DOLLAR}dashboards_prefix {
+  default "$NGINX_DASHBOARDS_PREFIX";
+}
+
+map ${DOLLAR}host ${DOLLAR}dashboards_proxy_pass {
+  default "$NGINX_DASHBOARDS_PROXY_PASS";
+}
+
+map ${DOLLAR}host ${DOLLAR}dashboards_proxy_url {
+  default "$NGINX_DASHBOARDS_PROXY_URL";
+}
+
+map ${DOLLAR}host ${DOLLAR}proxy_x_forwarded_proto_override {
+  default "$NGINX_X_FORWARDED_PROTO_OVERRIDE";
+}
+
+map $ARKIME_SSL ${DOLLAR}arkime_protocol {
+  default https;
+  "false" http;
+}
+
+map ${DOLLAR}host ${DOLLAR}admin_role {
+  default "$ROLE_ADMIN";
+}
+
+map $ROLE_BASED_ACCESS ${DOLLAR}capture_service_role {
+  default "$ROLE_CAPTURE_SERVICE";
+  "false" "$ROLE_ADMIN";
+}

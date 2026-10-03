@@ -1,0 +1,8 @@
+{
+  "implementation_policy": "All Git-tracked implementation, scripts and configuration files are byte-for-byte identical to the source commit. Only README.md and split metadata are added.",
+  "role": "core",
+  "schema": 2,
+  "source_commit": "0b30ea313a8ff82d79c7f339d2857d30824997e0",
+  "source_remote": "http://gitea.tcric.hq/vmbaye/Oculox_V2.git",
+  "tracked_source_files": 1818
+}

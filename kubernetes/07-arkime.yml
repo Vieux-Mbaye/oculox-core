@@ -1,0 +1,135 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: arkime
+  namespace: malcolm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8005
+      protocol: TCP
+      name: http
+    - port: 8081
+      protocol: TCP
+      name: wise
+  selector:
+    app: arkime
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arkime-deployment
+  namespace: malcolm
+  labels:
+    app: arkime
+    role: analysis
+spec:
+  selector:
+    matchLabels:
+      app: arkime
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: arkime
+        role: analysis
+        workload-group: heavy
+    spec:
+      containers:
+      - name: arkime-container
+        image: ghcr.io/idaholab/malcolm/arkime:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 8005
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: opensearch-env
+          - configMapRef:
+              name: upload-common-env
+          - configMapRef:
+              name: auth-common-env
+          - secretRef:
+              name: auth-env
+          - configMapRef:
+              name: arkime-env
+          - configMapRef:
+              name: arkime-offline-env
+          - secretRef:
+              name: arkime-secret-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 210
+          periodSeconds: 90
+          timeoutSeconds: 30
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: arkime-var-local-catrust-volume
+          - mountPath: /var/local/curlrc/secretmap
+            name: arkime-opensearch-curlrc-secret-volume
+          - mountPath: "/opt/arkime/parsers/configmap"
+            name: arkime-parsers-volume
+          - mountPath: "/opt/arkime/rules/configmap"
+            name: arkime-rules-volume
+          - mountPath: "/data/pcap"
+            name: arkime-pcap-volume
+          - mountPath: "/opt/arkime/wiseini"
+            name: arkime-config-volume
+            subPath: "arkime/wiseini"  
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: arkime-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/config:arkime/wiseini;/data/pcap:processed"
+        volumeMounts:
+          - name: arkime-pcap-volume
+            mountPath: "/data/pcap"
+          - name: arkime-config-volume
+            mountPath: "/data/config"
+      volumes:
+        - name: arkime-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: arkime-opensearch-curlrc-secret-volume
+          secret:
+            secretName: opensearch-curlrc
+        - name: arkime-parsers-volume
+          configMap:
+            name: arkime-parsers
+        - name: arkime-rules-volume
+          configMap:
+            name: arkime-rules
+        - name: arkime-pcap-volume
+          persistentVolumeClaim:
+            claimName: pcap-claim
+        - name: arkime-config-volume
+          persistentVolumeClaim:
+            claimName: config-claim

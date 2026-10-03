@@ -1,0 +1,111 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zeek-offline-deployment
+  namespace: malcolm
+  labels:
+    app: zeek-offline
+    role: ingest
+spec:
+  selector:
+    matchLabels:
+      app: zeek-offline
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zeek-offline
+        role: ingest
+        workload-group: heavy
+    spec:
+      containers:
+      - name: zeek-offline-container
+        image: ghcr.io/idaholab/malcolm/zeek:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: upload-common-env
+          - configMapRef:
+              name: zeek-env
+          - configMapRef:
+              name: zeek-offline-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: zeek-offline-var-local-catrust-volume
+          - mountPath: "/pcap"
+            name: zeek-offline-pcap-volume
+          - mountPath: "/zeek/extract_files"
+            name: zeek-offline-zeek-volume
+            subPath: "extract_files"
+          - mountPath: "/zeek/upload"
+            name: zeek-offline-zeek-volume
+            subPath: "upload"
+          - mountPath: "/usr/local/zeek/share/zeek/site/custom/configmap"
+            name: zeek-offline-custom-volume
+          - mountPath: "/usr/local/zeek/share/zeek/site/intel-preseed/configmap"
+            name: zeek-offline-intel-preseed-volume
+          - mountPath: "/usr/local/zeek/share/zeek/site/intel"
+            name: zeek-offline-intel-volume
+            subPath: "zeek/intel"
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: zeek-offline-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/config:zeek/intel/Google,zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/data/pcap:processed;/data/zeek-logs:current,extract_files/filescan,live,processed,upload"
+        volumeMounts:
+          - name: zeek-offline-intel-volume
+            mountPath: "/data/config"
+          - name: zeek-offline-pcap-volume
+            mountPath: "/data/pcap"
+          - name: zeek-offline-zeek-volume
+            mountPath: "/data/zeek-logs"
+      volumes:
+        - name: zeek-offline-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: zeek-offline-pcap-volume
+          persistentVolumeClaim:
+            claimName: pcap-claim
+        - name: zeek-offline-zeek-volume
+          persistentVolumeClaim:
+            claimName: zeek-claim
+        - name: zeek-offline-custom-volume
+          configMap:
+            name: zeek-custom
+        - name: zeek-offline-intel-preseed-volume
+          configMap:
+            name: zeek-intel-preseed
+        - name: zeek-offline-intel-volume
+          persistentVolumeClaim:
+            claimName: config-claim

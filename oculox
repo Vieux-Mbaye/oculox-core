@@ -1,0 +1,603 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+PROJECT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+COMPOSE_OVERRIDE="${PROJECT_DIR}/dev/compose/docker-compose.dev.yml"
+STATE_FILE="${PROJECT_DIR}/dev/generated/deployment.env"
+RUNTIME_COMPOSE_FILE="${PROJECT_DIR}/dev/generated/docker-compose.runtime.yml"
+RUNTIME_COMPOSE_SOURCE="${PROJECT_DIR}/dev/generated/docker-compose.runtime.source.yml"
+COMPOSE_PROJECT_NAME="$(basename "$PROJECT_DIR" | tr '[:upper:]' '[:lower:]')"
+OPERATOR="$(id -un)"
+
+cd "$PROJECT_DIR"
+
+usage() {
+    cat <<'EOF'
+Oculox - installation et exploitation résilientes
+
+Installation neuve :
+  ./oculox install principal --server-name <nom-DNS-ou-IP> \
+      --opensearch-bundle <répertoire-bundle-core>
+  ./oculox install hedgehog --principal-host <nom-DNS-ou-IP> \
+      --collector-name <nom> --bundle <répertoire-bundle-beats> \
+      --opensearch-bundle <répertoire-bundle-hedgehog>
+
+Cluster OpenSearch dédié :
+  ./oculox install cluster --endpoint-ip <adresse-IP-VM>
+  ./oculox install cluster --config <cluster.yml>
+  ./oculox cluster start|stop|restart|status|logs|validate|config
+  ./oculox cluster apply --config <cluster.yml>
+  ./oculox cluster client-bundle core <sortie>
+  ./oculox cluster client-bundle hedgehog <sortie>
+
+Reprise d'une installation interrompue après l'assistant système :
+  ./oculox resume-install principal --server-name <nom-DNS-ou-IP> \
+      --opensearch-bundle <répertoire-bundle-core>
+  ./oculox resume-install hedgehog --principal-host <nom-DNS-ou-IP> \
+      --collector-name <nom> --bundle <répertoire-bundle-beats> \
+      --opensearch-bundle <répertoire-bundle-hedgehog>
+
+Préparation d'un dépôt déjà configuré :
+  ./oculox prepare principal --server-name <nom-DNS-ou-IP>
+  ./oculox prepare hedgehog --principal-host <nom-DNS-ou-IP> \
+      --collector-name <nom> --bundle <répertoire-bundle>
+
+Exploitation :
+  ./oculox start
+  ./oculox restart [service...]
+  ./oculox stop
+  ./oculox status
+  ./oculox logs [service...]
+  ./oculox pull
+  ./oculox validate
+  ./oculox collector-bundle <nom-collecteur> <nom-DNS-ou-IP-principal> [sortie]
+  ./oculox configure-opensearch-remote --bundle <répertoire-bundle>
+  ./oculox keycloak provision [--admin-username <nom>]
+  ./oculox keycloak activate-portal
+  ./oculox keycloak activate-dashboards
+  ./oculox keycloak deactivate-portal
+  ./oculox keycloak deactivate-dashboards
+  ./oculox keycloak verify-portal
+  ./oculox keycloak verify-dashboards
+  ./oculox keycloak verify-hardening
+  ./oculox keycloak credentials
+  ./oculox keycloak report
+  ./oculox verify clients
+  ./oculox verify ingestion baseline --output <rapport-core.json>
+  ./oculox verify ingestion inject --pcap <fichier.pcap> \
+      --run-id <identifiant> --output <rapport-collecteur.json>
+  ./oculox verify ingestion finalize --baseline <rapport-core.json> \
+      --collector-report <rapport-collecteur.json> --output <rapport-final.json>
+  ./oculox verify failover --reports-dir <répertoire> --output <rapport.json>
+
+L'installation utilise les composants officiels compatibles et applique
+automatiquement l'interface Oculox. Les secrets d'authentification sont
+demandés interactivement et ne sont jamais placés dans la ligne de commande
+ni dans Git.
+EOF
+}
+
+compose() {
+    docker compose \
+        --project-name "$COMPOSE_PROJECT_NAME" \
+        --project-directory "$PROJECT_DIR" \
+        -f "$PROJECT_DIR/docker-compose.yml" \
+        -f "$COMPOSE_OVERRIDE" \
+        "$@"
+}
+
+render_runtime_compose() {
+    # Render the official Compose file together with the Oculox resilience
+    # overlay. The result contains absolute bind paths, so the upstream
+    # lifecycle script can validate and initialize its normal runtime paths.
+    install -d -m 0700 "$PROJECT_DIR/dev/generated"
+    compose --profile "$PROFILE" config > "$RUNTIME_COMPOSE_SOURCE"
+    ./dev/scripts/render-remote-opensearch-compose.py \
+        --input "$RUNTIME_COMPOSE_SOURCE" \
+        --output "$RUNTIME_COMPOSE_FILE" \
+        --opensearch-env "$PROJECT_DIR/config/opensearch.env" \
+        --clients-dir "$PROJECT_DIR/dev/generated/opensearch-clients"
+    rm -f "$RUNTIME_COMPOSE_SOURCE"
+    chmod 0600 "$RUNTIME_COMPOSE_FILE"
+}
+
+official_start() {
+    render_runtime_compose
+    COMPOSE_PROJECT_NAME="$COMPOSE_PROJECT_NAME" \
+        ./scripts/start -f "$RUNTIME_COMPOSE_FILE" -p "$PROFILE"
+}
+
+read_state() {
+    [[ -s "$STATE_FILE" ]] || {
+        printf 'Déploiement non préparé. Exécutez ./oculox prepare ...\n' >&2
+        exit 1
+    }
+    OCULOX_ROLE="$(sed -n 's/^OCULOX_ROLE=//p' "$STATE_FILE")"
+    [[ "$OCULOX_ROLE" == principal || "$OCULOX_ROLE" == hedgehog ]] || {
+        printf 'Rôle invalide dans %s\n' "$STATE_FILE" >&2
+        exit 1
+    }
+    PROFILE="malcolm"
+    if [[ "$OCULOX_ROLE" == hedgehog ]]; then
+        PROFILE="hedgehog"
+    fi
+}
+
+parse_role_options() {
+    ROLE="${1:-}"
+    shift || true
+    SERVER_NAME=""
+    PRINCIPAL_HOST=""
+    COLLECTOR_NAME=""
+    BUNDLE=""
+    OPENSEARCH_BUNDLE=""
+    while (($#)); do
+        case "$1" in
+            --server-name) shift; SERVER_NAME="${1:-}" ;;
+            --principal-host) shift; PRINCIPAL_HOST="${1:-}" ;;
+            --collector-name) shift; COLLECTOR_NAME="${1:-}" ;;
+            --bundle) shift; BUNDLE="${1:-}" ;;
+            --opensearch-bundle) shift; OPENSEARCH_BUNDLE="${1:-}" ;;
+            *) printf 'Option inconnue : %s\n' "$1" >&2; usage; exit 2 ;;
+        esac
+        shift
+    done
+    [[ "$ROLE" == principal || "$ROLE" == hedgehog ]] || { usage; exit 2; }
+}
+
+apply_remote_opensearch_bundle() {
+    [[ -n "$OPENSEARCH_BUNDLE" ]] || return 0
+    ./dev/scripts/configure-remote-opensearch.py \
+        --bundle "$OPENSEARCH_BUNDLE" \
+        --role "$ROLE"
+}
+
+protect_existing_role() {
+    if [[ -s "$STATE_FILE" ]]; then
+        local existing_role
+        existing_role="$(sed -n 's/^OCULOX_ROLE=//p' "$STATE_FILE")"
+        if [[ -n "$existing_role" && "$existing_role" != "$ROLE" ]]; then
+            printf 'Ce dépôt est déjà préparé pour le rôle %s.\n' "$existing_role" >&2
+            printf 'Utilisez un dépôt et des données distincts pour le rôle %s.\n' "$ROLE" >&2
+            exit 1
+        fi
+    fi
+}
+
+ensure_python_yaml() {
+    if python3 -c 'import yaml' >/dev/null 2>&1; then
+        return
+    fi
+
+    printf '%s\n' 'Dépendance Python PyYAML absente. Installation du paquet système...'
+    if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update
+        sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y python3-yaml
+    elif command -v dnf >/dev/null 2>&1; then
+        sudo dnf install -y python3-pyyaml
+    elif command -v yum >/dev/null 2>&1; then
+        sudo yum install -y python3-pyyaml
+    elif command -v zypper >/dev/null 2>&1; then
+        sudo zypper --non-interactive install python3-PyYAML
+    else
+        cat >&2 <<'EOF'
+PyYAML est requis pour générer la configuration Filebeat résiliente.
+Installez le paquet PyYAML fourni par votre système, puis relancez la commande.
+EOF
+        exit 1
+    fi
+
+    python3 -c 'import yaml' >/dev/null 2>&1 || {
+        printf '%s\n' \
+            'Le paquet PyYAML a été installé, mais le Python actif ne peut pas le charger.' >&2
+        exit 1
+    }
+}
+
+prepare_principal() {
+    [[ -n "$SERVER_NAME" ]] || { printf '%s\n' '--server-name est obligatoire' >&2; exit 2; }
+    ./dev/scripts/configure-deployment-role.py --role principal --server-name "$SERVER_NAME"
+    ./dev/scripts/configure-public-endpoint.py --public-host "$SERVER_NAME"
+    ./dev/scripts/generate-web-pki.sh
+    ./dev/scripts/generate-beats-pki.sh --server-name "$SERVER_NAME"
+    ./dev/scripts/render-filebeat-ha-config.py \
+        --output-dir "$PROJECT_DIR/dev/generated/filebeat" \
+        --host logstash:5044 \
+        --host logstash-2:5044
+}
+
+bundle_value() {
+    local key="$1"
+    sed -n "s/^${key}=//p" "$BUNDLE/endpoints.env"
+}
+
+prepare_hedgehog() {
+    [[ -n "$PRINCIPAL_HOST" && -n "$COLLECTOR_NAME" && -n "$BUNDLE" ]] || {
+        printf '%s\n' '--principal-host, --collector-name et --bundle sont obligatoires' >&2
+        exit 2
+    }
+    for file in ca.crt client.crt client.key endpoints.env SHA256SUMS; do
+        [[ -s "$BUNDLE/$file" ]] || { printf 'Bundle incomplet : %s\n' "$BUNDLE/$file" >&2; exit 1; }
+    done
+    (cd "$BUNDLE" && sha256sum -c SHA256SUMS)
+    [[ "$(bundle_value OCULOX_PRINCIPAL_HOST)" == "$PRINCIPAL_HOST" ]] || {
+        printf 'Le bundle ne correspond pas au principal %s.\n' "$PRINCIPAL_HOST" >&2
+        exit 1
+    }
+    [[ "$(bundle_value OCULOX_COLLECTOR_NAME)" == "$COLLECTOR_NAME" ]] || {
+        printf 'Le bundle ne correspond pas au collecteur %s.\n' "$COLLECTOR_NAME" >&2
+        exit 1
+    }
+
+    ./dev/scripts/configure-deployment-role.py \
+        --role hedgehog \
+        --principal-host "$PRINCIPAL_HOST" \
+        --collector-name "$COLLECTOR_NAME"
+    install -d -m 0700 "$PROJECT_DIR/dev/generated/pki"
+    install -m 0644 "$BUNDLE/ca.crt" "$PROJECT_DIR/dev/generated/pki/ca.crt"
+    install -m 0644 "$BUNDLE/client.crt" "$PROJECT_DIR/dev/generated/pki/client.crt"
+    install -m 0600 "$BUNDLE/client.key" "$PROJECT_DIR/dev/generated/pki/client.key"
+    ./dev/scripts/render-filebeat-ha-config.py \
+        --output-dir "$PROJECT_DIR/dev/generated/filebeat" \
+        --host "${PRINCIPAL_HOST}:5044" \
+        --host "${PRINCIPAL_HOST}:5045"
+}
+
+prepare_role() {
+    protect_existing_role
+    ensure_python_yaml
+    if [[ "$ROLE" == principal ]]; then
+        prepare_principal
+    else
+        prepare_hedgehog
+    fi
+    apply_remote_opensearch_bundle
+    ./dev/scripts/validate-compose.sh
+    printf 'Préparation %s terminée.\n' "$ROLE"
+}
+
+keycloak_provision() {
+    local admin_username="oculox-initial-admin"
+    while (($#)); do
+        case "$1" in
+            --admin-username) shift; admin_username="${1:-}" ;;
+            *) printf 'Option Keycloak inconnue : %s\n' "$1" >&2; usage; exit 2 ;;
+        esac
+        shift
+    done
+    read_state
+    [[ "$OCULOX_ROLE" == principal ]] || {
+        printf '%s\n' 'Le provisionnement Keycloak est disponible uniquement sur Oculox Core.' >&2
+        exit 1
+    }
+    ./dev/scripts/keycloak/configure-realm.py prepare --admin-username "$admin_username"
+    compose --profile "$PROFILE" up -d --force-recreate keycloak
+    local attempt keycloak_ready=false
+    for attempt in $(seq 1 30); do
+        if compose --profile "$PROFILE" exec -T keycloak \
+            curl -sSf --output /dev/null http://localhost:8080/keycloak/realms/master; then
+            keycloak_ready=true
+            break
+        fi
+        sleep 2
+    done
+    [[ "$keycloak_ready" == true ]] || {
+        printf '%s\n' 'Keycloak ne répond pas après 60 secondes.' >&2
+        exit 1
+    }
+    if ! compose --profile "$PROFILE" exec -T keycloak /usr/local/bin/realm-setup.sh --check-access; then
+        printf '%s\n' 'Création contrôlée du compte de service Keycloak de récupération...'
+        compose --profile "$PROFILE" stop keycloak
+        compose --profile "$PROFILE" run --rm --no-deps --entrypoint /bin/sh keycloak -c \
+            'unset KC_BOOTSTRAP_ADMIN_USERNAME KC_BOOTSTRAP_ADMIN_PASSWORD; export KC_DB=postgres KC_DB_USERNAME="$POSTGRES_KEYCLOAK_USER" KC_DB_PASSWORD="$POSTGRES_KEYCLOAK_PASSWORD" KC_DB_URL="jdbc:postgresql://${POSTGRES_HOST}:${PGPORT}/${POSTGRES_KEYCLOAK_DB}"; exec /opt/keycloak/bin/kc.sh bootstrap-admin service --no-prompt --client-id "$KEYCLOAK_RECOVERY_CLIENT_ID" --client-secret:env KEYCLOAK_RECOVERY_CLIENT_SECRET'
+        compose --profile "$PROFILE" up -d --force-recreate keycloak
+        keycloak_ready=false
+        for attempt in $(seq 1 30); do
+            if compose --profile "$PROFILE" exec -T keycloak \
+                curl -sSf --output /dev/null http://localhost:8080/keycloak/realms/master; then
+                keycloak_ready=true
+                break
+            fi
+            sleep 2
+        done
+        [[ "$keycloak_ready" == true ]] || {
+            printf '%s\n' 'Keycloak ne répond pas après la récupération du bootstrap.' >&2
+            exit 1
+        }
+        compose --profile "$PROFILE" exec -T keycloak /usr/local/bin/realm-setup.sh --check-access
+    fi
+    compose --profile "$PROFILE" exec -T keycloak /usr/local/bin/hardening-preflight.sh
+    compose --profile "$PROFILE" exec -T keycloak /usr/local/bin/realm-setup.sh
+    install -d -m 0700 "$PROJECT_DIR/dev/generated/keycloak-provisioning"
+    compose --profile "$PROFILE" exec -T keycloak /usr/local/bin/realm-setup.sh --verify \
+        > "$PROJECT_DIR/dev/generated/keycloak-provisioning/realm-report.json"
+    jq -e '.result == "PASS"' "$PROJECT_DIR/dev/generated/keycloak-provisioning/realm-report.json" >/dev/null
+    compose --profile "$PROFILE" exec -T keycloak /usr/local/bin/realm-setup.sh --retire-bootstrap
+    ./dev/scripts/keycloak/configure-realm.py finalize
+    compose --profile "$PROFILE" up -d --force-recreate keycloak
+    if sed -n 's/^NGINX_AUTH_MODE=//p' "$PROJECT_DIR/config/auth-common.env" | grep -qx keycloak; then
+        printf '%s\n' 'Keycloak realm, clients, groupes et rôles sont provisionnés. Le portail reste en mode Keycloak.'
+    else
+        printf '%s\n' 'Keycloak realm, clients, groupes et rôles sont provisionnés. Le portail reste en mode Basic.'
+    fi
+}
+
+keycloak_command() {
+    case "${1:-}" in
+        provision)
+            shift
+            keycloak_provision "$@"
+            ;;
+        activate-portal)
+            shift
+            read_state
+            [[ "$OCULOX_ROLE" == principal ]] || {
+                printf '%s\n' 'L’activation Keycloak du portail est disponible uniquement sur Oculox Core.' >&2
+                exit 1
+            }
+            ./dev/scripts/keycloak/configure-portal-auth.py activate "$@"
+            render_runtime_compose
+            docker compose -f "$RUNTIME_COMPOSE_FILE" --profile "$PROFILE" config --quiet
+            printf '%s\n' 'Portail Oculox configuré pour Keycloak. Redémarrez avec ./oculox restart nginx-proxy keycloak.'
+            ;;
+        activate-dashboards)
+            shift
+            read_state
+            [[ "$OCULOX_ROLE" == principal ]] || {
+                printf '%s\n' 'L’activation OIDC Dashboards est disponible uniquement sur Oculox Core.' >&2
+                exit 1
+            }
+            ./dev/scripts/keycloak/configure-dashboards-oidc.py activate "$@"
+            render_runtime_compose
+            docker compose -f "$RUNTIME_COMPOSE_FILE" --profile "$PROFILE" config --quiet
+            printf '%s\n' 'Dashboards configuré pour OIDC. Redémarrez avec ./oculox restart dashboards nginx-proxy.'
+            ;;
+        deactivate-portal)
+            shift
+            read_state
+            [[ "$OCULOX_ROLE" == principal ]] || {
+                printf '%s\n' 'La désactivation Keycloak du portail est disponible uniquement sur Oculox Core.' >&2
+                exit 1
+            }
+            ./dev/scripts/keycloak/configure-portal-auth.py deactivate "$@"
+            render_runtime_compose
+            docker compose -f "$RUNTIME_COMPOSE_FILE" --profile "$PROFILE" config --quiet
+            printf '%s\n' 'Portail Oculox revenu en Basic. Redémarrez avec ./oculox restart nginx-proxy.'
+            ;;
+        deactivate-dashboards)
+            shift
+            read_state
+            [[ "$OCULOX_ROLE" == principal ]] || {
+                printf '%s\n' 'La désactivation OIDC Dashboards est disponible uniquement sur Oculox Core.' >&2
+                exit 1
+            }
+            ./dev/scripts/keycloak/configure-dashboards-oidc.py deactivate "$@"
+            render_runtime_compose
+            docker compose -f "$RUNTIME_COMPOSE_FILE" --profile "$PROFILE" config --quiet
+            printf '%s\n' 'Dashboards revenu en Basic. Redémarrez avec ./oculox restart dashboards nginx-proxy.'
+            ;;
+        verify-portal)
+            shift
+            ./dev/scripts/keycloak/configure-portal-auth.py verify "$@"
+            ;;
+        verify-dashboards)
+            shift
+            ./dev/scripts/keycloak/configure-dashboards-oidc.py verify "$@"
+            ;;
+        verify-hardening)
+            shift
+            ./dev/scripts/keycloak/verify-functional-hardening.py "$@"
+            ;;
+        credentials)
+            local credentials_file="$PROJECT_DIR/dev/generated/keycloak-initial-credentials.env"
+            [[ -s "$credentials_file" ]] || {
+                printf '%s\n' 'Aucun fichier d’identifiants initiaux Keycloak n’est disponible.' >&2
+                exit 1
+            }
+            cat "$credentials_file"
+            ;;
+        report)
+            local report_file="$PROJECT_DIR/dev/generated/keycloak-provisioning/realm-report.json"
+            [[ -s "$report_file" ]] || {
+                printf '%s\n' 'Aucun rapport de provisionnement Keycloak n’est disponible.' >&2
+                exit 1
+            }
+            jq . "$report_file"
+            ;;
+        *) usage; exit 2 ;;
+    esac
+}
+
+resume_command() {
+    local -a command=("$PROJECT_DIR/oculox" resume-install "$ROLE")
+    if [[ "$ROLE" == principal ]]; then
+        command+=(--server-name "$SERVER_NAME")
+    else
+        command+=(
+            --principal-host "$PRINCIPAL_HOST"
+            --collector-name "$COLLECTOR_NAME"
+            --bundle "$BUNDLE"
+        )
+    fi
+    if [[ -n "$OPENSEARCH_BUNDLE" ]]; then
+        command+=(--opensearch-bundle "$OPENSEARCH_BUNDLE")
+    fi
+    printf 'cd %q && exec' "$PROJECT_DIR"
+    printf ' %q' "${command[@]}"
+}
+
+continue_install() {
+    apply_remote_opensearch_bundle
+    printf 'Étape 2/4 - Authentification et secrets officiels\n'
+    ./scripts/auth_setup
+    printf 'Étape 3/4 - Application du rôle et de la résilience Oculox\n'
+    prepare_role
+    printf 'Étape 4/4 - Démarrage de la plateforme complète\n'
+    read_state
+    compose --profile "$PROFILE" pull
+    official_start
+    ./oculox status
+}
+
+continue_with_docker_access() {
+    local command
+
+    if docker info >/dev/null 2>&1; then
+        continue_install
+        return
+    fi
+
+    command="$(resume_command)"
+    if ! sudo docker info >/dev/null 2>&1; then
+        cat >&2 <<EOF
+Le moteur Docker n'est pas accessible, même avec les privilèges administrateur.
+Vérifiez le service Docker, puis reprenez l'installation avec :
+
+  ${command}
+EOF
+        exit 1
+    fi
+
+    if id -nG "$OPERATOR" | tr ' ' '\n' | grep -qx docker; then
+        printf '%s\n' \
+            'Le groupe docker vient d’être attribué. Reprise automatique avec les nouveaux groupes.'
+        # sudo only establishes the refreshed primary group. The resumed
+        # process still runs with the operator UID, so generated secrets do
+        # not become root-owned.
+        exec sudo -u "$OPERATOR" -g docker -- bash -c "$command"
+    fi
+
+    cat >&2 <<EOF
+Docker fonctionne, mais le compte ${OPERATOR} n'a pas encore un accès non privilégié.
+Ajoutez ce compte au groupe docker si nécessaire, ouvrez une nouvelle session,
+puis reprenez sans relancer l'assistant système :
+
+  ${command}
+EOF
+    exit 1
+}
+
+COMMAND="${1:-}"
+shift || true
+
+case "$COMMAND" in
+    install)
+        if [[ "${1:-}" == cluster || "${1:-}" == opensearch-cluster ]]; then
+            shift
+            ./dev/scripts/opensearch-cluster/manage-cluster.sh install "$@"
+            exit
+        fi
+        parse_role_options "$@"
+        protect_existing_role
+        printf 'Étape 1/4 - Installation système et configuration du socle Oculox\n'
+        # The complete official installer requires root on Linux and therefore
+        # creates config/*.env as root. Return those generated files to the
+        # operator before the unprivileged Oculox preparation reads them.
+        sudo ./scripts/install.py --tui
+        sudo chown -R "$(id -u):$(id -g)" "$PROJECT_DIR/config"
+        # The Oculox state is runtime data, not source code. Create its parent
+        # explicitly for the operator even when the repository was cloned by
+        # root, otherwise the role preparation cannot write deployment.env.
+        sudo install -d -o "$(id -u)" -g "$(id -g)" -m 0700 \
+            "$PROJECT_DIR/dev/generated"
+        # Running the installer through sudo may also leave the default
+        # container identity at root. Correct only those root defaults and
+        # preserve any non-zero identity explicitly selected in the TUI.
+        sed -i "s/^PUID=0$/PUID=$(id -u)/" "$PROJECT_DIR/config/process.env"
+        sed -i "s/^PGID=0$/PGID=$(id -g)/" "$PROJECT_DIR/config/process.env"
+        if [[ "$ROLE" == principal ]]; then
+            ./dev/scripts/configure-deployment-role.py --role principal --server-name "$SERVER_NAME"
+        else
+            ./dev/scripts/configure-deployment-role.py \
+                --role hedgehog \
+                --principal-host "$PRINCIPAL_HOST" \
+                --collector-name "$COLLECTOR_NAME"
+        fi
+        continue_with_docker_access
+        ;;
+    resume-install)
+        parse_role_options "$@"
+        protect_existing_role
+        [[ -s "$PROJECT_DIR/config/process.env" ]] || {
+            printf '%s\n' \
+                'Configuration absente. Utilisez ./oculox install au lieu de resume-install.' >&2
+            exit 1
+        }
+        continue_with_docker_access
+        ;;
+    prepare)
+        parse_role_options "$@"
+        prepare_role
+        ;;
+    start)
+        read_state
+        official_start
+        ./oculox status
+        ;;
+    restart)
+        read_state
+        # `docker compose restart` only restarts existing containers and does
+        # not apply changed ports, mounts, environment variables or limits.
+        # Reconcile the rendered configuration first through the official
+        # startup path, then preserve the explicit restart semantics.
+        official_start
+        compose --profile "$PROFILE" restart "$@"
+        ./oculox status
+        ;;
+    stop)
+        read_state
+        compose --profile "$PROFILE" down
+        ;;
+    status)
+        read_state
+        compose --profile "$PROFILE" ps
+        ;;
+    logs)
+        read_state
+        compose --profile "$PROFILE" logs --tail 200 "$@"
+        ;;
+    pull)
+        read_state
+        compose --profile "$PROFILE" pull
+        ;;
+    validate)
+        ./dev/scripts/audit-dev-repository.sh
+        read_state
+        compose --profile "$PROFILE" config --quiet
+        ;;
+    collector-bundle)
+        ./dev/scripts/create-collector-bundle.sh "$@"
+        ;;
+    configure-opensearch-remote)
+        ./dev/scripts/configure-remote-opensearch.py "$@"
+        read_state
+        render_runtime_compose
+        docker compose -f "$RUNTIME_COMPOSE_FILE" --profile "$PROFILE" config --quiet
+        printf '%s\n' 'Configuration OpenSearch distante et Compose d’exécution validés.'
+        ;;
+    cluster)
+        ./dev/scripts/opensearch-cluster/manage-cluster.sh "$@"
+        ;;
+    keycloak)
+        keycloak_command "$@"
+        ;;
+    verify)
+        case "${1:-}" in
+            clients)
+                shift
+                ./dev/tests/opensearch-cluster/validate-client-connectivity.py "$@"
+                ;;
+            ingestion)
+                shift
+                ./dev/tests/opensearch-cluster/validate-ingestion-path.py "$@"
+                ;;
+            failover)
+                shift
+                ./dev/tests/opensearch-cluster/summarize-ingestion-failover.py "$@"
+                ;;
+            *) usage; exit 2 ;;
+        esac
+        ;;
+    *) usage; exit 2 ;;
+esac

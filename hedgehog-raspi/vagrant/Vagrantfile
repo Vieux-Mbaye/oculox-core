@@ -1,0 +1,72 @@
+# Copyright (c) 2026 Battelle Energy Alliance, LLC.  All rights reserved.
+
+# hack: https://github.com/hashicorp/vagrant/issues/8878#issuecomment-345112810
+class VagrantPlugins::ProviderVirtualBox::Action::Network
+  def dhcp_server_matches_config?(dhcp_server, config)
+    true
+  end
+end
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "vagrant-hedgehog-raspi-build"
+  config.vm.box = "bento/debian-13"
+
+  config.vm.network "private_network", type: "dhcp"
+
+  config.vm.synced_folder "../..", "/Malcolm",
+    disabled: false,
+    type: "rsync",
+    rsync__auto: false,
+    rsync__exclude: ["netbox/media/",
+                     "malcolm-iso/malcolm-*.*",
+                     "hedgehog-raspi/raspi_4_*.*"]
+  config.vm.synced_folder '.', '/vagrant', disabled: true
+
+  if Vagrant.has_plugin?("vagrant-vbguest")
+    config.vbguest.auto_update = false
+  end
+
+  config.vm.provider "virtualbox" do |vm|
+    vm.memory = "8192"
+    vm.cpus = 4
+  end
+
+  config.vm.provider "libvirt" do |vm|
+    vm.memory = "8192"
+    vm.cpus = 4
+  end
+
+  config.vm.provider "vmware_desktop" do |vm|
+    vm.memory = "8192"
+    vm.cpus = 4
+  end
+
+  config.vm.provider "vmware_fusion" do |vm|
+    vm.memory = "8192"
+    vm.cpus = 4
+  end
+
+  config.vm.provision "shell", inline: <<-STEP1
+    dpkg-reconfigure debconf -f noninteractive -p critical
+    export DEBIAN_FRONTEND=noninteractive
+    sed -i "s/main/main contrib non-free non-free-firmware/g" /etc/apt/sources.list
+    apt-get -qqy update
+    apt-get -y install \
+      binfmt-support \
+      bmap-tools \
+      ca-certificates \
+      debootstrap \
+      dosfstools \
+      git \
+      kpartx \
+      psmisc \
+      python3 \
+      qemu-user-static \
+      qemu-utils \
+      rsync \
+      time \
+      vmdb2 \
+      zerofree
+  STEP1
+end

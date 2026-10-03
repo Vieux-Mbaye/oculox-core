@@ -1,0 +1,327 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2026 Battelle Energy Alliance, LLC.  All rights reserved.
+
+###################################################################################################
+# Monitor a directory for PCAP files for processing (by moving them from upload/ to processed/)
+#
+# Run the script with --help for options
+###################################################################################################
+
+import argparse
+import glob
+import logging
+import magic
+import os
+import pathlib
+import re
+import shutil
+import signal
+import sys
+import time
+
+import malcolm_utils
+from malcolm_utils import sizeof_fmt, str2bool, remove_suffix, set_logging, get_verbosity_env_var_count
+from pcap_utils import PCAP_MIME_TYPES
+import watch_common
+
+###################################################################################################
+scriptName = os.path.basename(__file__)
+scriptPath = os.path.dirname(os.path.realpath(__file__))
+origPath = os.getcwd()
+shuttingDown = [False]
+
+###################################################################################################
+MINIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES = 24
+try:
+    MAXIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES = int(os.getenv('PCAP_UPLOAD_MAX_FILE_GB', '50')) * 1024 * 1024 * 1024
+except:
+    MAXIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES = 50 * 1024 * 1024 * 1024
+
+
+###################################################################################################
+# handle sigint/sigterm and set a global shutdown variable
+def shutdown_handler(signum, frame):
+    global shuttingDown
+    shuttingDown[0] = True
+
+
+###################################################################################################
+def file_processor(pathname, **kwargs):
+    uid = kwargs.get("uid")
+    gid = kwargs.get("gid")
+    pcapDir = kwargs.get("destination")
+    zeekDir = kwargs.get("zeek")
+    minBytes = kwargs.get("minBytes") or MINIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES
+    maxBytes = kwargs.get("maxBytes") or MAXIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES
+    logger = kwargs.get("logger") or logging
+
+    logger.info(f"{scriptName}:\t👓\t{pathname}")
+
+    if os.path.isfile(pathname):
+        time.sleep(0.1)
+        try:
+            os.chown(pathname, uid, gid)
+
+            # get the file magic mime type
+            fileMime = magic.from_file(pathname, mime=True)
+            fileType = magic.from_file(pathname)
+            fileSize = os.path.getsize(pathname)
+
+            if minBytes <= fileSize <= maxBytes:
+                if os.path.isdir(pcapDir) and (
+                    (fileMime in PCAP_MIME_TYPES) or re.search(r'pcap-?ng', fileType, re.IGNORECASE)
+                ):
+                    # a pcap file to be processed by dropping it into pcapDir
+                    logger.info(f"{scriptName}:\t🖅\t{pathname} [{fileMime}][{fileType}] to {pcapDir}")
+                    shutil.move(pathname, os.path.join(pcapDir, os.path.basename(pathname)))
+
+                elif os.path.isdir(zeekDir) and (
+                    fileMime
+                    in [
+                        'application/gzip',
+                        'application/vnd.rar',
+                        'application/x-7z-compressed',
+                        'application/x-bzip2',
+                        'application/x-cpio',
+                        'application/x-gzip',
+                        'application/x-lzip',
+                        'application/x-lzma',
+                        'application/x-rar',
+                        'application/x-rar-compressed',
+                        'application/x-tar',
+                        'application/x-xz',
+                        'application/zip',
+                        # windows event logs (idaholab/Malcolm#465) will be handled here as well, as they
+                        # may be uploaded either as-is or compressed
+                        'application/x-ms-evtx',
+                    ]
+                ):
+                    # looks like this is a compressed file (or evtx file), we're assuming it's:
+                    #  * a zeek log archive to be processed by filebeat
+                    #  * a windows event log archive to be processed into JSON and then also sent through filebeat
+                    logger.info(f"{scriptName}:\t🖅\t{pathname} [{fileMime}][{fileType}] to {zeekDir}")
+                    shutil.move(pathname, os.path.join(zeekDir, os.path.basename(pathname)))
+
+                else:
+                    # unhandled file type uploaded, delete it
+                    logger.error(
+                        f"{scriptName}:\t🗑\t{pathname} ({sizeof_fmt(fileSize)}, {fileMime}, {fileType}) invalid file type, deleting"
+                    )
+                    os.unlink(pathname)
+            else:
+                # file size not in acceptable range, delete it
+                logger.error(
+                    f"{scriptName}:\t🗑\t{pathname} ({sizeof_fmt(fileSize)}, {fileMime}, {fileType}) unacceptable file size, deleting"
+                )
+                os.unlink(pathname)
+
+        except Exception as genericError:
+            logger.critical(f"{scriptName}:\texception: {genericError}")
+
+
+###################################################################################################
+# main
+def main():
+    global shuttingDown
+
+    parser = argparse.ArgumentParser(
+        description=scriptName,
+        add_help=True,
+        usage='{} <arguments>'.format(scriptName),
+    )
+    parser.add_argument(
+        '--verbose',
+        '-v',
+        action='count',
+        default=get_verbosity_env_var_count("PCAP_PIPELINE_VERBOSITY"),
+        help='Increase verbosity (e.g., -v, -vv, etc.)',
+    )
+    parser.add_argument(
+        '-r',
+        '--recursive-directory',
+        dest='recursiveDir',
+        help="If specified, monitor all directories with this name underneath --directory",
+        metavar='<name>',
+        type=str,
+        required=False,
+    )
+    parser.add_argument(
+        '--recursive',
+        dest='recursiveAll',
+        help="Monitor all directories underneath --directory",
+        metavar='true|false',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=False,
+        required=False,
+    )
+    parser.add_argument(
+        '-p',
+        '--polling',
+        dest='polling',
+        help="Use polling (instead of inotify)",
+        metavar='true|false',
+        type=str2bool,
+        nargs='?',
+        const=True,
+        default=os.getenv('PCAP_PIPELINE_POLLING', False),
+        required=False,
+    )
+    parser.add_argument(
+        '-c',
+        '--closed-sec',
+        dest='assumeClosedSec',
+        help="When polling, assume a file is closed after this many seconds of inactivity",
+        metavar='<seconds>',
+        type=int,
+        default=int(os.getenv('PCAP_PIPELINE_POLLING_ASSUME_CLOSED_SEC', str(watch_common.ASSUME_CLOSED_SEC_DEFAULT))),
+        required=False,
+    )
+    parser.add_argument(
+        '-i',
+        '--in',
+        dest='srcDir',
+        help='Source directory to monitor',
+        metavar='<directory>',
+        type=str,
+        default=os.path.join(
+            remove_suffix(os.getenv('PCAP_PATH', '/pcap'), '/'), os.getenv('PCAP_PATH_UPLOAD_SUBDIR', 'upload')
+        ),
+        required=False,
+    )
+    parser.add_argument(
+        '-o',
+        '--out',
+        dest='dstDir',
+        help='Destination directory',
+        metavar='<directory>',
+        type=str,
+        default=os.path.join(
+            remove_suffix(os.getenv('PCAP_PATH', '/pcap'), '/'), os.getenv('PCAP_PATH_PROCESSED_SUBDIR', 'processed')
+        ),
+        required=False,
+    )
+    parser.add_argument(
+        '-z',
+        '--zeek',
+        dest='zeekDir',
+        help='Zeek upload directory',
+        metavar='<directory>',
+        type=str,
+        default=os.path.join(
+            remove_suffix(os.getenv('ZEEK_PATH', '/zeek'), '/'), os.getenv('ZEEK_PATH_UPLOAD_SUBDIR', 'upload')
+        ),
+        required=False,
+    )
+    parser.add_argument(
+        '--min-bytes',
+        dest='minBytes',
+        help="Minimum size for checked files",
+        metavar='<bytes>',
+        type=int,
+        default=MINIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES,
+        required=False,
+    )
+    parser.add_argument(
+        '--max-bytes',
+        dest='maxBytes',
+        help="Maximum size for checked files, in bytes",
+        metavar='<bytes>',
+        type=int,
+        default=MAXIMUM_CHECKED_FILE_SIZE_DEFAULT_BYTES,
+        required=False,
+    )
+    parser.add_argument(
+        '-u',
+        '--uid',
+        dest='chownUid',
+        help='UID to chown files',
+        metavar='<integer>',
+        type=int,
+        default=int(os.getenv('PUID', os.getenv('DEFAULT_UID', '1000'))),
+        required=False,
+    )
+    parser.add_argument(
+        '-g',
+        '--gid',
+        dest='chownGid',
+        help='UID to chown files',
+        metavar='<integer>',
+        type=int,
+        default=int(os.getenv('PGID', os.getenv('DEFAULT_GID', '1000'))),
+        required=False,
+    )
+    parser.add_argument(
+        '--start-sleep',
+        dest='startSleepSec',
+        help="Sleep for this many seconds before starting",
+        metavar='<seconds>',
+        type=int,
+        default=0,
+        required=False,
+    )
+
+    try:
+        args = parser.parse_args()
+    except SystemExit as e:
+        if e.code == 2:
+            parser.print_help()
+        sys.exit(e.code)
+
+    args.verbose = set_logging(os.getenv("PCAP_PIPELINE_LOGLEVEL", ""), args.verbose, set_traceback_limit=True)
+    logging.debug(os.path.join(scriptPath, scriptName))
+    logging.debug(f"Arguments: {sys.argv[1:]}")
+    logging.debug(f"Arguments: {args}")
+
+    # handle sigint and sigterm for graceful shutdown
+    signal.signal(signal.SIGINT, shutdown_handler)
+    signal.signal(signal.SIGTERM, shutdown_handler)
+
+    # sleep for a bit if requested
+    sleepCount = 0
+    while (not shuttingDown[0]) and (sleepCount < args.startSleepSec):
+        time.sleep(1)
+        sleepCount += 1
+
+    args.dstDir = remove_suffix(args.dstDir, '/')
+    args.srcDir = remove_suffix(args.srcDir, '/')
+    args.zeekDir = remove_suffix(args.zeekDir, '/')
+
+    # if directory to monitor doesn't exist, create it now
+    if not os.path.isdir(args.srcDir):
+        logging.info(f'{scriptName}:\tcreating "{args.srcDir}" to monitor')
+        pathlib.Path(args.srcDir).mkdir(parents=False, exist_ok=True)
+
+    # if recursion was requested, get list of directories to monitor
+    watchDirs = []
+    while len(watchDirs) == 0:
+        if args.recursiveDir is None:
+            watchDirs = [args.srcDir]
+        else:
+            watchDirs = glob.glob(f'{args.srcDir}/**/{args.recursiveDir}', recursive=True)
+
+    watch_common.WatchAndProcessDirectory(
+        watchDirs,
+        args.polling,
+        args.recursiveAll,
+        file_processor,
+        {
+            "logger": logging,
+            "destination": args.dstDir,
+            "zeek": args.zeekDir,
+            "uid": args.chownUid,
+            "gid": args.chownGid,
+            "minBytes": args.minBytes,
+            "maxBytes": args.maxBytes,
+        },
+        args.assumeClosedSec,
+        shuttingDown,
+        logging,
+    )
+
+
+if __name__ == '__main__':
+    main()

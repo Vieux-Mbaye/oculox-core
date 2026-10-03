@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pcap-capture-deployment
+  namespace: malcolm
+  labels:
+    app: pcap-capture
+    role: capture
+spec:
+  selector:
+    matchLabels:
+      app: pcap-capture
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: pcap-capture
+        role: capture
+        workload-group: heavy
+    spec:
+      containers:
+      - name: pcap-capture-container
+        image: ghcr.io/idaholab/malcolm/pcap-capture:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        securityContext:
+          capabilities:
+            add:
+              # IPC_LOCK required for some of the memory optimizations netsniff-ng does
+              - IPC_LOCK
+              # SYS_RESOURCE - for increasing memlock limits
+              - SYS_RESOURCE
+              # SYS_ADMIN - for netsniff-ng to set the disc I/O scheduler policy
+              - SYS_ADMIN
+              # NET_ADMIN and NET_RAW - to turn on promiscuous mode and capture raw packets
+              - NET_ADMIN
+              - NET_RAW
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: pcap-capture-env
+        env:
+          - name: PCAP_CAPTURE_DISABLED
+            value: "true"
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: capture-var-local-catrust-volume
+          - mountPath: "/pcap"
+            name: capture-pcap-volume
+            subPath: "upload"
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: pcap-capture-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/pcap:processed,upload"
+        volumeMounts:
+          - name: capture-pcap-volume
+            mountPath: "/data/pcap"
+      volumes:
+        - name: capture-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: capture-pcap-volume
+          persistentVolumeClaim:
+            claimName: pcap-claim

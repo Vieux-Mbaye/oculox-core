@@ -1,0 +1,169 @@
+{
+  "objects": [
+    {
+      "attributes": {
+        "description": "Linux kernel messages (kmsg), including from Oculox sensors and aggregators",
+        "hits": 0,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
+        },
+        "optionsJSON": "{\"hidePanelTitles\":false,\"useMargins\":true}",
+        "panelsJSON": "[{\"version\":\"2.18.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":41,\"i\":\"91267bbd-52aa-4f2e-88e6-2382f891ecd9\"},\"panelIndex\":\"91267bbd-52aa-4f2e-88e6-2382f891ecd9\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":8,\"y\":0,\"w\":14,\"h\":16,\"i\":\"1c0ec894-1fd1-4a1a-8aa1-730e651ecca8\"},\"panelIndex\":\"1c0ec894-1fd1-4a1a-8aa1-730e651ecca8\",\"embeddableConfig\":{},\"panelRefName\":\"panel_1\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":22,\"y\":0,\"w\":26,\"h\":16,\"i\":\"d395e5d6-8064-4226-b4bd-7c21db0d6cf5\"},\"panelIndex\":\"d395e5d6-8064-4226-b4bd-7c21db0d6cf5\",\"embeddableConfig\":{},\"panelRefName\":\"panel_2\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":8,\"y\":16,\"w\":40,\"h\":25,\"i\":\"4178095b-48cb-4ce8-b79c-eea288285dd5\"},\"panelIndex\":\"4178095b-48cb-4ce8-b79c-eea288285dd5\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"}]",
+        "timeRestore": false,
+        "title": "Linux Kernel Messages",
+        "version": 1
+      },
+      "id": "3768ef70-d819-11ee-820d-dd9fd73a3921",
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+          "name": "panel_0",
+          "type": "visualization"
+        },
+        {
+          "id": "822595a0-d818-11ee-820d-dd9fd73a3921",
+          "name": "panel_1",
+          "type": "visualization"
+        },
+        {
+          "id": "ab235be0-d818-11ee-820d-dd9fd73a3921",
+          "name": "panel_2",
+          "type": "visualization"
+        },
+        {
+          "id": "27ac44c0-d818-11ee-820d-dd9fd73a3921",
+          "name": "panel_3",
+          "type": "search"
+        }
+      ],
+      "type": "dashboard",
+      "updated_at": "2025-01-07T15:52:17.199Z",
+      "version": "WzEwNzAsMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "title": "Navigation",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}"
+      },
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:03.736Z",
+      "version": "WzkyOCwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Linux Kernel Messages by Host",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Linux Kernel Messages by Host\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"host.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Host\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"top_hits\",\"params\":{\"field\":\"MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER\",\"aggregate\":\"concat\",\"size\":1,\"sortField\":\"MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER\",\"sortOrder\":\"desc\",\"customLabel\":\"Last Kernel Message\"},\"schema\":\"metric\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "822595a0-d818-11ee-820d-dd9fd73a3921",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "27ac44c0-d818-11ee-820d-dd9fd73a3921",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:05.763Z",
+      "version": "Wzk0OSwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Linux Kernel Messages over Time",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":true}}",
+        "version": 1,
+        "visState": "{\"title\":\"Linux Kernel Messages over Time\",\"type\":\"histogram\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{\"customLabel\":\"Message Count\"},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"params\":{\"field\":\"MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER\",\"useNormalizedOpenSearchInterval\":true,\"scaleMetricValues\":false,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{},\"customLabel\":\"Messages over Time by Priority\"},\"schema\":\"segment\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"miscbeat.kmsg.priority\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":10,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Priority\"},\"schema\":\"group\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"filter\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Message Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Message Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}"
+      },
+      "id": "ab235be0-d818-11ee-820d-dd9fd73a3921",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "27ac44c0-d818-11ee-820d-dd9fd73a3921",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:05.763Z",
+      "version": "Wzk1MCwxXQ=="
+    },
+    {
+      "attributes": {
+        "columns": [
+          "host.name",
+          "miscbeat.kmsg.sequence",
+          "miscbeat.kmsg.priority",
+          "event.original"
+        ],
+        "description": "",
+        "hits": 0,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.module:kmsg\",\"language\":\"kuery\"},\"highlightAll\":false,\"version\":true,\"aggs\":{\"2\":{\"date_histogram\":{\"field\":\"MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER\",\"fixed_interval\":\"30m\",\"min_doc_count\":1}}},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        },
+        "sort": [],
+        "title": "Linux Kernel Messages",
+        "version": 1
+      },
+      "id": "27ac44c0-d818-11ee-820d-dd9fd73a3921",
+      "migrationVersion": {
+        "search": "7.9.3"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "MALCOLM_OTHER_INDEX_PATTERN_REPLACER",
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern"
+        }
+      ],
+      "type": "search",
+      "updated_at": "2025-01-07T15:10:05.763Z",
+      "version": "Wzk1MSwxXQ=="
+    }
+  ],
+  "version": "2.18.0"
+}

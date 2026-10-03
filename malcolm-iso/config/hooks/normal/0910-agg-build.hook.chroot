@@ -1,0 +1,216 @@
+#!/bin/bash
+
+# tweak some stuff for aide
+chmod a-x /etc/cron.daily/dailyaidecheck
+chattr +i /etc/cron.daily/dailyaidecheck
+mkdir -p /etc/aide/aide.conf.d /var/lib/aide
+touch /var/lib/aide/aide.db
+chmod 600 /var/lib/aide/aide.db
+sed -r -i "s/(Checksums\s*=\s*).*/\1 sha512/" /etc/aide/aide.conf
+cat << 'EOF' >> /etc/aide/aide.conf.d/00_local_excludes
+/etc/at\.allow$ f Full-n-c-m
+/etc/clamav$ d VarDir-n-c-m
+/etc/clamav/.+\.conf$ f VarFile-n-c-m
+/etc/cron\.\w+$ d VarDir-n-c-m
+/etc/cron\.allow$ f Full-n-c-m
+/etc/crontab$ f VarFile-n-c-m
+/etc/group-?$ f Full-n-i
+/etc/gshadow-?$ f Full-n-i
+/etc/hostname$ f VarFile-n-c-m
+/etc/hosts$ f VarFile-n-c-m
+/etc/installer-?$ f Full-n-c-m
+/etc/ntp\.conf$ f VarFile-n-c-m
+/etc/passwd-?$ f Full-n-i
+/etc/rc\d*\.d$ d VarDir-n-c-m
+/etc/rc\d*\.d/.+$ l VarInode
+/etc/shadow-?$ f Full-n-i
+/etc/systemd/system/multi-user\.target\.wants(/|$) d VarDir-n-c-m
+/etc/systemd/system/multi-user\.target\.wants/.+$ l VarInode
+/etc/ufw$ d VarDir-n-c-m
+/etc/ufw/.+\.rules$ f VarFile-n-c-m
+/usr/local/bin$ d VarDirTime-n
+/var/lib/aide$ d VarDirInode-n-c-m
+/var/lib/aide/aide\.db(\.new)?$ f VarFile-n-c-m-i
+/var/lib/samba$ d VarDir-n-c-m
+/var/lib/xfsprogs$ d VarDir-n-c-m
+!/(.+/)?__pycache__(/|$)
+!/capture(/|$)
+!/dev(/|$)
+!/etc/.*\.bak$
+!/etc/aide/.*\.swp$
+!/etc/cron\.d/htpdate$
+!/etc/ld\.so\.cache$
+!/etc/lvm(/|$)
+!/etc/network/interfaces.d(/|$)
+!/etc/NetworkManager/system-connections(/|$)
+!/etc/rc\d*\.d/.*ntp$
+!/etc/systemd/system/multi-user\.target\.wants/ntp.service$
+!/home/[^/]+$
+!/home/[^/]+/\.bash_history$
+!/home/[^/]+/\.cache(/|$)
+!/home/[^/]+/\.config(/|$)
+!/home/[^/]+/\.face$
+!/home/[^/]+/\.gnupg(/|$)
+!/home/[^/]+/\.hushlogin$
+!/home/[^/]+/\.ICEauthority$
+!/home/[^/]+/\.local/share(/|$)
+!/home/[^/]+/\.mozilla(/|$)
+!/home/[^/]+/\.selected_editor$
+!/home/[^/]+/\.sudo_as_admin_successful$
+!/home/[^/]+/\.thumbnails(/|$)
+!/home/[^/]+/\.tmux.conf$
+!/home/[^/]+/\.vimrc$
+!/home/[^/]+/\.Xauthority$
+!/home/[^/]+/\.xsession-errors.*$
+!/home/[^/]+/Desktop(/|$)
+!/home/[^/]+/Documents(/|$)
+!/home/[^/]+/Downloads(/|$)
+!/home/[^/]+/Malcolm(/|$)
+!/home/[^/]+/tmp(/|$)
+!/malcolm(/|$)
+!/malcolm_images\.tar\.gz$
+!/opt/harbianaudit(/|$)
+!/root$
+!/root/\.cache(/|$)
+!/root/\.config(/|$)
+!/root/\.local/share(/|$)
+!/root/tmp(/|$)
+!/run(/|$)
+!/tmp(/|$)
+!/var/backups(/|$)
+!/var/cache(/|$)
+!/var/lib/AccountsService(/|$)
+!/var/lib/apt/daily_lock$
+!/var/lib/apt/lists(/|$)
+!/var/lib/clamav(/|$)
+!/var/lib/colord(/|$)
+!/var/lib/containerd(/|$)
+!/var/lib/dhcpcd(/|$)
+!/var/lib/docker(/|$)
+!/var/lib/dpkg/info(/|$)
+!/var/lib/dpkg/triggers(/|$)
+!/var/lib/lightdm(/|$)
+!/var/lib/logrotate(/|$)
+!/var/lib/NetworkManager(/|$)
+!/var/lib/plymouth(/|$)
+!/var/lib/samba(/|$)
+!/var/lib/sudo/lectured(/|$)
+!/var/lib/systemd/linger(/|$)
+!/var/lib/systemd/timers(/|$)
+!/var/lib/xfsprogs(/|$)
+!/var/log(/|$)
+!/var/mail(/|$)
+!/var/run(/|$)
+!/var/spool(/|$)
+!/var/tmp(/|$)
+EOF
+###
+
+# we'll use cURL to get release information and assets from GitHub using the GitHub API
+GITHUB_API_CURL_ARGS=()
+GITHUB_API_CURL_ARGS+=( -fsSL )
+GITHUB_API_CURL_ARGS+=( -H )
+GITHUB_API_CURL_ARGS+=( "Accept: application/vnd.github.v3+json" )
+[[ -n "$GITHUB_TOKEN" ]] && GITHUB_API_CURL_ARGS+=( -H ) && GITHUB_API_CURL_ARGS+=( "Authorization: token $GITHUB_TOKEN" )
+
+case "$(uname -m)" in
+  x86_64)  BINARCH=amd64 ;;
+  aarch64) BINARCH=arm64 ;;
+  *) echo "Unsupported arch: $(uname -m)" >&2; exit 1 ;;
+esac
+BINARCH=$(uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
+
+# docker-compose symlink
+dpkg -s docker-compose-plugin && \
+    ln -s -r /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose
+
+# yq
+RELEASE_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_linux_${BINARCH}"
+curl "${GITHUB_API_CURL_ARGS[@]}" -o /usr/local/bin/yq "${RELEASE_URL}"
+chmod 755 /usr/local/bin/yq
+
+# croc
+RELEASE_URL="https://api.github.com/repos/schollz/croc/releases/latest"
+[[ "$BINARCH" == amd64 ]] && RELEASE_FILE_REGEX="Linux-64bit\\\.tar\\\.gz$" || RELEASE_FILE_REGEX="Linux-ARM64\\\.tar\\\.gz$"
+cd /usr/local/bin
+curl "${GITHUB_API_CURL_ARGS[@]}" "$(curl "${GITHUB_API_CURL_ARGS[@]}" "$(curl "${GITHUB_API_CURL_ARGS[@]}" "$RELEASE_URL" | jq '.assets_url' | tr -d '"')" | jq ".[] | select(.browser_download_url|test(\"$RELEASE_FILE_REGEX\")) | .browser_download_url" | tr -d '"')" | tar zxvf - croc
+chmod 755 ./croc
+chown root:root ./croc
+###
+
+# just
+JUST_RELEASE_URL="https://api.github.com/repos/casey/just/releases/latest"
+mkdir -p /tmp/just
+cd /tmp
+just_assets_url="$(curl "${GITHUB_API_CURL_ARGS[@]}" "$JUST_RELEASE_URL" | jq '.assets_url' | tr -d '"')"
+just_arch=$([[ "$BINARCH" == amd64 ]] && echo x86_64 || echo aarch64)
+just_tar_url="$(
+  curl "${GITHUB_API_CURL_ARGS[@]}" "$just_assets_url" |
+    jq -r --arg arch "$just_arch" '
+      .[] | select(.browser_download_url | contains($arch + "-unknown-linux-musl.tar.gz"))
+      | .browser_download_url
+    '
+)"
+curl "${GITHUB_API_CURL_ARGS[@]}" "${just_tar_url}" | tar xzf - -C ./just
+mv ./just/just /usr/local/bin/just
+chmod 755 /usr/local/bin/just
+chown root:root /usr/local/bin/just
+rm -rf /tmp/just
+###
+
+# eza
+EZA_RELEASE_URL="https://api.github.com/repos/eza-community/eza/releases/latest"
+mkdir -p /tmp/eza
+cd /tmp
+eza_assets_url="$(curl "${GITHUB_API_CURL_ARGS[@]}" "$EZA_RELEASE_URL" | jq '.assets_url' | tr -d '"')"
+eza_arch=$([[ "$BINARCH" == amd64 ]] && echo x86_64 || echo aarch64)
+eza_pattern=$([[ "$BINARCH" == amd64 ]] && echo '-unknown-linux-musl.tar.gz' || echo '-unknown-linux-gnu_no_libgit.tar.gz')
+eza_tar_url="$(
+  curl "${GITHUB_API_CURL_ARGS[@]}" "$eza_assets_url" |
+    jq -r --arg arch "$eza_arch" --arg pattern "$eza_pattern" '
+      .[] | select(.browser_download_url | contains($arch + $pattern))
+      | .browser_download_url
+    '
+)"
+curl "${GITHUB_API_CURL_ARGS[@]}" "${eza_tar_url}" | tar xzf - -C ./eza
+mv ./eza/eza /usr/local/bin/eza
+chmod 755 /usr/local/bin/eza
+chown root:root /usr/local/bin/eza
+rm -rf /tmp/eza
+###
+
+# terminal font
+mkdir -p /usr/share/fonts/truetype/hack
+cd /usr/share/fonts/truetype/hack
+curl -sSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Hack.tar.xz | tar xfJ -
+chmod 755 /usr/share/fonts/truetype/hack
+chmod 644 /usr/share/fonts/truetype/hack/*
+fc-cache -f -v
+###
+
+# stern
+RELEASE_URL="https://api.github.com/repos/stern/stern/releases/latest"
+[[ "$BINARCH" == amd64 ]] && RELEASE_FILE_REGEX="_linux_amd64\\\.tar\\\.gz$" || RELEASE_FILE_REGEX="_linux_arm64\\\.tar\\\.gz$"
+cd /tmp
+mkdir -p ./stern
+curl "${GITHUB_API_CURL_ARGS[@]}" "$(curl "${GITHUB_API_CURL_ARGS[@]}" "$(curl "${GITHUB_API_CURL_ARGS[@]}" "$RELEASE_URL" | jq '.assets_url' | tr -d '"')" | jq ".[] | select(.browser_download_url|test(\"$RELEASE_FILE_REGEX\")) | .browser_download_url" | tr -d '"')" | tar xzf - -C ./stern
+mv ./stern/stern /usr/local/bin/stern
+chmod 755 /usr/local/bin/stern
+chown root:root /usr/local/bin/stern
+rm -rf /tmp/stern*
+###
+
+# kubectl
+curl -sSL -o /usr/local/bin/kubectl "https://dl.k8s.io/release/$(curl -sSL https://dl.k8s.io/release/stable.txt)/bin/linux/$BINARCH/kubectl"
+chmod 755 /usr/local/bin/kubectl
+chown root:root /usr/local/bin/kubectl
+###
+
+# run kiosk system process information daemon under systemd
+if [ -f /opt/kiosk/kiosk.service ]; then
+  mv /opt/kiosk/kiosk.service /etc/systemd/system/kiosk.service
+  chown root:root /etc/systemd/system/kiosk.service
+  chmod 644 /etc/systemd/system/kiosk.service
+  systemctl daemon-reload
+  systemctl enable kiosk
+fi

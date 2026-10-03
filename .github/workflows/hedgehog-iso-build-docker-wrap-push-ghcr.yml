@@ -1,0 +1,26 @@
+name: hedgehog-iso-build-docker-wrap-push-ghcr
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'malcolm-iso/**'
+      - 'shared/bin/*'
+      - '.trigger_iso_workflow_build'
+      - '.github/workflows/iso-build-push.yml'
+      - '.github/workflows/hedgehog-iso-build-docker-wrap-push-ghcr.yml'
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/iso-build-push.yml
+    permissions:
+      actions: write
+      packages: write
+      contents: read
+      security-events: write
+    with:
+      profile: hedgehog

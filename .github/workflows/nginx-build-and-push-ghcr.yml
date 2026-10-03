@@ -1,0 +1,33 @@
+name: nginx-build-and-push-ghcr
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'nginx/**'
+      - 'Dockerfiles/nginx.Dockerfile'
+      - 'container-health-scripts/nginx.sh'
+      - 'shared/bin/docker-uid-gid-setup.sh'
+      - '.trigger_workflow_build'
+      - '_config.yml'
+      - '_includes/**'
+      - '_layouts/**'
+      - 'docs/**'
+      - 'Gemfile'
+      - 'README.md'
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  docker:
+    uses: ./.github/workflows/docker-build-push-scan.yml
+    permissions:
+      actions: write
+      packages: write
+      contents: read
+      security-events: write
+    with:
+      service: nginx-proxy
+      dockerfile: ./Dockerfiles/nginx.Dockerfile

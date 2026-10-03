@@ -1,0 +1,528 @@
+{
+  "version": "2.5.0",
+  "objects": [
+    {
+      "id": "dd87edd0-796a-11ec-9ce6-b395c1ff58f4",
+      "type": "dashboard",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-04-29T15:49:16.000Z",
+      "version": "Wzk1MiwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary",
+        "hits": 0,
+        "description": "",
+        "panelsJSON": "[{\"version\":\"2.5.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":31,\"i\":\"2\"},\"panelIndex\":\"2\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":8,\"y\":0,\"w\":10,\"h\":31,\"i\":\"fc818c59-8306-4f6c-87c6-2386910c5f65\"},\"panelIndex\":\"fc818c59-8306-4f6c-87c6-2386910c5f65\",\"embeddableConfig\":{\"hidePanelTitles\":false},\"panelRefName\":\"panel_1\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":18,\"y\":0,\"w\":30,\"h\":11,\"i\":\"28e2dbd3-5a7d-4a76-bc34-6b6de8254690\"},\"panelIndex\":\"28e2dbd3-5a7d-4a76-bc34-6b6de8254690\",\"embeddableConfig\":{},\"panelRefName\":\"panel_2\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":18,\"y\":11,\"w\":9,\"h\":18,\"i\":\"a2d62e63-70cd-4835-8cb1-68c84a273f99\"},\"panelIndex\":\"a2d62e63-70cd-4835-8cb1-68c84a273f99\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":27,\"y\":11,\"w\":9,\"h\":18,\"i\":\"5cecf8c4-270e-4376-839e-ffc43feee2a8\"},\"panelIndex\":\"5cecf8c4-270e-4376-839e-ffc43feee2a8\",\"embeddableConfig\":{},\"panelRefName\":\"panel_4\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":36,\"y\":11,\"w\":12,\"h\":30,\"i\":\"e9ef651a-fafc-46d8-a020-e1159a91e9a3\"},\"panelIndex\":\"e9ef651a-fafc-46d8-a020-e1159a91e9a3\",\"embeddableConfig\":{},\"panelRefName\":\"panel_5\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":18,\"y\":29,\"w\":18,\"h\":40,\"i\":\"76010cc4-9cfe-4fc7-95d2-2c68b26c377f\"},\"panelIndex\":\"76010cc4-9cfe-4fc7-95d2-2c68b26c377f\",\"embeddableConfig\":{},\"panelRefName\":\"panel_6\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":0,\"y\":31,\"w\":8,\"h\":18,\"i\":\"844fa8b7-fc4b-4f2f-9ad7-390f0ea501df\"},\"panelIndex\":\"844fa8b7-fc4b-4f2f-9ad7-390f0ea501df\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}},\"panelRefName\":\"panel_7\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":8,\"y\":31,\"w\":10,\"h\":18,\"i\":\"3776f460-c4a9-4dca-82b7-8f7fdff39d4e\"},\"panelIndex\":\"3776f460-c4a9-4dca-82b7-8f7fdff39d4e\",\"embeddableConfig\":{},\"panelRefName\":\"panel_8\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":36,\"y\":41,\"w\":12,\"h\":8,\"i\":\"d6e83d77-8304-443a-8abf-d70a812d8192\"},\"panelIndex\":\"d6e83d77-8304-443a-8abf-d70a812d8192\",\"embeddableConfig\":{},\"panelRefName\":\"panel_9\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":0,\"y\":49,\"w\":18,\"h\":20,\"i\":\"77667538-5271-4f14-90ee-c18fd47014a3\"},\"panelIndex\":\"77667538-5271-4f14-90ee-c18fd47014a3\",\"embeddableConfig\":{},\"panelRefName\":\"panel_10\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":36,\"y\":49,\"w\":12,\"h\":20,\"i\":\"b525948d-4ea2-4e09-b86a-4cfbed09ea95\"},\"panelIndex\":\"b525948d-4ea2-4e09-b86a-4cfbed09ea95\",\"embeddableConfig\":{},\"panelRefName\":\"panel_11\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":0,\"y\":69,\"w\":48,\"h\":30,\"i\":\"f2f374bb-d80c-43d0-baf2-649810c3de6d\"},\"panelIndex\":\"f2f374bb-d80c-43d0-baf2-649810c3de6d\",\"embeddableConfig\":{},\"panelRefName\":\"panel_12\"},{\"version\":\"2.5.0\",\"gridData\":{\"x\":0,\"y\":99,\"w\":48,\"h\":30,\"i\":\"929431a5-fa23-4b30-9ea8-b2ee9517fb76\"},\"panelIndex\":\"929431a5-fa23-4b30-9ea8-b2ee9517fb76\",\"embeddableConfig\":{},\"panelRefName\":\"panel_13\"}]",
+        "optionsJSON": "{\"useMargins\":true}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":\"*\"},\"filter\":[]}"
+        }
+      },
+      "references": [
+        {
+          "name": "panel_0",
+          "type": "visualization",
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3"
+        },
+        {
+          "name": "panel_1",
+          "type": "visualization",
+          "id": "92c65a40-2480-11ed-90af-d572007a83ed"
+        },
+        {
+          "name": "panel_2",
+          "type": "visualization",
+          "id": "d3963c30-796c-11ec-9ce6-b395c1ff58f4"
+        },
+        {
+          "name": "panel_3",
+          "type": "visualization",
+          "id": "8e858040-796e-11ec-9ce6-b395c1ff58f4"
+        },
+        {
+          "name": "panel_4",
+          "type": "visualization",
+          "id": "42113f00-796f-11ec-9ce6-b395c1ff58f4"
+        },
+        {
+          "name": "panel_5",
+          "type": "visualization",
+          "id": "ce63a3d0-796f-11ec-9ce6-b395c1ff58f4"
+        },
+        {
+          "name": "panel_6",
+          "type": "visualization",
+          "id": "78512b80-2481-11ed-90af-d572007a83ed"
+        },
+        {
+          "name": "panel_7",
+          "type": "visualization",
+          "id": "56cceef0-796d-11ec-9ce6-b395c1ff58f4"
+        },
+        {
+          "name": "panel_8",
+          "type": "visualization",
+          "id": "b9478130-796d-11ec-9ce6-b395c1ff58f4"
+        },
+        {
+          "name": "panel_9",
+          "type": "visualization",
+          "id": "2b4fa8f0-2483-11ed-90af-d572007a83ed"
+        },
+        {
+          "name": "panel_10",
+          "type": "visualization",
+          "id": "5cb9eaf0-2482-11ed-90af-d572007a83ed"
+        },
+        {
+          "name": "panel_11",
+          "type": "visualization",
+          "id": "c5848c20-2482-11ed-90af-d572007a83ed"
+        },
+        {
+          "name": "panel_12",
+          "type": "search",
+          "id": "f438fba0-9d90-11ed-b538-252e4eaa9952"
+        },
+        {
+          "name": "panel_13",
+          "type": "search",
+          "id": "2e1ab730-2480-11ed-90af-d572007a83ed"
+        }
+      ],
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      }
+    },
+    {
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:18.367Z",
+      "version": "WzgzOCwxXQ==",
+      "attributes": {
+        "title": "Navigation",
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "92c65a40-2480-11ed-90af-d572007a83ed",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc1NiwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Log Count",
+        "visState": "{\"title\":\"OPCUA Binary - Log Count\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Log Type\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":20,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e1ab730-2480-11ed-90af-d572007a83ed"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "d3963c30-796c-11ec-9ce6-b395c1ff58f4",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc1NywxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Traffic Over Time",
+        "visState": "{\"title\":\"OPCUA Binary - Traffic Over Time\",\"type\":\"histogram\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"params\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"useNormalizedOpenSearchInterval\":true,\"scaleMetricValues\":false,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{},\"customLabel\":\" \"},\"schema\":\"segment\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":25,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Log Type\"},\"schema\":\"group\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"filter\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.provider:zeek AND event.dataset:opcua*\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "8e858040-796e-11ec-9ce6-b395c1ff58f4",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc1OCwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Actions",
+        "visState": "{\"title\":\"OPCUA Binary - Actions\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.action\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Action\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:opcua*\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "42113f00-796f-11ec-9ce6-b395c1ff58f4",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc1OSwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Results",
+        "visState": "{\"title\":\"OPCUA Binary - Results\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.result\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Result\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:opcua*\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "ce63a3d0-796f-11ec-9ce6-b395c1ff58f4",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2MCwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - URLs and URIs",
+        "visState": "{\"title\":\"OPCUA Binary - URLs and URIs\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"url.original\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"URL or URI\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":20,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:opcua*\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "78512b80-2481-11ed-90af-d572007a83ed",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2MywxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - User",
+        "visState": "{\"title\":\"OPCUA Binary - User\",\"type\":\"horizontal_bar\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"related.user\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":25,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"User\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"normal\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false,\"labels\":{},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e1ab730-2480-11ed-90af-d572007a83ed"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "56cceef0-796d-11ec-9ce6-b395c1ff58f4",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2MSwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Source",
+        "visState": "{\"title\":\"OPCUA Binary - Source\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Source IP\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "f438fba0-9d90-11ed-b538-252e4eaa9952"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "b9478130-796d-11ec-9ce6-b395c1ff58f4",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2MiwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Destination",
+        "visState": "{\"title\":\"OPCUA Binary - Destination\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination IP\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.port\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination Port\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "f438fba0-9d90-11ed-b538-252e4eaa9952"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "2b4fa8f0-2483-11ed-90af-d572007a83ed",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2NCwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Password Count",
+        "visState": "{\"title\":\"OPCUA Binary - Password Count\",\"type\":\"metric\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"cardinality\",\"params\":{\"field\":\"related.password\",\"customLabel\":\"Unique Passwords\"},\"schema\":\"metric\"}],\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":60}}}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e1ab730-2480-11ed-90af-d572007a83ed"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "5cb9eaf0-2482-11ed-90af-d572007a83ed",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2NSwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Software",
+        "visState": "{\"title\":\"OPCUA Binary - Software\",\"type\":\"horizontal_bar\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.software.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":10,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Software Name\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"normal\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false,\"labels\":{},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e1ab730-2480-11ed-90af-d572007a83ed"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "c5848c20-2482-11ed-90af-d572007a83ed",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2NiwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Protocol Version",
+        "visState": "{\"title\":\"OPCUA Binary - Protocol Version\",\"type\":\"pie\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.protocol_version\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Protocol Version\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}}}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":true}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e1ab730-2480-11ed-90af-d572007a83ed"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "f438fba0-9d90-11ed-b538-252e4eaa9952",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:49:01.658Z",
+      "version": "Wzk0OSwxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "event.dataset",
+          "source.ip",
+          "destination.ip",
+          "destination.port",
+          "event.action",
+          "event.result",
+          "zeek.opcua_binary.opcua_link_id",
+          "event.id"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"query\":\"event.provider:zeek AND event.dataset:(opcua_binary OR opcua_binary_status_code_detail)\",\"language\":\"lucene\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "2e1ab730-2480-11ed-90af-d572007a83ed",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-01-26T15:31:10.301Z",
+      "version": "Wzc2NywxXQ==",
+      "attributes": {
+        "title": "OPCUA Binary and Related - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "event.dataset",
+          "source.ip",
+          "destination.ip",
+          "destination.port",
+          "event.action",
+          "event.result",
+          "url.original",
+          "event.id"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"kuery\",\"query\":\"event.provider:zeek AND event.dataset:opcua*\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    }
+  ]
+}

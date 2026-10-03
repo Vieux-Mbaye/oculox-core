@@ -1,0 +1,313 @@
+#!/bin/bash
+
+# attempt to set ulimits (as root)
+if [[ "${PUSER_RLIMIT_UNLOCK:-false}" == "true" ]] && command -v ulimit >/dev/null 2>&1; then
+  ulimit -c ${PUSER_RLIMIT_C:-0} >/dev/null 2>&1
+  ulimit -l ${PUSER_RLIMIT_L:-unlimited} >/dev/null 2>&1
+  ulimit -m ${PUSER_RLIMIT_M:-unlimited} >/dev/null 2>&1
+  ulimit -v ${PUSER_RLIMIT_V:-unlimited} >/dev/null 2>&1
+  ulimit -x ${PUSER_RLIMIT_X:-unlimited} >/dev/null 2>&1
+  ulimit -n ${PUSER_RLIMIT_N:-65535} >/dev/null 2>&1
+  ulimit -u ${PUSER_RLIMIT_U:-262144} >/dev/null 2>&1
+fi
+
+set -e
+
+unset ENTRYPOINT_CMD
+unset ENTRYPOINT_ARGS
+[ "$#" -ge 1 ] && ENTRYPOINT_CMD="$1" && [ "$#" -gt 1 ] && shift 1 && ENTRYPOINT_ARGS=( "$@" )
+
+# modify the UID/GID for the default user/group (for example, 1000 -> 1001)
+usermod --non-unique --uid ${PUID:-${DEFAULT_UID}} ${PUSER}
+groupmod --non-unique --gid ${PGID:-${DEFAULT_GID}} ${PGROUP}
+
+# Any directory named with the value of CONFIG_MAP_DIR will have its contents rsync'ed into
+#   the parent directory as the container starts up. This is mostly for convenience for
+#   Kubernetes configmap objects, which, because the directory into which they are
+#   copied is made read-only, doesn't play nicely if you're using it for configuration
+#   files which exist in a directory which may need to do read-write operations on other files.
+#   This works for nested subdirectories, but don't nest CONFIG_MAP_DIR directories
+#   inside of other CONFIG_MAP_DIR directories. More than one CONFIG_MAP_DIR can be specified
+#   in this variable, separated by ';' (for example, "CONFIG_MAP_DIR=configmap;secretmap").
+#
+
+CONFIG_MAP_FIND_PRUNE_ARGS=()
+if [[ -n ${CONFIG_MAP_DIR} ]] && command -v rsync >/dev/null 2>&1; then
+  while read MAP_DIR; do
+
+    find / -type d -name "${MAP_DIR}" -print -o -path /sys -prune -o -path /proc -prune 2>/dev/null | \
+    awk '{print gsub("/","/"), $0}' | sort -n | cut -d' ' -f2- | \
+    while read CMDIR; do
+
+      DSTDIR="$(realpath "${CMDIR}"/../)"
+      rsync --recursive --copy-links \
+            "--usermap=*:${PUID:-${DEFAULT_UID}}" \
+            "--groupmap=*:${PGID:-${DEFAULT_GID}}" \
+            --exclude='..*' --exclude="${MAP_DIR}"/ --exclude=.dockerignore --exclude=.gitignore \
+            "${CMDIR}"/ "${DSTDIR}"/
+
+      # Additionally, files in these directories with _MALDIR_ in the name will be expanded out,
+      #   creating the intermediate paths. For example:
+      #     ./acid_MALDIR_ACID_MALDIR_s7comm_MALDIR_detect_MALDIR_copy.zeek
+      #       will be renamed to
+      #     ./acid/ACID/s7comm/detect/copy.zeek
+      find "${DSTDIR}" -type f -name '*_MALDIR_*' -print -o -path "${CMDIR}" -prune 2>/dev/null | \
+      while read FLATTENED_FILE; do
+        EXPANDED_FILE="$(echo "${FLATTENED_FILE}" | sed 's@_MALDIR_@/@g')"
+        mkdir -p "$(dirname "${EXPANDED_FILE}")" && \
+          mv "${FLATTENED_FILE}" "${EXPANDED_FILE}" || \
+          true
+      done # loop over flattened filenames
+
+        # regarding ownership and permissions:
+        #
+        # I *think* what we want to do here is change the ownership of
+        #   these configmap-copied files to be owned by the user specified by PUID
+        #   (falling back to DEFAULT_UID) and PGID (falling back to DEFAULT_GID).
+        #   The other option would be to preserve the ownership of the source
+        #   fine with --owner --group, but I don't think that's what we want, as
+        #   if we were doing this with a docker bind mount they'd likely have the
+        #   permissions of the original user on the host, anyway, which is
+        #   supposed to match up to PUID/PGID.
+        #
+        # For permissions, rsync says that "existing files retain their existing permissions"
+        #   and "new files get their normal permission bits set to the source file's
+        #   permissions masked with the receiving directory's default permissions"
+        #   (either via umask or ACL) which I think is what we want. The other alternative
+        #   would be to do something like --chmod=D2755,F644
+
+    done # loop over found MAP_DIR directories
+    CONFIG_MAP_FIND_PRUNE_ARGS+=(-o -name "${MAP_DIR}" -prune)
+
+  done < <(echo "${CONFIG_MAP_DIR}" | tr ';' '\n') # loop over ';' separated CONFIG_MAP_DIR values
+fi # check for CONFIG_MAP_DIR and rsync
+
+set +e
+
+# if there are semicolon-separated PUSER_CHOWN entries explicitly specified, chown them first
+if [[ -n ${PUSER_CHOWN} ]]; then
+  IFS=';' read -ra ENTITIES <<< "${PUSER_CHOWN}"
+  for ENTITY in "${ENTITIES[@]}"; do
+    chown -R ${PUSER}:${PGROUP} "${ENTITY}" 2>/dev/null
+  done
+fi
+
+# change user/group ownership of any other files/directories belonging to the original IDs
+if [[ -n ${PUID} ]] && [[ "${PUID}" != "${DEFAULT_UID}" ]]; then
+  find / -path /sys -prune -o -path /proc -prune -o -user ${DEFAULT_UID} -exec chown -f ${PUID} "{}" \; 2>/dev/null
+fi
+if [[ -n ${PGID} ]] && [[ "${PGID}" != "${DEFAULT_GID}" ]]; then
+  find / -path /sys -prune -o -path /proc -prune -o -group ${DEFAULT_GID} -exec chown -f :${PGID} "{}" \; 2>/dev/null
+fi
+
+# If there are subdirectories that need to be created that are explicitly specified, make them here. format of $PUSER_MKDIR is:
+#   required_path:subdirectory_to_mkdir,subdirectory_to_mkdir,subdirectory_to_mkdir
+# Multiple entries can be separated by semicolon
+# Ownership of these directories will be set to PUID/PGID
+#
+# e.g.,
+#   For the entry: /data/zeek-logs:current,upload,extract_files/quarantined,extract_files/preserved
+#   If /data/zeek-logs exists, will mkdir -p /data/zeek-logs /data/zeek-logs/upload /data/zeek-logs/extract_files/quarantined /data/zeek-logs/extract_files/preserved
+if [[ -n ${PUSER_MKDIR} ]]; then
+  IFS=';' read -ra ENTITIES <<< "${PUSER_MKDIR}"
+  for ENTITY in "${ENTITIES[@]}"; do
+    REQ_DIR="$(echo "${ENTITY}" | cut -d: -f1)"
+    if [[ -n ${REQ_DIR} ]] && [[ -d "${REQ_DIR}" ]]; then
+      IFS=',' read -ra MKDIR_DIRS <<< "$(echo "${ENTITY}" | cut -d: -f2-)"
+      for NEW_DIR in "${MKDIR_DIRS[@]}"; do
+        mkdir -p "${REQ_DIR}"/"${NEW_DIR}" 2>/dev/null
+        [[ -n ${PUID} ]] && chown -R -f ${PUID} "${REQ_DIR}$(echo /"${NEW_DIR}" | awk -F/ '{print FS $2}')" 2>/dev/null
+        [[ -n ${PGID} ]] && chown -R -f :${PGID} "${REQ_DIR}$(echo /"${NEW_DIR}" | awk -F/ '{print FS $2}')" 2>/dev/null
+      done
+    fi
+  done
+fi
+
+# If there are files that need to be copied that are explicitly specified, copy them here. format of $PUSER_COPY is:
+#   source_path:destination_path
+# Multiple entries can be separated by semicolon.
+# Ownership of copied files will be set to PUID/PGID
+#
+# e.g.,
+#   For the entry: /source/file.conf:/dest/file.conf;/source/dir:/dest/dir
+#   Will copy /source/file.conf to /dest/file.conf and /source/dir to /dest/dir
+#   and chown both to PUID:PGID
+if [[ -n ${PUSER_COPY} ]]; then
+  IFS=';' read -ra ENTITIES <<< "${PUSER_COPY}"
+  for ENTITY in "${ENTITIES[@]}"; do
+    SRC="$(echo "${ENTITY}" | cut -d: -f1)"
+    DST="$(echo "${ENTITY}" | cut -d: -f2-)"
+    if [[ -n ${SRC} ]] && [[ -e "${SRC}" ]] && [[ -n ${DST} ]]; then
+      # Create destination directory if it doesn't exist
+      mkdir -p "$(dirname "${DST}")" 2>/dev/null
+      cp -r "${SRC}" "${DST}" 2>/dev/null
+      [[ -n ${PUID} ]] && chown -R -f ${PUID} "${DST}" 2>/dev/null
+      [[ -n ${PGID} ]] && chown -R -f :${PGID} "${DST}" 2>/dev/null
+    fi
+  done
+fi
+
+# if there is a trusted CA file or directory specified and openssl is available, handle it
+if [[ -n ${PUSER_CA_TRUST} ]] && command -v openssl >/dev/null 2>&1; then
+  declare -a CA_FILES
+  if [[ -d "${PUSER_CA_TRUST}" ]]; then
+    while read -r -d ''; do
+      CA_FILES+=("$REPLY")
+    done < <(find "${PUSER_CA_TRUST}" -type f -size +31c -print0 "${CONFIG_MAP_FIND_PRUNE_ARGS[@]}" 2>/dev/null)
+  elif [[ -f "${PUSER_CA_TRUST}" ]]; then
+    CA_FILES+=("${PUSER_CA_TRUST}")
+  fi
+  for CA_FILE in "${CA_FILES[@]}"; do
+    CA_NAME_ORIG="$(basename "$CA_FILE")"
+    CA_NAME_CRT="${CA_NAME_ORIG%.*}.crt"
+    DEST_FILE=
+    CONCAT_FILE=
+    HASH_FILE="$(openssl x509 -hash -noout -in "$CA_FILE")".0
+    if command -v update-ca-certificates >/dev/null 2>&1; then
+      if [[ -d /usr/local/share/ca-certificates ]]; then
+        DEST_FILE=/usr/local/share/ca-certificates/"$CA_NAME_CRT"
+      elif [[ -d /usr/share/ca-certificates ]]; then
+        DEST_FILE=/usr/share/ca-certificates/"$CA_NAME_CRT"
+      elif [[ -d /etc/ssl/certs ]]; then
+        DEST_FILE==/etc/ssl/certs/"$HASH_FILE"
+      fi
+    elif command -v update-ca-trust >/dev/null 2>&1; then
+      if [[ -d /usr/share/pki/ca-trust-source/anchors ]]; then
+        DEST_FILE=/usr/share/pki/ca-trust-source/anchors/"$CA_NAME_CRT"
+      elif [[ -d /etc/pki/ca-trust/source/anchors ]]; then
+        DEST_FILE=/etc/pki/ca-trust/source/anchors/"$CA_NAME_CRT"
+      fi
+    else
+      if [[ -d /etc/ssl/certs ]]; then
+        DEST_FILE=/etc/ssl/certs/"$HASH_FILE"
+        CONCAT_FILE=/etc/ssl/certs/ca-certificates.crt
+      fi
+      if [[ -f /etc/ssl/certs/ca-certificates.crt ]]; then
+        CONCAT_FILE=/etc/ssl/certs/ca-certificates.crt
+      elif [[ -f /etc/pki/tls/certs/ca-bundle.crt ]]; then
+        CONCAT_FILE=/etc/pki/tls/certs/ca-bundle.crt
+      elif [[ -f /usr/share/ssl/certs/ca-bundle.crt ]]; then
+        CONCAT_FILE=/usr/share/ssl/certs/ca-bundle.crt
+      elif [[ -f /etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem ]]; then
+        CONCAT_FILE=/etc/pki/ca-trust/extracted/pem/tls-ca-bundle.pem
+      fi
+    fi
+    [[ -n "$DEST_FILE" ]] && ( cp "$CA_FILE" "$DEST_FILE" && chmod 644 "$DEST_FILE" )
+    [[ -n "$CONCAT_FILE" ]] && \
+      ( echo "" >> "$CONCAT_FILE" && \
+        echo "# $CA_NAME_ORIG" >> "$CONCAT_FILE" \
+        && cat "$CA_FILE" >> "$CONCAT_FILE" )
+  done
+  command -v update-ca-certificates >/dev/null 2>&1 && update-ca-certificates >/dev/null 2>&1
+  command -v update-ca-trust >/dev/null 2>&1 && update-ca-trust extract >/dev/null 2>&1
+fi
+
+# determine if we are now dropping privileges to exec ENTRYPOINT_CMD
+if [[ "$PUSER_PRIV_DROP" == "true" ]]; then
+  EXEC_USER="${PUSER}"
+  # Prefer getent, falling back to a manual /etc/passwd read, since getent
+  #   isn't POSIX-guaranteed and this is invoked before we know anything
+  #   about the image we're in.
+  if command -v getent >/dev/null 2>&1; then
+    USER_HOME="$(getent passwd "${PUSER}" | cut -d: -f6)"
+  else
+    USER_HOME="$(awk -F: -v u="${PUSER}" '$1 == u { print $6 }' /etc/passwd 2>/dev/null)"
+  fi
+else
+  EXEC_USER="${USER:-root}"
+  USER_HOME="${HOME:-/root}"
+fi
+
+# Build the inner command that actually applies per-user ulimits and execs the
+#   entrypoint. This runs AS the target user, after privileges have already
+#   been dropped by whichever mechanism below is selected, so it's expressed
+#   as a single string and handed to bash -c rather than a heredoc piped into
+#   an interactive-ish `su` shell (setpriv/gosu/su-exec have no shell of their
+#   own to pipe into; they just exec a command directly).
+read -r -d '' INNER_CMD <<'INNER_EOF' || true
+if [[ "${PUSER_RLIMIT_UNLOCK:-false}" == "true" ]] && command -v ulimit >/dev/null 2>&1; then
+  ulimit -c ${PUSER_RLIMIT_C:-0} >/dev/null 2>&1
+  ulimit -l ${PUSER_RLIMIT_L:-unlimited} >/dev/null 2>&1
+  ulimit -m ${PUSER_RLIMIT_M:-unlimited} >/dev/null 2>&1
+  ulimit -v ${PUSER_RLIMIT_V:-unlimited} >/dev/null 2>&1
+  ulimit -x ${PUSER_RLIMIT_X:-unlimited} >/dev/null 2>&1
+  ulimit -n ${PUSER_RLIMIT_N:-65535} >/dev/null 2>&1
+  ulimit -u ${PUSER_RLIMIT_U:-262144} >/dev/null 2>&1
+fi
+id
+if [[ -n "${ENTRYPOINT_CMD}" ]]; then
+  exec "${ENTRYPOINT_CMD}" __ENTRYPOINT_ARGS_PLACEHOLDER__
+fi
+INNER_EOF
+
+# Drop privileges and exec the entrypoint. Preference order, all of which
+#   exec directly with no intervening shell/session of their own (unlike
+#   `su`, which -- depending on distro -- may open a PAM session that
+#   force-kills its child on SIGTERM instead of forwarding the signal and
+#   waiting, breaking graceful container shutdown):
+#
+#   1. setpriv (util-linux) -- Needs numeric uid/gid (no username lookup)
+#      and explicit supplementary-group initialization via --init-groups
+#      (mutually exclusive with --keep-groups/--clear-groups, so don't
+#      combine it with those).
+#   2. gosu -- purpose-built for exactly this container privilege-drop
+#      pattern; present on some base images.
+#   3. su-exec -- Alpine-native equivalent of gosu.
+#   4. su -- last-resort fallback for any image with none of the above.
+#      `exec`'d so at least non-PAM (e.g. busybox) `su` collapses out of
+#      the process tree; PAM-backed `su` may still exhibit the session-kill
+#      behavior, but this preserves prior behavior for images that reach
+#      this branch.
+#
+# EXEC_UID/EXEC_GID are resolved once here since setpriv needs them numeric.
+#   Prefer getent, falling back to `id`, which is POSIX-required and a safer
+#   universal assumption for any future/forked image that might lack getent.
+if command -v getent >/dev/null 2>&1; then
+  EXEC_UID="$(getent passwd "${EXEC_USER}" | cut -d: -f3)"
+  EXEC_GID="$(getent passwd "${EXEC_USER}" | cut -d: -f4)"
+else
+  EXEC_UID="$(id -u "${EXEC_USER}" 2>/dev/null)"
+  EXEC_GID="$(id -g "${EXEC_USER}" 2>/dev/null)"
+fi
+
+export USER="${EXEC_USER}"
+export HOME="${USER_HOME}"
+export PUSER_RLIMIT_UNLOCK PUSER_RLIMIT_C PUSER_RLIMIT_L PUSER_RLIMIT_M \
+       PUSER_RLIMIT_V PUSER_RLIMIT_X PUSER_RLIMIT_N PUSER_RLIMIT_U \
+       ENTRYPOINT_CMD
+
+# Bash arrays cannot be exported across a process boundary into a separate
+#   `bash -c` child, so serialize ENTRYPOINT_ARGS (if any) directly into the
+#   inner command string using %q, which quotes each argument such that it
+#   re-parses back into the same argument, including embedded spaces/quotes.
+if [[ -n "${ENTRYPOINT_ARGS+x}" ]]; then
+  ENTRYPOINT_ARGS_QUOTED="$(printf '%q ' "${ENTRYPOINT_ARGS[@]}")"
+else
+  ENTRYPOINT_ARGS_QUOTED=""
+fi
+INNER_CMD="${INNER_CMD//__ENTRYPOINT_ARGS_PLACEHOLDER__/${ENTRYPOINT_ARGS_QUOTED}}"
+
+# Some images (notably Alpine's busybox multi-call binary) provide a
+#   `setpriv` that only implements --dump/--nnp/--inh-caps/--ambient-caps --
+#   it has no concept of --reuid/--regid/--init-groups at all. `command -v`
+#   alone can't distinguish this from util-linux's full setpriv, so probe
+#   --help for the flags we actually need before committing to this branch.
+has_full_setpriv() {
+  command -v setpriv >/dev/null 2>&1 || return 1
+  setpriv --help 2>&1 | grep -q -- '--reuid' \
+    && setpriv --help 2>&1 | grep -q -- '--init-groups'
+}
+
+if has_full_setpriv && [[ -n "${EXEC_UID}" ]] && [[ -n "${EXEC_GID}" ]]; then
+  exec setpriv --reuid="${EXEC_UID}" --regid="${EXEC_GID}" --init-groups \
+      /bin/bash -c "${INNER_CMD}"
+
+elif command -v gosu >/dev/null 2>&1; then
+  exec gosu "${EXEC_USER}" /bin/bash -c "${INNER_CMD}"
+
+elif command -v su-exec >/dev/null 2>&1; then
+  exec su-exec "${EXEC_USER}" /bin/bash -c "${INNER_CMD}"
+
+else
+  exec su -s /bin/bash -p "${EXEC_USER}" -c "${INNER_CMD}"
+fi

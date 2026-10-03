@@ -1,0 +1,279 @@
+{
+  "objects": [
+    {
+      "attributes": {
+        "description": "Messages from Systemd's Journald daemon on Linux environments, including Oculox sensors and aggregators",
+        "hits": 0,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
+        },
+        "optionsJSON": "{\"hidePanelTitles\":false,\"useMargins\":true}",
+        "panelsJSON": "[{\"version\":\"2.18.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":37,\"i\":\"27b84693-c9ce-4a89-a43e-534eb4c0c0d0\"},\"panelIndex\":\"27b84693-c9ce-4a89-a43e-534eb4c0c0d0\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":8,\"y\":0,\"w\":11,\"h\":19,\"i\":\"b514b4e8-689b-465e-8335-ca20c20d46fe\"},\"panelIndex\":\"b514b4e8-689b-465e-8335-ca20c20d46fe\",\"embeddableConfig\":{\"vis\":{\"legendOpen\":true}},\"panelRefName\":\"panel_1\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":19,\"y\":0,\"w\":10,\"h\":19,\"i\":\"7a7cfec2-8688-45a7-9790-66b3f0e9fd7e\"},\"panelIndex\":\"7a7cfec2-8688-45a7-9790-66b3f0e9fd7e\",\"embeddableConfig\":{},\"panelRefName\":\"panel_2\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":29,\"y\":0,\"w\":19,\"h\":19,\"i\":\"2143906d-7adb-4de7-8484-2f87c8c98332\"},\"panelIndex\":\"2143906d-7adb-4de7-8484-2f87c8c98332\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":8,\"y\":19,\"w\":21,\"h\":18,\"i\":\"bb4d56fd-b110-4d58-b6aa-e4189bdba918\"},\"panelIndex\":\"bb4d56fd-b110-4d58-b6aa-e4189bdba918\",\"embeddableConfig\":{},\"panelRefName\":\"panel_4\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":29,\"y\":19,\"w\":19,\"h\":18,\"i\":\"4e4780cd-add6-4dbe-95ac-d11afbcd630c\"},\"panelIndex\":\"4e4780cd-add6-4dbe-95ac-d11afbcd630c\",\"embeddableConfig\":{},\"panelRefName\":\"panel_5\"},{\"version\":\"2.18.0\",\"gridData\":{\"x\":0,\"y\":37,\"w\":48,\"h\":32,\"i\":\"77bbae8a-66cd-4e30-9b90-c7ab7c271320\"},\"panelIndex\":\"77bbae8a-66cd-4e30-9b90-c7ab7c271320\",\"embeddableConfig\":{},\"panelRefName\":\"panel_6\"}]",
+        "timeRestore": false,
+        "title": "Journald Logs",
+        "version": 1
+      },
+      "id": "f6600310-9943-11ee-a029-e973f4774355",
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+          "name": "panel_0",
+          "type": "visualization"
+        },
+        {
+          "id": "82e154f0-99e5-11ee-a12e-a134fdba98ea",
+          "name": "panel_1",
+          "type": "visualization"
+        },
+        {
+          "id": "5a3cb5c0-99e6-11ee-a12e-a134fdba98ea",
+          "name": "panel_2",
+          "type": "visualization"
+        },
+        {
+          "id": "02c189b0-99e6-11ee-a12e-a134fdba98ea",
+          "name": "panel_3",
+          "type": "visualization"
+        },
+        {
+          "id": "81e6b660-99e7-11ee-a12e-a134fdba98ea",
+          "name": "panel_4",
+          "type": "visualization"
+        },
+        {
+          "id": "9601eb20-99e6-11ee-a12e-a134fdba98ea",
+          "name": "panel_5",
+          "type": "visualization"
+        },
+        {
+          "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+          "name": "panel_6",
+          "type": "search"
+        }
+      ],
+      "type": "dashboard",
+      "updated_at": "2025-01-07T15:45:40.604Z",
+      "version": "WzEwNjksMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "title": "Navigation",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}"
+      },
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:03.736Z",
+      "version": "WzkyOCwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Journald - Logger",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "version": 1,
+        "visState": "{\"title\":\"Journald - Logger\",\"type\":\"pie\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"log.logger\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":10,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}}}"
+      },
+      "id": "82e154f0-99e5-11ee-a12e-a134fdba98ea",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:17.095Z",
+      "version": "WzEwNDYsMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Journald - Process UID",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":1,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Journald - Process UID\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"miscbeat.systemd.hostname\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Systemd Host\"},\"schema\":\"bucket\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"process.user.id\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Process UID\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "5a3cb5c0-99e6-11ee-a12e-a134fdba98ea",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:17.095Z",
+      "version": "WzEwNDcsMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Journald - Logs by Host Over Time",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Journald - Logs by Host Over Time\",\"type\":\"histogram\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"params\":{\"field\":\"MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER\",\"useNormalizedOpenSearchInterval\":true,\"scaleMetricValues\":false,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{}},\"schema\":\"segment\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"miscbeat.systemd.hostname\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":10,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"Unknown\",\"customLabel\":\"Journald Host\"},\"schema\":\"group\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"filter\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":true,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}"
+      },
+      "id": "02c189b0-99e6-11ee-a12e-a134fdba98ea",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:17.095Z",
+      "version": "WzEwNDgsMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Journald - Systemd Unit",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":3,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Journald - Systemd Unit\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"miscbeat.systemd.systemd_unit\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Systemd Unit\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"miscbeat.systemd.systemd_user_unit\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Systemd User Unit\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"miscbeat.systemd.user_unit\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"User Unit\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "81e6b660-99e7-11ee-a12e-a134fdba98ea",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:17.095Z",
+      "version": "WzEwNDksMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Journald - Process Name",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Journald - Process Name\",\"type\":\"tagcloud\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"process.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":50,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"segment\"}],\"params\":{\"scale\":\"square root\",\"orientation\":\"single\",\"minFontSize\":18,\"maxFontSize\":72,\"showLabel\":false}}"
+      },
+      "id": "9601eb20-99e6-11ee-a12e-a134fdba98ea",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-07T15:10:17.095Z",
+      "version": "WzEwNTAsMV0="
+    },
+    {
+      "attributes": {
+        "columns": [
+          "MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER",
+          "miscbeat.systemd.hostname",
+          "process.name",
+          "process.pid",
+          "process.user.id",
+          "event.original",
+          "miscbeat.systemd.systemd_unit",
+          "miscbeat.systemd.systemd_user_unit",
+          "log.logger"
+        ],
+        "description": "",
+        "hits": 0,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"miscbeat.systemd:*\",\"language\":\"kuery\"},\"highlightAll\":false,\"version\":true,\"aggs\":{\"2\":{\"date_histogram\":{\"field\":\"MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER\",\"calendar_interval\":\"1w\",\"min_doc_count\":1}}},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        },
+        "sort": [],
+        "title": "Journald - Logs",
+        "version": 1
+      },
+      "id": "c79c1e60-9943-11ee-a029-e973f4774355",
+      "migrationVersion": {
+        "search": "7.9.3"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "MALCOLM_OTHER_INDEX_PATTERN_REPLACER",
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern"
+        }
+      ],
+      "type": "search",
+      "updated_at": "2025-01-07T15:10:17.095Z",
+      "version": "WzEwNTEsMV0="
+    }
+  ],
+  "version": "2.18.0"
+}

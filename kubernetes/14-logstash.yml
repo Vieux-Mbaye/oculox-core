@@ -1,0 +1,146 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logstash
+  namespace: malcolm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5044
+      protocol: TCP
+      name: lumberjack
+    - port: 9001
+      protocol: TCP
+      name: supervisord
+    - port: 9600
+      protocol: TCP
+      name: http
+  selector:
+    app: logstash
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash-deployment
+  namespace: malcolm
+  labels:
+    app: logstash
+    role: log-processor
+spec:
+  selector:
+    matchLabels:
+      app: logstash
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: logstash
+        role: log-processor
+        workload-group: heavy
+    spec:
+      containers:
+      - name: logstash-container
+        image: ghcr.io/idaholab/malcolm/logstash-oss:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        securityContext:
+          capabilities:
+            add:
+              # IPC_LOCK - to lock memory, preventing swapping
+              - IPC_LOCK
+              # SYS_RESOURCE - for increasing memlock limits
+              - SYS_RESOURCE
+        ports:
+          - name: lumberjack
+            protocol: TCP
+            containerPort: 5044
+          - name: supervisord
+            protocol: TCP
+            containerPort: 9001
+          - name: http
+            protocol: TCP
+            containerPort: 9600
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: opensearch-env
+          - configMapRef:
+              name: netbox-common-env
+          - configMapRef:
+              name: netbox-env
+          - configMapRef:
+              name: filescan-env
+          - secretRef:
+              name: netbox-secret-env
+          - configMapRef:
+              name: beats-common-env
+          - configMapRef:
+              name: lookup-common-env
+          - configMapRef:
+              name: logstash-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 600
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: logstash-var-local-catrust-volume
+          - mountPath: /var/local/curlrc/secretmap
+            name: logstash-opensearch-curlrc-secret-volume
+          - mountPath: /certs/secretmap
+            name: logstash-certs-secret-volume
+          - mountPath: /etc/configmap
+            name: logstash-maps-volume
+          - name: logstash-config-persist-volume
+            mountPath: /usr/share/logstash/config/persist
+            subPath: "logstash"
+      terminationGracePeriodSeconds: 120
+      initContainers:
+      - name: logstash-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/config:logstash"
+        volumeMounts:
+          - name: logstash-config-persist-volume
+            mountPath: "/data/config"
+      volumes:
+        - name: logstash-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: logstash-opensearch-curlrc-secret-volume
+          secret:
+            secretName: opensearch-curlrc
+        - name: logstash-certs-secret-volume
+          secret:
+            secretName: logstash-certs
+        - name: logstash-maps-volume
+          configMap:
+            name: logstash-maps
+        - name: logstash-config-persist-volume
+          persistentVolumeClaim:
+            claimName: config-claim

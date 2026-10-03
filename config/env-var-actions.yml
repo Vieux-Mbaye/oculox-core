@@ -1,0 +1,318 @@
+renamed_environment_variable_files:
+  # destination_env_file:
+  #   source_env_file
+  postgres:
+    netbox_postgres
+  filescan_secret:
+    zeek_secret
+  valkey:
+    redis
+copied_environment_variables:
+  # destination_env_file:
+  #   source_env_file:
+  #     destination_key:
+  #       source_key:
+  #         "source_value": destination_value
+  arkime_offline:
+    arkime:
+      ARKIME_ALLOW_WISE_GUI_CONFIG:
+        ARKIME_ALLOW_WISE_GUI_CONFIG
+      ARKIME_EXPOSE_WISE_GUI:
+        ARKIME_EXPOSE_WISE_GUI:
+          "false": "true"
+  auth_common:
+    auth_common:
+      NGINX_AUTH_MODE:
+        NGINX_BASIC_AUTH
+  filebeat:
+    filebeat:
+      FILEBEAT_SCANNER_FINGERPRINT_LENGTH:
+        FILEBEAT_SCANNER_FINGERPRINT_LENGTH:
+          "1024": "512"
+  filescan:
+    filescan:
+        FILESCAN_OUTPUT_PATH:
+          FILESCAN_OUTPUT_PATH:
+            ? "/filescan/data/logs/filescan-%(ts)s.txt"
+            : "/filescan/data/logs/filescan-%(ts)s.log"
+    zeek:
+      FILESCAN_HTTP_SERVER_ZIP:
+        EXTRACTED_FILE_HTTP_SERVER_ZIP
+      FILESCAN_HTTP_SERVER_MAGIC:
+        EXTRACTED_FILE_HTTP_SERVER_MAGIC
+      FILESCAN_HTTP_SERVER_ENABLE:
+        EXTRACTED_FILE_HTTP_SERVER_ENABLE
+      FILESCAN_PRUNE_THRESHOLD_MAX_SIZE:
+        EXTRACTED_FILE_PRUNE_THRESHOLD_MAX_SIZE
+      FILESCAN_PRUNE_THRESHOLD_TOTAL_DISK_USAGE_PERCENT:
+        EXTRACTED_FILE_PRUNE_THRESHOLD_TOTAL_DISK_USAGE_PERCENT
+      FILESCAN_PRUNE_INTERVAL_SECONDS:
+        EXTRACTED_FILE_PRUNE_INTERVAL_SECONDS
+      FILESCAN_PRESERVATION:
+        EXTRACTED_FILE_PRESERVATION
+  filescan_secret:
+    filescan_secret:
+      FILESCAN_HTTP_SERVER_KEY:
+        EXTRACTED_FILE_HTTP_SERVER_KEY
+  logstash:
+    logstash:
+      LOGSTASH_NETBOX_ENRICHMENT_DATASETS:
+        LOGSTASH_NETBOX_ENRICHMENT_DATASETS:
+          ? "suricata.alert,zeek.conn,zeek.dhcp,zeek.dns,zeek.known_hosts,zeek.known_services,zeek.ntlm,zeek.notice,zeek.signatures,zeek.software,zeek.weird"
+          : "default"
+          ? "suricata.alert,zeek.conn,zeek.dce_rpc,zeek.dhcp,zeek.dns,zeek.known_hosts,zeek.known_routers,zeek.known_services,zeek.login,zeek.ntlm,zeek.notice,zeek.rdp,zeek.rfb,zeek.signatures,zeek.smb_cmd,zeek.smb_files,zeek.smb_mapping,zeek.software,zeek.ssh,zeek.weird"
+          : "default"
+          ? "filescan.strelka,suricata.alert,zeek.conn,zeek.dce_rpc,zeek.dhcp,zeek.dns,zeek.known_hosts,zeek.known_routers,zeek.known_services,zeek.login,zeek.ntlm,zeek.notice,zeek.rdp,zeek.rfb,zeek.signatures,zeek.smb_cmd,zeek.smb_files,zeek.smb_mapping,zeek.software,zeek.ssh,zeek.weird"
+          : "default"
+
+  netbox:
+    netbox:
+      REMOTE_AUTH_HEADER:
+        REMOTE_AUTH_HEADER:
+          "HTTP_X_REMOTE_AUTH": HTTP_X_FORWARDED_USER
+      REMOTE_AUTH_GROUP_HEADER:
+        REMOTE_AUTH_GROUP_HEADER:
+          "HTTP_X_REMOTE_AUTH_GROUP": HTTP_X_FORWARDED_ROLES
+      REMOTE_AUTH_USER_EMAIL:
+        REMOTE_AUTH_USER_EMAIL:
+          "HTTP_X_REMOTE_AUTH_EMAIL": HTTP_X_FORWARDED_EMAIL
+      REMOTE_AUTH_USER_FIRST_NAME:
+        REMOTE_AUTH_USER_FIRST_NAME:
+          "HTTP_X_REMOTE_AUTH_FIRST_NAME": HTTP_X_FORWARDED_GIVEN_NAME
+      REMOTE_AUTH_USER_LAST_NAME:
+        REMOTE_AUTH_USER_LAST_NAME:
+          "HTTP_X_REMOTE_AUTH_LAST_NAME": HTTP_X_FORWARDED_FAMILY_NAME
+      REMOTE_AUTH_AUTO_CREATE_GROUPS:
+        REMOTE_AUTH_AUTO_CREATE_GROUPS:
+          "True": False
+      REMOTE_AUTH_GROUP_SYNC_ENABLED:
+        REMOTE_AUTH_GROUP_SYNC_ENABLED:
+          "False": True
+      REMOTE_AUTH_DEFAULT_GROUPS:
+        REMOTE_AUTH_DEFAULT_GROUPS:
+          "standard": netbox_read_access
+      REMOTE_AUTH_STAFF_GROUPS:
+        REMOTE_AUTH_STAFF_GROUPS:
+          "administrator": admin
+      REMOTE_AUTH_SUPERUSER_GROUPS:
+        REMOTE_AUTH_SUPERUSER_GROUPS:
+          "administrator": admin
+  netbox_common:
+    netbox_common:
+      NETBOX_MODE:
+        NETBOX_DISABLED:
+          "true": disabled
+          "false": local
+  nginx:
+    auth_common:
+      NGINX_LDAP_TLS_STUNNEL:
+        NGINX_LDAP_TLS_STUNNEL
+      NGINX_LDAP_TLS_STUNNEL_CHECK_HOST:
+        NGINX_LDAP_TLS_STUNNEL_CHECK_HOST
+      NGINX_LDAP_TLS_STUNNEL_CHECK_IP:
+        NGINX_LDAP_TLS_STUNNEL_CHECK_IP
+      NGINX_LDAP_TLS_STUNNEL_VERIFY_LEVEL:
+        NGINX_LDAP_TLS_STUNNEL_VERIFY_LEVEL
+    nginx:
+      NGINX_RESOLVER_IPV4:
+        NGINX_RESOLVER_IPV4_OFF:
+          "true": "false"
+          "false": "true"
+      NGINX_RESOLVER_IPV6:
+        NGINX_RESOLVER_IPV6_OFF:
+          "true": "false"
+          "false": "true"
+  opensearch:
+    opensearch:
+      OPENSEARCH_URL:
+        OPENSEARCH_URL:
+          "http://opensearch:9200": "https://opensearch:9200"
+    arkime:
+      CLUSTER_MAX_SHARDS_PER_NODE:
+        OPENSEARCH_MAX_SHARDS_PER_NODE
+  pipeline:
+    zeek:
+      YARA_CUSTOM_RULES_ONLY:
+        EXTRACTED_FILE_YARA_CUSTOM_ONLY
+      RULES_UPDATE_ENABLED:
+        EXTRACTED_FILE_UPDATE_RULES
+  postgres:
+    netbox:
+      DB_HOST:
+        POSTGRES_HOST
+    postgres:
+      POSTGRES_DB:
+        DB_NAME
+      POSTGRES_USER:
+        DB_USER
+      POSTGRES_PASSWORD:
+        DB_PASSWORD
+      POSTGRES_NETBOX_DB:
+        DB_NAME
+      POSTGRES_NETBOX_USER:
+        DB_USER
+      POSTGRES_NETBOX_PASSWORD:
+        DB_PASSWORD
+      POSTGRES_KEYCLOAK_PASSWORD:
+        DB_PASSWORD
+  valkey:
+    valkey:
+      VALKEY_AUTO_AOF_REWRITE_MIN_SIZE:
+        REDIS_AUTO_AOF_REWRITE_MIN_SIZE
+      VALKEY_CACHE_HOST:
+        REDIS_CACHE_HOST:
+          "redis-cache": valkey-cache
+      VALKEY_CACHE_MAXMEMORY:
+        REDIS_CACHE_MAXMEMORY
+      VALKEY_CACHE_MAXMEMORY_POLICY:
+        REDIS_CACHE_MAXMEMORY_POLICY
+      VALKEY_CACHE_PORT:
+        REDIS_CACHE_PORT
+      VALKEY_FILESCAN_CACHE_DATABASE:
+        REDIS_FILESCAN_CACHE_DATABASE
+      VALKEY_HOST:
+        REDIS_HOST:
+          "redis": valkey
+      VALKEY_MAXMEMORY:
+        REDIS_MAXMEMORY
+      VALKEY_MAXMEMORY_POLICY:
+        REDIS_MAXMEMORY_POLICY
+      VALKEY_NETBOX_CACHE_DATABASE:
+        REDIS_NETBOX_CACHE_DATABASE
+      VALKEY_NETBOX_DATABASE:
+        REDIS_NETBOX_DATABASE
+      VALKEY_PASSWORD:
+        REDIS_PASSWORD
+      VALKEY_PORT:
+        REDIS_PORT
+      VALKEY_STRELKA_COORDINATOR_CACHE_DATABASE:
+        REDIS_STRELKA_COORDINATOR_CACHE_DATABASE
+      VALKEY_STRELKA_GATEKEEPER_CACHE_DATABASE:
+        REDIS_STRELKA_GATEKEEPER_CACHE_DATABASE
+      VALKEY_ZEEK_FILES_DATABASE:
+        REDIS_ZEEK_FILES_DATABASE
+    netbox:
+      REDIS_HOST:
+        REDIS_HOST:
+          "netbox-redis": redis
+      REDIS_CACHE_HOST:
+        REDIS_CACHE_HOST:
+          "netbox-redis-cache": redis-cache
+      REDIS_NETBOX_DATABASE:
+        REDIS_DATABASE
+      REDIS_NETBOX_CACHE_DATABASE:
+        REDIS_CACHE_DATABASE
+    netbox_secret:
+      REDIS_PASSWORD:
+        REDIS_PASSWORD
+removed_environment_variables:
+  # env_file:
+  #   - key1
+  #   - key2
+  arkime:
+    - OPENSEARCH_MAX_SHARDS_PER_NODE
+    - ARKIME_EXPOSE_WISE_GUI
+    - ARKIME_ALLOW_WISE_GUI_CONFIG
+  arkime_live:
+    - VIEWER
+  arkime_offline:
+    - ARKIME_PCAP_PROCESSOR
+    - VIEWER
+    - WISE
+  auth_common:
+    - NGINX_BASIC_AUTH
+    - NGINX_LDAP_TLS_STUNNEL
+    - NGINX_LDAP_TLS_STUNNEL_CHECK_HOST
+    - NGINX_LDAP_TLS_STUNNEL_CHECK_IP
+    - NGINX_LDAP_TLS_STUNNEL_VERIFY_LEVEL
+  lookup_common:
+    - CONNECTION_SECONDS_SEVERITY_THRESHOLD
+  netbox_redis:
+    - REDIS_PASSWORD
+  netbox_common:
+    - NETBOX_REDIS_DISABLED
+    - NETBOX_POSTGRES_DISABLED
+    - NETBOX_CRON
+    - NETBOX_DISABLED
+  netbox_secret:
+    - DB_PASSWORD
+    - DB_USER
+    - REDIS_CACHE_PASSWORD
+    - REDIS_PASSWORD
+  netbox:
+    - DB_HOST
+    - DB_NAME
+    - REDIS_CACHE_HOST
+    - REDIS_HOST
+    - REDIS_CACHE_DATABASE
+    - REDIS_DATABASE
+    - REMOTE_AUTH_STAFF_USERS
+    - REMOTE_AUTH_SUPERUSERS
+  netbox_redis_cache:
+    - REDIS_HOST
+    - REDIS_CACHE_HOST
+    - REDIS_PASSWORD
+  nginx:
+    - NGINX_RESOLVER_IPV4_OFF
+    - NGINX_RESOLVER_IPV6_OFF
+  postgres:
+    - DB_NAME
+    - DB_HOST
+    - DB_USER
+    - DB_PASSWORD
+  suricata_offline:
+    - SURICATA_PCAP_PROCESSOR
+  valkey:
+    - REDIS_AUTO_AOF_REWRITE_MIN_SIZE
+    - REDIS_CACHE_HOST
+    - REDIS_CACHE_MAXMEMORY
+    - REDIS_CACHE_MAXMEMORY_POLICY
+    - REDIS_CACHE_PORT
+    - REDIS_FILESCAN_CACHE_DATABASE
+    - REDIS_HOST
+    - REDIS_MAXMEMORY
+    - REDIS_MAXMEMORY_POLICY
+    - REDIS_NETBOX_CACHE_DATABASE
+    - REDIS_NETBOX_DATABASE
+    - REDIS_PASSWORD
+    - REDIS_PORT
+    - REDIS_STRELKA_COORDINATOR_CACHE_DATABASE
+    - REDIS_STRELKA_GATEKEEPER_CACHE_DATABASE
+    - REDIS_ZEEK_FILES_DATABASE
+  zeek:
+    - CAPA_MAX_REQUESTS
+    - CLAMD_MAX_REQUESTS
+    - EXTRACTED_FILE_CAPA_VERBOSE
+    - EXTRACTED_FILE_ENABLE_CAPA
+    - EXTRACTED_FILE_ENABLE_CLAMAV
+    - EXTRACTED_FILE_ENABLE_VTOT
+    - EXTRACTED_FILE_ENABLE_YARA
+    - EXTRACTED_FILE_HTTP_SERVER_ENABLE
+    - EXTRACTED_FILE_HTTP_SERVER_MAGIC
+    - EXTRACTED_FILE_HTTP_SERVER_RECURSIVE
+    - EXTRACTED_FILE_HTTP_SERVER_RECURSIVE
+    - EXTRACTED_FILE_HTTP_SERVER_ZIP
+    - EXTRACTED_FILE_IGNORE_EXISTING
+    - EXTRACTED_FILE_MIN_BYTES
+    - EXTRACTED_FILE_PIPELINE_VERBOSITY
+    - EXTRACTED_FILE_PRESERVATION
+    - EXTRACTED_FILE_PRUNE_INTERVAL_SECONDS
+    - EXTRACTED_FILE_PRUNE_THRESHOLD_MAX_SIZE
+    - EXTRACTED_FILE_PRUNE_THRESHOLD_TOTAL_DISK_USAGE_PERCENT
+    - EXTRACTED_FILE_WATCHER_POLLING
+    - EXTRACTED_FILE_WATCHER_POLLING_ASSUME_CLOSED_SEC
+    - EXTRACTED_FILE_YARA_CUSTOM_ONLY
+    - VTOT_REQUESTS_PER_MINUTE
+    - YARA_MAX_REQUESTS
+  zeek_offline:
+    - ZEEK_PCAP_PROCESSOR
+  zeek_secret:
+    - VTOT_API2_KEY
+relocated_files:
+  # Files/directories to relocate (relative to Malcolm installation directory)
+  # Only occurs if Malcolm is not running, source exists, and destination does not.
+  # path/to/source: path/to/destination
+  netbox/postgres: postgres
+  netbox/redis: valkey
+  redis: valkey
+  arkime/lua: arkime/parsers

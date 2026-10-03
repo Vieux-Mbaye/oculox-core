@@ -1,0 +1,380 @@
+{
+  "version": "2.8.0",
+  "objects": [
+    {
+      "id": "4e5f106e-c60a-4226-8f64-d534abb912ab",
+      "type": "dashboard",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-04-29T15:49:16.000Z",
+      "version": "Wzk1MiwxXQ==",
+      "attributes": {
+        "title": "SNMP",
+        "hits": 0,
+        "description": "",
+        "panelsJSON": "[{\"version\":\"2.8.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":33,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":16,\"y\":0,\"w\":32,\"h\":14,\"i\":\"3\"},\"panelIndex\":\"3\",\"embeddableConfig\":{\"vis\":{\"legendOpen\":false}},\"panelRefName\":\"panel_1\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":0,\"y\":33,\"w\":10,\"h\":19,\"i\":\"5\"},\"panelIndex\":\"5\",\"embeddableConfig\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"asc\"}},\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}},\"panelRefName\":\"panel_2\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":10,\"y\":33,\"w\":12,\"h\":19,\"i\":\"6\"},\"panelIndex\":\"6\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":20,\"y\":14,\"w\":9,\"h\":19,\"i\":\"9\"},\"panelIndex\":\"9\",\"embeddableConfig\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"asc\"}},\"table\":null,\"vis\":{\"params\":{\"sort\":{\"columnIndex\":0,\"direction\":\"desc\"}}}},\"panelRefName\":\"panel_4\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":8,\"y\":0,\"w\":8,\"h\":14,\"i\":\"13\"},\"panelIndex\":\"13\",\"embeddableConfig\":{},\"panelRefName\":\"panel_5\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":8,\"y\":14,\"w\":12,\"h\":19,\"i\":\"14\"},\"panelIndex\":\"14\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":1,\"direction\":\"desc\"}}}},\"panelRefName\":\"panel_6\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":29,\"y\":14,\"w\":19,\"h\":19,\"i\":\"21d58bff-8812-458a-9c96-ad6bff972ead\"},\"panelIndex\":\"21d58bff-8812-458a-9c96-ad6bff972ead\",\"embeddableConfig\":{},\"panelRefName\":\"panel_7\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":0,\"y\":52,\"w\":48,\"h\":32,\"i\":\"3c17aeed-cffb-4aaf-a3b3-710de42d206c\"},\"panelIndex\":\"3c17aeed-cffb-4aaf-a3b3-710de42d206c\",\"embeddableConfig\":{},\"panelRefName\":\"panel_8\"},{\"version\":\"2.8.0\",\"gridData\":{\"x\":22,\"y\":33,\"w\":26,\"h\":19,\"i\":\"c79c7ba6-abe8-41c6-af4a-809a8b405971\"},\"panelIndex\":\"c79c7ba6-abe8-41c6-af4a-809a8b405971\",\"embeddableConfig\":{},\"panelRefName\":\"panel_9\"}]",
+        "optionsJSON": "{\"useMargins\":true}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"query\":\"*\",\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [
+        {
+          "name": "panel_0",
+          "type": "visualization",
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3"
+        },
+        {
+          "name": "panel_1",
+          "type": "visualization",
+          "id": "96dc7277-2123-4a0d-9311-571a6dd9bb0a"
+        },
+        {
+          "name": "panel_2",
+          "type": "visualization",
+          "id": "272670ef-2b43-45dc-b8ae-c7f2ead10348"
+        },
+        {
+          "name": "panel_3",
+          "type": "visualization",
+          "id": "cf0c69f3-7cc6-4c70-a33a-154e77ca547a"
+        },
+        {
+          "name": "panel_4",
+          "type": "visualization",
+          "id": "f95dd65c-c240-4144-bd27-ff5692843e25"
+        },
+        {
+          "name": "panel_5",
+          "type": "visualization",
+          "id": "AWDHD-LfxQT5EBNmq4iB"
+        },
+        {
+          "name": "panel_6",
+          "type": "visualization",
+          "id": "72341dff-ce1a-4f9c-bf4b-5675409476a1"
+        },
+        {
+          "name": "panel_7",
+          "type": "visualization",
+          "id": "2969b5e0-6c96-11eb-b775-c574dc643cbb"
+        },
+        {
+          "name": "panel_8",
+          "type": "search",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        },
+        {
+          "name": "panel_9",
+          "type": "visualization",
+          "id": "11c1b480-8325-11ee-a28c-7361f03cd201"
+        }
+      ],
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      }
+    },
+    {
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:19:25.240Z",
+      "version": "Wzg1OSwxXQ==",
+      "attributes": {
+        "title": "Navigation",
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "96dc7277-2123-4a0d-9311-571a6dd9bb0a",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM1NCwxXQ==",
+      "attributes": {
+        "visState": "{\"title\":\"SNMP - Log Count Over Time\",\"type\":\"line\",\"params\":{\"grid\":{\"categoryLines\":false,\"style\":{\"color\":\"#eee\"}},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"truncate\":100},\"title\":{\"text\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER per 12 hours\"}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"\"}}],\"seriesParams\":[{\"show\":true,\"mode\":\"normal\",\"type\":\"histogram\",\"drawLinesBetweenPoints\":true,\"showCircles\":true,\"interpolate\":\"linear\",\"lineWidth\":2,\"data\":{\"id\":\"1\",\"label\":\"Count\"},\"valueAxis\":\"ValueAxis-1\"}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"showCircles\":true,\"interpolate\":\"linear\",\"scale\":\"linear\",\"drawLinesBetweenPoints\":true,\"radiusRatio\":9,\"times\":[],\"addTimeMarker\":false,\"defaultYExtents\":false,\"setYExtents\":false},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"schema\":\"segment\",\"params\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"interval\":\"auto\",\"min_doc_count\":1,\"extended_bounds\":{},\"customLabel\":\" \"}}],\"listeners\":{}}",
+        "description": "",
+        "title": "SNMP - Log Count Over Time",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "272670ef-2b43-45dc-b8ae-c7f2ead10348",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM1NSwxXQ==",
+      "attributes": {
+        "visState": "{\"title\":\"SNMP - Source IP Address\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"source.ip\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"IP Address\"}}],\"listeners\":{}}",
+        "description": "",
+        "title": "SNMP - Source IP Address",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "cf0c69f3-7cc6-4c70-a33a-154e77ca547a",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM1NiwxXQ==",
+      "attributes": {
+        "title": "SNMP - Destination IP Address",
+        "visState": "{\"title\":\"SNMP - Destination IP Address\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"showMetricsAtAllLevels\":false,\"percentageCol\":\"\",\"dimensions\":{\"metrics\":[{\"accessor\":1,\"format\":{\"id\":\"number\"},\"params\":{},\"label\":\"Count\",\"aggType\":\"count\"}],\"buckets\":[{\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"label\":\"IP Address\",\"aggType\":\"terms\"}]}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"destination.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"IP Address\"}},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"destination.port\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Port\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":2,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "f95dd65c-c240-4144-bd27-ff5692843e25",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM1NywxXQ==",
+      "attributes": {
+        "visState": "{\"title\":\"SNMP - Session Duration\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.snmp.duration\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Duration\"}}],\"listeners\":{}}",
+        "description": "",
+        "title": "SNMP - Session Duration",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "AWDHD-LfxQT5EBNmq4iB",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM1OCwxXQ==",
+      "attributes": {
+        "title": "SNMP - Log Count",
+        "visState": "{\"title\":\"SNMP - Log Count\",\"type\":\"metric\",\"params\":{\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"type\":\"range\",\"from\":0,\"to\":100}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#FB9E00\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":30}},\"dimensions\":{\"metrics\":[{\"type\":\"vis_dimension\",\"accessor\":1,\"format\":{\"id\":\"number\",\"params\":{}}}],\"bucket\":{\"type\":\"vis_dimension\",\"accessor\":0,\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"drilldown\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}}}},\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{\"customLabel\":\"Version\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"group\",\"params\":{\"field\":\"network.protocol_version\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"SNMP Version\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"defaultColors\":{\"0 - 100\":\"rgb(0,104,55)\"}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "72341dff-ce1a-4f9c-bf4b-5675409476a1",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM1OSwxXQ==",
+      "attributes": {
+        "title": "SNMP - Community String",
+        "visState": "{\"title\":\"SNMP - Community String\",\"type\":\"table\",\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\"},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"schema\":\"metric\",\"params\":{}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"zeek.snmp.community\",\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"size\":100,\"order\":\"desc\",\"orderBy\":\"1\",\"customLabel\":\"Community String\"}}]}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":null,\"direction\":null}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[],\"query\":{\"query\":\"\",\"language\":\"lucene\"}}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "2969b5e0-6c96-11eb-b775-c574dc643cbb",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM2MCwxXQ==",
+      "attributes": {
+        "title": "SNMP - PDU Type",
+        "visState": "{\"title\":\"SNMP - PDU Type\",\"type\":\"horizontal_bar\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.action\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":8,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"PDU Type\"},\"schema\":\"segment\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.protocol_version\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"group\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":75,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"},\"row\":true,\"orderBucketsBySum\":false}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "a7b5dae1-2f35-47c9-91ba-c8e8e66d10c8",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:18:39.742Z",
+      "version": "WzM2MiwxXQ==",
+      "attributes": {
+        "title": "SNMP - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "source.ip",
+          "destination.ip",
+          "destination.port",
+          "zeek.snmp.version",
+          "event.action",
+          "zeek.snmp.community",
+          "event.id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"event.dataset:snmp\",\"analyze_wildcard\":true}},\"language\":\"lucene\"},\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "11c1b480-8325-11ee-a28c-7361f03cd201",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2023-11-14T19:36:13.000Z",
+      "version": "Wzk1MSwxXQ==",
+      "attributes": {
+        "title": "SNMP - Version and PDU Type",
+        "visState": "{\"title\":\"SNMP - Version and PDU Type\",\"type\":\"vega\",\"aggs\":[],\"params\":{\"spec\":\"{\\n  // thanks to:\\n  // - https://www.elastic.co/blog/sankey-visualization-with-vega-in-kibana\\n  // - https://blog.davidvassallo.me/2023/09/08/adding-opensearch-dashboards-kibana-filters-to-vega-visuals/\\n  $schema: https://vega.github.io/schema/vega/v3.0.json\\n  data: [\\n    {\\n      // query ES based on the currently selected time range and filter string\\n      name: rawData\\n      url: {\\n        %context%: true\\n        %timefield%: MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\\n        index: MALCOLM_NETWORK_INDEX_PATTERN_REPLACER\\n        body: {\\n          size: 0\\n          aggs: {\\n            table: {\\n              composite: {\\n                size: 10000\\n                sources: [\\n                  {\\n                    stk1: {\\n                      terms: {field: \\\"network.protocol_version\\\"}\\n                    }\\n                  }\\n                  {\\n                    stk2: {\\n                      terms: {field: \\\"event.action\\\"}\\n                    }\\n                  }\\n                ]\\n              }\\n            }\\n          }\\n        }\\n      }\\n      // From the result, take just the data we are interested in\\n      format: {property: \\\"aggregations.table.buckets\\\"}\\n      // Convert key.stk1 -> stk1 for simpler access below\\n      transform: [\\n        {type: \\\"formula\\\", expr: \\\"datum.key.stk1\\\", as: \\\"stk1\\\"}\\n        {type: \\\"formula\\\", expr: \\\"datum.key.stk2\\\", as: \\\"stk2\\\"}\\n        {type: \\\"formula\\\", expr: \\\"datum.doc_count\\\", as: \\\"size\\\"}\\n      ]\\n    }\\n    {\\n      name: nodes\\n      source: rawData\\n      transform: [\\n        // when a value is selected, filter out unrelated data\\n        {\\n          type: filter\\n          expr: !groupSelector || groupSelector.stk1 == datum.stk1 || groupSelector.stk2 == datum.stk2\\n        }\\n        // Set new key for later lookups - identifies each node\\n        {type: \\\"formula\\\", expr: \\\"datum.stk1+datum.stk2\\\", as: \\\"key\\\"}\\n        // instead of each table row, create two new rows,\\n        // one for the source (stack=stk1) and one for destination node (stack=stk2).\\n        // The values stored in stk1 and stk2 fields is placed into grpId field.\\n        {\\n          type: fold\\n          fields: [\\\"stk1\\\", \\\"stk2\\\"]\\n          as: [\\\"stack\\\", \\\"grpId\\\"]\\n        }\\n        // Create a sortkey, different for stk1 and stk2 stacks.\\n        // Space separator ensures proper sort order in some corner cases.\\n        {\\n          type: formula\\n          expr: datum.stack == 'stk1' ? datum.stk1+' '+datum.stk2 : datum.stk2+' '+datum.stk1\\n          as: sortField\\n        }\\n        // Calculate y0 and y1 positions for stacking nodes one on top of the other,\\n        // independently for each stack, and ensuring they are in the proper order,\\n        // alphabetical from the top (reversed on the y axis)\\n        {\\n          type: stack\\n          groupby: [\\\"stack\\\"]\\n          sort: {field: \\\"sortField\\\", order: \\\"descending\\\"}\\n          field: size\\n        }\\n        // calculate vertical center point for each node, used to draw edges\\n        {type: \\\"formula\\\", expr: \\\"(datum.y0+datum.y1)/2\\\", as: \\\"yc\\\"}\\n      ]\\n    }\\n    {\\n      name: groups\\n      source: nodes\\n      transform: [\\n        // combine all nodes into groups, summing up the doc counts\\n        {\\n          type: aggregate\\n          groupby: [\\\"stack\\\", \\\"grpId\\\"]\\n          fields: [\\\"size\\\"]\\n          ops: [\\\"sum\\\"]\\n          as: [\\\"total\\\"]\\n        }\\n        // re-calculate the stacking y0,y1 values\\n        {\\n          type: stack\\n          groupby: [\\\"stack\\\"]\\n          sort: {field: \\\"grpId\\\", order: \\\"descending\\\"}\\n          field: total\\n        }\\n        // project y0 and y1 values to screen coordinates\\n        // doing it once here instead of doing it several times in marks\\n        {type: \\\"formula\\\", expr: \\\"scale('y', datum.y0)\\\", as: \\\"scaledY0\\\"}\\n        {type: \\\"formula\\\", expr: \\\"scale('y', datum.y1)\\\", as: \\\"scaledY1\\\"}\\n        // boolean flag if the label should be on the right of the stack\\n        {type: \\\"formula\\\", expr: \\\"datum.stack == 'stk1'\\\", as: \\\"rightLabel\\\"}\\n        // Calculate percentage for this value using \\\"y\\\" scale\\n        // domain upper bound, which represents the total\\n        {\\n          type: formula\\n          expr: datum.total/domain('y')[1]\\n          as: percentage\\n        }\\n      ]\\n    }\\n    {\\n      // This is a temp lookup table with all the 'stk2' stack nodes\\n      name: destinationNodes\\n      source: nodes\\n      transform: [\\n        {type: \\\"filter\\\", expr: \\\"datum.stack == 'stk2'\\\"}\\n      ]\\n    }\\n    {\\n      name: edges\\n      source: nodes\\n      transform: [\\n        // we only want nodes from the left stack\\n        {type: \\\"filter\\\", expr: \\\"datum.stack == 'stk1'\\\"}\\n        // find corresponding node from the right stack, keep it as \\\"target\\\"\\n        {\\n          type: lookup\\n          from: destinationNodes\\n          key: key\\n          fields: [\\\"key\\\"]\\n          as: [\\\"target\\\"]\\n        }\\n        // calculate SVG link path between stk1 and stk2 stacks for the node pair\\n        {\\n          type: linkpath\\n          orient: horizontal\\n          shape: diagonal\\n          sourceY: {expr: \\\"scale('y', datum.yc)\\\"}\\n          sourceX: {expr: \\\"scale('x', 'stk1') + bandwidth('x')\\\"}\\n          targetY: {expr: \\\"scale('y', datum.target.yc)\\\"}\\n          targetX: {expr: \\\"scale('x', 'stk2')\\\"}\\n        }\\n        // A little trick to calculate the thickness of the line.\\n        // The value needs to be the same as the hight of the node, but scaling\\n        // size to screen's height gives inversed value because screen's Y\\n        // coordinate goes from the top to the bottom, whereas the graph's Y=0\\n        // is at the bottom. So subtracting scaled doc count from screen height\\n        // (which is the \\\"lower\\\" bound of the \\\"y\\\" scale) gives us the right value\\n        {\\n          type: formula\\n          expr: range('y')[0]-scale('y', datum.size)\\n          as: strokeWidth\\n        }\\n        // Tooltip needs individual link's percentage of all values\\n        {\\n          type: formula\\n          expr: datum.size/domain('y')[1]\\n          as: percentage\\n        }\\n      ]\\n    }\\n  ]\\n  scales: [\\n    {\\n      // calculates horizontal stack positioning\\n      name: x\\n      type: band\\n      range: width\\n      domain: [\\\"stk1\\\", \\\"stk2\\\"]\\n      paddingOuter: 0.05\\n      paddingInner: 0.95\\n    }\\n    {\\n      // this scale goes up as high as the highest y1 value of all nodes\\n      name: y\\n      type: linear\\n      range: height\\n      domain: {data: \\\"nodes\\\", field: \\\"y1\\\"}\\n    }\\n    {\\n      // use rawData to ensure the colors stay the same when clicking.\\n      name: color\\n      type: ordinal\\n      range: category\\n      domain: {data: \\\"rawData\\\", fields: [\\\"stk1\\\", \\\"stk2\\\"]}\\n    }\\n    {\\n      // this scale is used to map internal ids (stk1, stk2) to stack names\\n      name: stackNames\\n      type: ordinal\\n      range: [\\\"SNMP Version\\\", \\\"Action\\\"]\\n      domain: [\\\"stk1\\\", \\\"stk2\\\"]\\n    }\\n  ]\\n  axes: [\\n    {\\n      // x axis should use custom label formatting to print proper stack names\\n      orient: bottom\\n      scale: x\\n      encode: {\\n        labels: {\\n          update: {\\n            text: {scale: \\\"stackNames\\\", field: \\\"value\\\"}\\n          }\\n        }\\n      }\\n    }\\n    {orient: \\\"left\\\", scale: \\\"y\\\"}\\n  ]\\n  marks: [\\n    {\\n      // draw the connecting line between stacks\\n      type: path\\n      name: edgeMark\\n      from: {data: \\\"edges\\\"}\\n      // this prevents some autosizing issues with large strokeWidth for paths\\n      clip: true\\n      encode: {\\n        update: {\\n          // By default use color of the left node, except when showing contributors\\n          // from just one value, in which case use destination color.\\n          stroke: [\\n            {\\n              test: groupSelector && groupSelector.stack=='stk1'\\n              scale: color\\n              field: stk2\\n            }\\n            {scale: \\\"color\\\", field: \\\"stk1\\\"}\\n          ]\\n          strokeWidth: {field: \\\"strokeWidth\\\"}\\n          path: {field: \\\"path\\\"}\\n          // when showing all data, and hovering over a value,\\n          // highlight the contributors for that value\\n          strokeOpacity: {\\n            signal: !groupSelector && (groupHover.stk1 == datum.stk1 || groupHover.stk2 == datum.stk2) ? 0.9 : 0.3\\n          }\\n          // Ensure that the hover-selected edges show on top\\n          zindex: {\\n            signal: !groupSelector && (groupHover.stk1 == datum.stk1 || groupHover.stk2 == datum.stk2) ? 1 : 0\\n          }\\n          // format tooltip string\\n          tooltip: {\\n            signal: datum.stk1 + ' → ' + datum.stk2 + '    ' + format(datum.size, ',.0f') + '   (' + format(datum.percentage, '.1%') + ')'\\n          }\\n        }\\n        // Simple mouseover highlighting of a single line\\n        hover: {\\n          strokeOpacity: {value: 1}\\n        }\\n      }\\n    }\\n    {\\n      // draw stack groups (countries)\\n      type: rect\\n      name: groupMark\\n      from: {data: \\\"groups\\\"}\\n      encode: {\\n        enter: {\\n          fill: {scale: \\\"color\\\", field: \\\"grpId\\\"}\\n          width: {scale: \\\"x\\\", band: 1}\\n        }\\n        update: {\\n          x: {scale: \\\"x\\\", field: \\\"stack\\\"}\\n          y: {field: \\\"scaledY0\\\"}\\n          y2: {field: \\\"scaledY1\\\"}\\n          fillOpacity: {value: 0.6}\\n          tooltip: {\\n            signal: datum.grpId + '   ' + format(datum.total, ',.0f') + '   (' + format(datum.percentage, '.1%') + ')'\\n          }\\n        }\\n        hover: {\\n          fillOpacity: {value: 1}\\n        }\\n      }\\n    }\\n    {\\n      // draw labels on the inner side of the stack\\n      type: text\\n      from: {data: \\\"groups\\\"}\\n      // don't process events for the labels - otherwise line mouseover is unclean\\n      interactive: false\\n      encode: {\\n        update: {\\n          // depending on which stack it is, position x with some padding\\n          x: {\\n            signal: scale('x', datum.stack) + (datum.rightLabel ? bandwidth('x') + 8 : -8)\\n          }\\n          // middle of the group\\n          yc: {signal: \\\"(datum.scaledY0 + datum.scaledY1)/2\\\"}\\n          align: {signal: \\\"datum.rightLabel ? 'left' : 'right'\\\"}\\n          baseline: {value: \\\"middle\\\"}\\n          fontWeight: {value: \\\"bold\\\"}\\n          // only show text label if the group's height is large enough\\n          text: {signal: \\\"abs(datum.scaledY0-datum.scaledY1) > 13 ? datum.grpId : ''\\\"}\\n        }\\n      }\\n    }\\n    {\\n      // Create a \\\"show all\\\" button. Shown only when a value is selected.\\n      type: group\\n      data: [\\n        // We need to make the button show only when groupSelector signal is true.\\n        // Each mark is drawn as many times as there are elements in the backing data.\\n        // Which means that if values list is empty, it will not be drawn.\\n        // Here I create a data source with one empty object, and filter that list\\n        // based on the signal value. This can only be done in a group.\\n        {\\n          name: dataForShowAll\\n          values: [{}]\\n          transform: [{type: \\\"filter\\\", expr: \\\"groupSelector\\\"}]\\n        }\\n      ]\\n      // Set button size and positioning\\n      encode: {\\n        enter: {\\n          xc: {signal: \\\"width/2\\\"}\\n          y: {value: 30}\\n          width: {value: 80}\\n          height: {value: 30}\\n        }\\n      }\\n      marks: [\\n        {\\n          // This group is shown as a button with rounded corners.\\n          type: group\\n          // mark name allows signal capturing\\n          name: groupReset\\n          // Only shows button if dataForShowAll has values.\\n          from: {data: \\\"dataForShowAll\\\"}\\n          encode: {\\n            enter: {\\n              cornerRadius: {value: 6}\\n              fill: {value: \\\"#f5f5f5\\\"}\\n              stroke: {value: \\\"#c1c1c1\\\"}\\n              strokeWidth: {value: 2}\\n              // use parent group's size\\n              height: {\\n                field: {group: \\\"height\\\"}\\n              }\\n              width: {\\n                field: {group: \\\"width\\\"}\\n              }\\n            }\\n            update: {\\n              // groups are transparent by default\\n              opacity: {value: 1}\\n            }\\n            hover: {\\n              opacity: {value: 0.7}\\n            }\\n          }\\n          marks: [\\n            {\\n              type: text\\n              // if true, it will prevent clicking on the button when over text.\\n              interactive: false\\n              encode: {\\n                enter: {\\n                  // center text in the paren group\\n                  xc: {\\n                    field: {group: \\\"width\\\"}\\n                    mult: 0.5\\n                  }\\n                  yc: {\\n                    field: {group: \\\"height\\\"}\\n                    mult: 0.5\\n                    offset: 2\\n                  }\\n                  align: {value: \\\"center\\\"}\\n                  baseline: {value: \\\"middle\\\"}\\n                  fontWeight: {value: \\\"bold\\\"}\\n                  text: {value: \\\"Show All\\\"}\\n                }\\n              }\\n            }\\n          ]\\n        }\\n      ]\\n    }\\n  ]\\n  signals: [\\n    {\\n      // used to highlight data to/from the same value\\n      name: groupHover\\n      value: {}\\n      on: [\\n        {\\n          events: @groupMark:mouseover\\n          update: \\\"{stk1:datum.stack=='stk1' && datum.grpId, stk2:datum.stack=='stk2' && datum.grpId}\\\"\\n        }\\n        {events: \\\"mouseout\\\", update: \\\"{}\\\"}\\n      ]\\n    }\\n    // used to filter only the data related to the selected value\\n    {\\n      name: groupSelector\\n      value: false\\n      on: [\\n        {\\n          // Clicking groupMark sets this signal to the filter values\\n          events: @groupMark:click!\\n          update: \\\"datum.stack=='stk1' ? opensearchDashboardsAddFilter({\\\\\\\"match_phrase\\\\\\\": { \\\\\\\"network.protocol_version\\\\\\\": datum.grpId } }, 'MALCOLM_NETWORK_INDEX_PATTERN_REPLACER') : opensearchDashboardsAddFilter({\\\\\\\"match_phrase\\\\\\\": { \\\\\\\"event.action\\\\\\\": datum.grpId } }, 'MALCOLM_NETWORK_INDEX_PATTERN_REPLACER')\\\"\\n        }\\n        {\\n          // Clicking \\\"show all\\\" button, or double-clicking anywhere resets it\\n          events: [\\n            {type: \\\"click\\\", markname: \\\"groupReset\\\"}\\n            {type: \\\"dblclick\\\"}\\n          ]\\n          update: \\\"false\\\"\\n        }\\n      ]\\n    }\\n  ]\\n}\"}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:snmp\",\"language\":\"kuery\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    }
+  ]
+}

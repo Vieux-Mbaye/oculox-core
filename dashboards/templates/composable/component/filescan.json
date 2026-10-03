@@ -1,0 +1,48 @@
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "filescan": {
+          "properties": {
+            "hits": {
+              "type": "short"
+            },
+            "rules": {
+              "type": "nested",
+              "dynamic": false,
+              "include_in_parent": false,
+              "include_in_root": false,
+              "properties": {
+                "scanner": {
+                  "type": "keyword"
+                },
+                "name": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "tree": {
+              "properties": {
+                "root": {
+                  "type": "keyword"
+                },
+                "node": {
+                  "type": "keyword"
+                },
+                "parent": {
+                  "type": "keyword"
+                },
+                "depth": {
+                  "type": "short"
+                }
+              }
+            }
+          }
+        },
+        "strelka": {
+          "type": "flat_object"
+        }
+      }
+    }
+  }
+}

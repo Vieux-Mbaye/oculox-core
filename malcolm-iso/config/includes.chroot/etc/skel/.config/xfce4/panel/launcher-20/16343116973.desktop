@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Name=Malcolm - Landing Page
+Exec=/usr/bin/firefox https://localhost/
+Terminal=false
+X-MultipleArgs=false
+Type=Application
+Icon=/usr/share/icons/hicolor/64x64/malcolm.png
+Categories=Network;
+StartupWMClass=Firefox
+StartupNotify=true
+X-XFCE-Source=file:///usr/share/applications/malcolm-readme.desktop

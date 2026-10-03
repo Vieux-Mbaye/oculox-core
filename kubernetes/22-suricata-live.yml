@@ -1,0 +1,106 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: suricata-live-deployment
+  namespace: malcolm
+  labels:
+    app: suricata-live
+    role: capture
+spec:
+  selector:
+    matchLabels:
+      app: suricata-live
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: suricata-live
+        role: capture
+        workload-group: heavy
+    spec:
+      containers:
+      - name: suricata-live-container
+        image: ghcr.io/idaholab/malcolm/suricata:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        securityContext:
+          capabilities:
+            add:
+              # IPC_LOCK - to lock memory, preventing swapping
+              - IPC_LOCK
+              # SYS_RESOURCE - for increasing memlock limits
+              - SYS_RESOURCE
+              # NET_ADMIN and NET_RAW - to turn on promiscuous mode and capture raw packets
+              - NET_ADMIN
+              - NET_RAW
+              # SYS_NICE - to set process nice values, real-time scheduling policies, I/O scheduling
+              - SYS_NICE
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: upload-common-env
+          - configMapRef:
+              name: pcap-capture-env
+          - configMapRef:
+              name: suricata-env
+          - configMapRef:
+              name: suricata-live-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: suricata-live-var-local-catrust-volume
+          - mountPath: /var/log/suricata
+            name: suricata-live-suricata-logs-volume
+          - mountPath: "/opt/suricata/rules/configmap"
+            name: suricata-live-custom-rules-volume
+          - mountPath: "/opt/suricata/include-configs/configmap"
+            name: suricata-live-custom-configs-volume
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: suricata-live-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/suricata-logs:live"
+        volumeMounts:
+          - name: suricata-live-suricata-logs-volume
+            mountPath: "/data/suricata-logs"
+      volumes:
+        - name: suricata-live-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: suricata-live-suricata-logs-volume
+          persistentVolumeClaim:
+            claimName: suricata-claim
+        - name: suricata-live-custom-rules-volume
+          configMap:
+            name: suricata-rules
+        - name: suricata-live-custom-configs-volume
+          configMap:
+            name: suricata-configs

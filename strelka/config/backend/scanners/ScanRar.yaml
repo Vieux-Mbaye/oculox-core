@@ -1,0 +1,14 @@
+ScanRar:
+  - positive:
+      flavors:
+        - 'application/x-rar'
+        - 'application/x-rar-compressed'
+        - 'rar_file'
+    priority: 5
+    options:
+      limit: 1000
+      limit_metadata: True
+      size_limit: 250000000
+      crack_pws: False
+      log_pws: True
+      password_file: '/etc/strelka/passwords.dat'

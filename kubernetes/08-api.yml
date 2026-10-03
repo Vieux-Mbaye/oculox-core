@@ -1,0 +1,98 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: malcolm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5000
+      protocol: TCP
+      name: http
+  selector:
+    app: api
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: malcolm
+  labels:
+    app: api
+    role: service
+spec:
+  selector:
+    matchLabels:
+      app: api
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: api
+        role: service
+    spec:
+      containers:
+      - name: api-container
+        image: ghcr.io/idaholab/malcolm/api:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        command: ["/usr/bin/tini"]
+        args: ["--",
+               "/usr/local/bin/docker-uid-gid-setup.sh",
+               "/usr/local/bin/service_check_passthrough.sh",
+               "-s",
+               "api",
+               "gunicorn",
+               "--bind",
+               "0:5000",
+               "manage:app"]
+        ports:
+          - name: http
+            protocol: TCP
+            containerPort: 5000
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: arkime-env
+          - configMapRef:
+              name: upload-common-env
+          - configMapRef:
+              name: auth-common-env
+          - configMapRef:
+              name: dashboards-env
+          - configMapRef:
+              name: netbox-common-env
+          - secretRef:
+              name: netbox-secret-env
+          - secretRef:
+              name: valkey-env
+          - configMapRef:
+              name: opensearch-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: api-var-local-catrust-volume
+          - mountPath: /var/local/curlrc/secretmap
+            name: api-opensearch-curlrc-secret-volume
+      terminationGracePeriodSeconds: 20
+      volumes:
+        - name: api-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: api-opensearch-curlrc-secret-volume
+          secret:
+            secretName: opensearch-curlrc

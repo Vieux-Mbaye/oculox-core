@@ -1,0 +1,38 @@
+server {
+    listen 80 default_server;
+
+    sendfile on;
+    gzip off;
+    client_max_body_size 50G;
+    client_body_buffer_size 4M;
+
+    root /var/www/upload;
+    index index.php index.html;
+    autoindex off;
+
+    # Explicitly block execution from the upload storage directory
+    location ^~ /server/php/files/ {
+        try_files $uri =404;
+        # No fastcgi_pass — static files only
+    }
+
+    # PHP execution only for known entrypoints
+    location ~ ^/server/php/(index|submit)\.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_buffers 16 64k;
+        fastcgi_buffer_size 256k;
+        fastcgi_read_timeout 300s;
+        fastcgi_send_timeout 300s;
+        fastcgi_busy_buffers_size 384k;
+        fastcgi_request_buffering off;
+        fastcgi_pass unix:/run/php/php8.4-fpm.sock;
+    }
+
+    location ~ \.php$ {
+        deny all;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}

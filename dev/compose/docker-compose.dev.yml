@@ -1,0 +1,215 @@
+# Surcharges locales appliquées au docker-compose.yml d'origine.
+# Le service officiel "logstash" reste inchangé. La seconde instance en
+# hérite, puis ne remplace que son identité et sa file persistante.
+services:
+  # L'installateur officiel permet de choisir la politique de redémarrage.
+  # Cette surcharge garantit le comportement attendu par le déploiement Oculox,
+  # y compris après un redémarrage de l'hôte.
+  api:
+    restart: unless-stopped
+
+  arkime:
+    restart: unless-stopped
+
+  arkime-live:
+    restart: unless-stopped
+
+  dashboards:
+    restart: unless-stopped
+    environment:
+      # Dashboards is a Node.js application. This makes the deployment web CA
+      # available for the future HTTPS/OIDC connection to Keycloak.
+      NODE_EXTRA_CA_CERTS: /var/local/ca-trust/oculox-web-ca.crt
+    volumes:
+      # The official entrypoint copies this template to its writable runtime
+      # configuration, then injects the OpenSearch credentials as usual. Keep
+      # it outside /usr/share/opensearch-dashboards/config because the image
+      # owns that directory as a Docker volume.
+      - ./dashboards/opensearch_dashboards.yml:/tmp/oculox/opensearch_dashboards.orig.yml:ro
+      - ./dashboards/scripts/docker_entrypoint.sh:/usr/local/bin/docker_entrypoint.sh:ro
+
+  dashboards-helper:
+    restart: unless-stopped
+    environment:
+      SSL_CERT_FILE: /var/local/ca-trust/oculox-opensearch-ca.crt
+      REQUESTS_CA_BUNDLE: /var/local/ca-trust/oculox-opensearch-ca.crt
+    volumes:
+      # Keep template creation aligned with the dedicated OpenSearch cluster.
+      # The upstream image owns these paths, so bind mounts make the reviewed
+      # Oculox contract effective without rebuilding the vendor image.
+      - ./dashboards/scripts/shared-object-creation.sh:/usr/local/bin/shared-object-creation.sh:ro
+      - ./dashboards/templates/malcolm_beats_template.json:/opt/templates/malcolm_beats_template.json:ro
+      - ./dashboards/scripts/index-refresh.py:/usr/local/bin/index-refresh.py:ro
+      - ./dashboards/dashboards:/opt/dashboards:ro
+
+  filebeat:
+    restart: unless-stopped
+    # The official "Expose Oculox Service Ports" option publishes Filebeat on
+    # host port 5045. Oculox reserves that host port for the second Logstash
+    # Beats endpoint, so remove the official Filebeat publication.
+    ports: !reset []
+    volumes:
+      - ./dev/generated/filebeat/filebeat-logs.yml:/usr/share/filebeat-logs/filebeat-logs.yml:ro
+      - ./dev/generated/filebeat/filebeat-nginx.yml:/usr/share/filebeat-nginx/filebeat-nginx.yml:ro
+      - ./dev/generated/filebeat/filebeat-syslog-tcp.yml:/usr/share/filebeat-syslog-tcp/filebeat-syslog-tcp.yml:ro
+      - ./dev/generated/filebeat/filebeat-syslog-udp.yml:/usr/share/filebeat-syslog-udp/filebeat-syslog-udp.yml:ro
+      - ./dev/generated/filebeat/filebeat-tcp.yml:/usr/share/filebeat-tcp/filebeat-tcp.yml:ro
+      - ./dev/generated/pki/ca.crt:/certs/ca.crt:ro
+      - ./dev/generated/pki/client.crt:/certs/client.crt:ro
+      - ./dev/generated/pki/client.key:/certs/client.key:ro
+
+  filescan:
+    restart: unless-stopped
+    volumes:
+      - ./filescan/scripts/extracted_files_http_server.py:/usr/local/bin/extracted_files_http_server.py:ro
+      - ./dev/branding/icone_logo.png:/opt/assets/favicon.ico:ro
+
+  freq:
+    restart: unless-stopped
+
+  htadmin:
+    restart: unless-stopped
+    volumes:
+      - ./htadmin/src/includes/head.php:/var/www/htadmin/includes/head.php:ro
+      - ./dev/branding/logo_Oculox.png:/var/www/htadmin/logo_Oculox.png:ro
+      - ./dev/branding/icone_logo.png:/var/www/htadmin/icone_logo.png:ro
+      - ./dev/branding/icone_logo.png:/var/www/htadmin/oculox-icon.png:ro
+
+  keycloak:
+    restart: unless-stopped
+    volumes:
+      # Run the reviewed Oculox provisioning code even when the upstream
+      # Keycloak image is used. These mounts never contain runtime secrets.
+      - ./shared/bin/service_check_passthrough.sh:/usr/local/bin/service_check_passthrough.sh:ro
+      - ./keycloak/scripts/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
+      - ./keycloak/scripts/hardening-preflight.sh:/usr/local/bin/hardening-preflight.sh:ro
+      - ./keycloak/scripts/realm-setup.sh:/usr/local/bin/realm-setup.sh:ro
+
+  logstash:
+    restart: unless-stopped
+    ports:
+      - "${OCULOX_LOGSTASH_BIND_IP:-0.0.0.0}:5044:5044/tcp"
+    volumes:
+      - ./dev/config/logstash/input/01_beats_input.conf:/usr/share/logstash/malcolm-pipelines.available/input/01_beats_input.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/beats/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/enrichment/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/filescan/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_input.conf:/usr/share/logstash/malcolm-pipelines.available/input/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_output.conf:/usr/share/logstash/malcolm-pipelines.available/output/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/suricata/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/zeek/00_config.conf:ro
+      - ./dev/generated/pki/ca.crt:/certs/ca.crt:ro
+      - ./dev/generated/pki/server.crt:/certs/server.crt:ro
+      - ./dev/generated/pki/server.key:/certs/server.key:ro
+
+  netbox:
+    restart: unless-stopped
+
+  nginx-proxy:
+    restart: unless-stopped
+    entrypoint:
+      - /sbin/tini
+      - --
+      - /usr/local/bin/docker-uid-gid-setup.sh
+      - /opt/oculox-branding/install-nginx-branding.sh
+    command:
+      - /usr/bin/supervisord
+      - -c
+      - /etc/supervisord.conf
+      - -u
+      - root
+      - -n
+    volumes:
+      - ./dev/branding:/opt/oculox-branding:ro
+      - ./nginx/landingpage:/opt/oculox-landingpage:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/scripts/docker_entrypoint.sh:/usr/local/bin/docker_entrypoint.sh:ro
+      - ./nginx/nginx_envs.conf:/etc/nginx/nginx_envs.conf:ro
+      - ./nginx/nginx_auth_keycloak.conf:/etc/nginx/nginx_auth_keycloak.conf:ro
+      - ./nginx/nginx_auth_keycloak_basic.conf:/etc/nginx/nginx_auth_keycloak_basic.conf:ro
+      - ./nginx/nginx_dashboards_rewrite_dashboards.conf:/etc/nginx/nginx_dashboards_rewrite_dashboards.conf:ro
+      - ./nginx/nginx_dashboards_rewrite_remote_basic.conf:/etc/nginx/nginx_dashboards_rewrite_remote_basic.conf:ro
+      - ./nginx/nginx_dashboards_remote_server.conf:/etc/nginx/conf.d/02_oculox_dashboards_remote.conf:ro
+      - ./nginx/nginx_htadmin_global_replacements.conf:/etc/nginx/nginx_htadmin_global_replacements.conf:ro
+      - ./nginx/nginx_netbox_location.conf:/etc/nginx/nginx_netbox_location.conf:ro
+      - ./nginx/nginx_image_aliases.conf:/etc/nginx/nginx_image_aliases.conf:ro
+
+  opensearch:
+    restart: unless-stopped
+
+  pcap-capture:
+    restart: unless-stopped
+
+  pcap-monitor:
+    restart: unless-stopped
+    environment:
+      # Python/OpenSSL does not automatically scan the mounted ca-trust
+      # directory. Point both standard clients at the remote cluster CA.
+      SSL_CERT_FILE: /var/local/ca-trust/oculox-opensearch-ca.crt
+      REQUESTS_CA_BUNDLE: /var/local/ca-trust/oculox-opensearch-ca.crt
+
+  postgres:
+    restart: unless-stopped
+
+  strelka-backend:
+    restart: unless-stopped
+
+  strelka-frontend:
+    restart: unless-stopped
+
+  strelka-manager:
+    restart: unless-stopped
+
+  suricata:
+    restart: unless-stopped
+
+  suricata-live:
+    restart: unless-stopped
+
+  upload:
+    restart: unless-stopped
+    volumes:
+      - ./file-upload/site/index.html:/var/www/upload/index.html:ro
+      - ./dev/branding/logo_Oculox.png:/var/www/upload/logo_Oculox.png:ro
+      - ./dev/branding/icone_logo.png:/var/www/upload/icone_logo.png:ro
+      - ./dev/branding/icone_logo.png:/var/www/upload/oculox-icon.png:ro
+
+  valkey:
+    restart: unless-stopped
+
+  valkey-cache:
+    restart: unless-stopped
+
+  zeek:
+    restart: unless-stopped
+
+  zeek-live:
+    restart: unless-stopped
+
+  logstash-2:
+    extends:
+      file: docker-compose.yml
+      service: logstash
+    hostname: logstash-2
+    restart: unless-stopped
+    # `extends` also inherits ports published on the first Logstash by the
+    # official installer. Replace that list completely so this instance owns
+    # only the resilient endpoint 5045 -> 5044.
+    ports: !override
+      - "${OCULOX_LOGSTASH_BIND_IP:-0.0.0.0}:5045:5044/tcp"
+    volumes:
+      - logstash-persistent-queue-2:/logstash-persistent-queue
+      - ./dev/config/logstash/input/01_beats_input.conf:/usr/share/logstash/malcolm-pipelines.available/input/01_beats_input.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/beats/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/enrichment/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/filescan/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_input.conf:/usr/share/logstash/malcolm-pipelines.available/input/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_output.conf:/usr/share/logstash/malcolm-pipelines.available/output/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/suricata/00_config.conf:ro
+      - ./dev/config/logstash/pipeline-settings/00_persistent_default.conf:/usr/share/logstash/malcolm-pipelines.available/zeek/00_config.conf:ro
+      - ./dev/generated/pki/ca.crt:/certs/ca.crt:ro
+      - ./dev/generated/pki/server.crt:/certs/server.crt:ro
+      - ./dev/generated/pki/server.key:/certs/server.key:ro
+
+volumes:
+  logstash-persistent-queue-2:

@@ -1,0 +1,700 @@
+{
+  "version": "2.16.0",
+  "objects": [
+    {
+      "id": "677ee170-809e-11ed-8d5b-07069f823b6f",
+      "type": "dashboard",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T22:10:04.425Z",
+      "version": "WzEwMTUsMV0=",
+      "attributes": {
+        "title": "Asset Interaction Analysis",
+        "hits": 0,
+        "description": "",
+        "panelsJSON": "[{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":38,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{},\"panelRefName\":\"panel_0\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":8,\"y\":0,\"w\":40,\"h\":19,\"i\":\"a3985c0b-155d-4dbd-ae17-b620c23bcffd\"},\"panelIndex\":\"a3985c0b-155d-4dbd-ae17-b620c23bcffd\",\"embeddableConfig\":{\"table\":null,\"vis\":{\"params\":{\"sort\":{\"columnIndex\":6,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":4,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_1\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":8,\"y\":19,\"w\":15,\"h\":19,\"i\":\"be8823d0-07d0-4769-a3c3-45160ee47074\"},\"panelIndex\":\"be8823d0-07d0-4769-a3c3-45160ee47074\",\"embeddableConfig\":{},\"panelRefName\":\"panel_2\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":38,\"w\":20,\"h\":26,\"i\":\"3b28bc9b-393b-4cf2-b31c-3510b0994281\"},\"panelIndex\":\"3b28bc9b-393b-4cf2-b31c-3510b0994281\",\"embeddableConfig\":{},\"panelRefName\":\"panel_3\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":23,\"y\":19,\"w\":25,\"h\":19,\"i\":\"6d7baf85-fc04-49be-942e-e61f1fd7f0d0\"},\"panelIndex\":\"6d7baf85-fc04-49be-942e-e61f1fd7f0d0\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":4,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_4\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":20,\"y\":38,\"w\":28,\"h\":19,\"i\":\"64f0e91b-4263-4400-812d-c378cd6d8565\"},\"panelIndex\":\"64f0e91b-4263-4400-812d-c378cd6d8565\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":3,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_5\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":64,\"w\":20,\"h\":28,\"i\":\"2fe74242-3865-4c2e-87b4-ec2580f467eb\"},\"panelIndex\":\"2fe74242-3865-4c2e-87b4-ec2580f467eb\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":0,\"direction\":\"asc\"}}},\"panelRefName\":\"panel_6\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":20,\"y\":57,\"w\":28,\"h\":26,\"i\":\"d7a5cbcd-1907-4d98-8def-0e6ed61cfe51\"},\"panelIndex\":\"d7a5cbcd-1907-4d98-8def-0e6ed61cfe51\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":5,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":5,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_7\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":92,\"w\":20,\"h\":28,\"i\":\"c1614a06-d5e7-4bba-93cc-e8fa63205e11\"},\"panelIndex\":\"c1614a06-d5e7-4bba-93cc-e8fa63205e11\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":0,\"direction\":\"asc\"}}},\"panelRefName\":\"panel_8\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":20,\"y\":83,\"w\":14,\"h\":37,\"i\":\"618fe049-9298-49e7-adf6-31da64a796ad\"},\"panelIndex\":\"618fe049-9298-49e7-adf6-31da64a796ad\",\"embeddableConfig\":{},\"panelRefName\":\"panel_9\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":34,\"y\":83,\"w\":14,\"h\":37,\"i\":\"707927bd-fd2e-48cd-a045-4db49fb90159\"},\"panelIndex\":\"707927bd-fd2e-48cd-a045-4db49fb90159\",\"embeddableConfig\":{},\"panelRefName\":\"panel_10\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":120,\"w\":24,\"h\":22,\"i\":\"3c3e26f4-2485-4f09-a000-2ac61759bbc9\"},\"panelIndex\":\"3c3e26f4-2485-4f09-a000-2ac61759bbc9\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":4,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_11\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":24,\"y\":120,\"w\":24,\"h\":22,\"i\":\"fe600b29-f6af-4d33-b226-26743ced5290\"},\"panelIndex\":\"fe600b29-f6af-4d33-b226-26743ced5290\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":4,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_12\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":142,\"w\":24,\"h\":18,\"i\":\"2abbd1dd-532b-4204-a44d-c2914f47a6fe\"},\"panelIndex\":\"2abbd1dd-532b-4204-a44d-c2914f47a6fe\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":3,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_13\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":24,\"y\":142,\"w\":24,\"h\":18,\"i\":\"9b1cb1de-e704-4de8-9db5-253492ab5557\"},\"panelIndex\":\"9b1cb1de-e704-4de8-9db5-253492ab5557\",\"embeddableConfig\":{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":3,\"direction\":\"desc\"}}},\"panelRefName\":\"panel_14\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":160,\"w\":48,\"h\":33,\"i\":\"e85559bf-0ca0-4218-ac74-cad3c4b2d1c6\"},\"panelIndex\":\"e85559bf-0ca0-4218-ac74-cad3c4b2d1c6\",\"embeddableConfig\":{},\"panelRefName\":\"panel_15\"},{\"version\":\"2.16.0\",\"gridData\":{\"x\":0,\"y\":193,\"w\":48,\"h\":31,\"i\":\"aba4ed3d-64e5-435d-8b4d-80614ac32fca\"},\"panelIndex\":\"aba4ed3d-64e5-435d-8b4d-80614ac32fca\",\"embeddableConfig\":{},\"panelRefName\":\"panel_16\"}]",
+        "optionsJSON": "{\"useMargins\":true}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":\"*\"},\"filter\":[]}"
+        }
+      },
+      "references": [
+        {
+          "name": "panel_0",
+          "type": "visualization",
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3"
+        },
+        {
+          "name": "panel_1",
+          "type": "visualization",
+          "id": "9978a830-821c-11ed-9877-cfe49c9ac04f"
+        },
+        {
+          "name": "panel_2",
+          "type": "visualization",
+          "id": "0beea7f0-28e0-11ef-a577-459f54b684e5"
+        },
+        {
+          "name": "panel_3",
+          "type": "visualization",
+          "id": "3d477aa0-8324-11ee-a28c-7361f03cd201"
+        },
+        {
+          "name": "panel_4",
+          "type": "visualization",
+          "id": "34fb58a0-9787-11ed-a26e-595ac55a6057"
+        },
+        {
+          "name": "panel_5",
+          "type": "visualization",
+          "id": "1d4da4b0-8247-11ed-978d-3910915d0e0c"
+        },
+        {
+          "name": "panel_6",
+          "type": "visualization",
+          "id": "ac1687d0-8183-11ed-8ccb-af218b39580f"
+        },
+        {
+          "name": "panel_7",
+          "type": "visualization",
+          "id": "b8d19d20-8246-11ed-978d-3910915d0e0c"
+        },
+        {
+          "name": "panel_8",
+          "type": "visualization",
+          "id": "f9664e00-821c-11ed-9877-cfe49c9ac04f"
+        },
+        {
+          "name": "panel_9",
+          "type": "visualization",
+          "id": "467db3b0-8185-11ed-8ccb-af218b39580f"
+        },
+        {
+          "name": "panel_10",
+          "type": "visualization",
+          "id": "637b1e80-8185-11ed-8ccb-af218b39580f"
+        },
+        {
+          "name": "panel_11",
+          "type": "visualization",
+          "id": "e40049c0-821d-11ed-9877-cfe49c9ac04f"
+        },
+        {
+          "name": "panel_12",
+          "type": "visualization",
+          "id": "f0167720-821d-11ed-9877-cfe49c9ac04f"
+        },
+        {
+          "name": "panel_13",
+          "type": "visualization",
+          "id": "20a4ad80-8acf-11ed-95fa-1ba69c999d66"
+        },
+        {
+          "name": "panel_14",
+          "type": "visualization",
+          "id": "5e0b84f0-8acf-11ed-95fa-1ba69c999d66"
+        },
+        {
+          "name": "panel_15",
+          "type": "search",
+          "id": "2e27c5e0-809e-11ed-8d5b-07069f823b6f"
+        },
+        {
+          "name": "panel_16",
+          "type": "search",
+          "id": "8d302e10-9b74-11ed-a51c-3fd00aab0ddc"
+        }
+      ],
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      }
+    },
+    {
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:57:29.068Z",
+      "version": "Wzg4NywxXQ==",
+      "attributes": {
+        "title": "Navigation",
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "9978a830-821c-11ed-9877-cfe49c9ac04f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyMywxXQ==",
+      "attributes": {
+        "title": "Traffic by Network Segment",
+        "visState": "{\"title\":\"Traffic by Network Segment\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{\"customLabel\":\"Log Count\"},\"schema\":\"metric\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"related.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Site\"},\"schema\":\"bucket\"},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.direction\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"unknown\",\"customLabel\":\"Direction\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.segment.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Source Segment\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.segment.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Destination Segment\"},\"schema\":\"bucket\"},{\"id\":\"7\",\"enabled\":true,\"type\":\"sum\",\"params\":{\"field\":\"network.packets\",\"customLabel\":\"Total Packets\"},\"schema\":\"metric\"},{\"id\":\"8\",\"enabled\":true,\"type\":\"sum\",\"params\":{\"field\":\"network.bytes\",\"customLabel\":\"Total Bytes\"},\"schema\":\"metric\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":6,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":6,\"direction\":\"desc\"}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"source.segment.id:* OR destination.segment.id:*\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "cde50940-5b52-11ef-b245-313a0ac785d6"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "0beea7f0-28e0-11ef-a577-459f54b684e5",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyNCwxXQ==",
+      "attributes": {
+        "title": "Network Site",
+        "visState": "{\"title\":\"Network Site\",\"type\":\"pie\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"related.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":10,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Unknown\",\"customLabel\":\"Site\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":false,\"last_level\":true,\"truncate\":100}}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "3d477aa0-8324-11ee-a28c-7361f03cd201",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyNSwxXQ==",
+      "attributes": {
+        "title": "Cross Segment Traffic",
+        "visState": "{\"title\":\"Cross Segment Traffic\",\"type\":\"vega\",\"aggs\":[],\"params\":{\"spec\":\"{\\n  // thanks to:\\n  // - https://www.elastic.co/blog/sankey-visualization-with-vega-in-kibana\\n  // - https://blog.davidvassallo.me/2023/09/08/adding-opensearch-dashboards-kibana-filters-to-vega-visuals/\\n  $schema: https://vega.github.io/schema/vega/v3.0.json\\n  data: [\\n    {\\n      // query ES based on the currently selected time range and filter string\\n      name: rawData\\n      url: {\\n        %context%: true\\n        %timefield%: MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\\n        index: MALCOLM_NETWORK_INDEX_PATTERN_REPLACER\\n        body: {\\n          size: 0\\n          aggs: {\\n            table: {\\n              composite: {\\n                size: 10000\\n                sources: [\\n                  {\\n                    stk1: {\\n                      terms: {field: \\\"source.segment.name\\\"}\\n                    }\\n                  }\\n                  {\\n                    stk2: {\\n                      terms: {field: \\\"destination.segment.name\\\"}\\n                    }\\n                  }\\n                ]\\n              }\\n            }\\n          }\\n        }\\n      }\\n      // From the result, take just the data we are interested in\\n      format: {property: \\\"aggregations.table.buckets\\\"}\\n      // Convert key.stk1 -> stk1 for simpler access below\\n      transform: [\\n        {type: \\\"formula\\\", expr: \\\"datum.key.stk1\\\", as: \\\"stk1\\\"}\\n        {type: \\\"formula\\\", expr: \\\"datum.key.stk2\\\", as: \\\"stk2\\\"}\\n        {type: \\\"formula\\\", expr: \\\"datum.doc_count\\\", as: \\\"size\\\"}\\n      ]\\n    }\\n    {\\n      name: nodes\\n      source: rawData\\n      transform: [\\n        // when a value is selected, filter out unrelated data\\n        {\\n          type: filter\\n          expr: !groupSelector || groupSelector.stk1 == datum.stk1 || groupSelector.stk2 == datum.stk2\\n        }\\n        // Set new key for later lookups - identifies each node\\n        {type: \\\"formula\\\", expr: \\\"datum.stk1+datum.stk2\\\", as: \\\"key\\\"}\\n        // instead of each table row, create two new rows,\\n        // one for the source (stack=stk1) and one for destination node (stack=stk2).\\n        // The values stored in stk1 and stk2 fields is placed into grpId field.\\n        {\\n          type: fold\\n          fields: [\\\"stk1\\\", \\\"stk2\\\"]\\n          as: [\\\"stack\\\", \\\"grpId\\\"]\\n        }\\n        // Create a sortkey, different for stk1 and stk2 stacks.\\n        // Space separator ensures proper sort order in some corner cases.\\n        {\\n          type: formula\\n          expr: datum.stack == 'stk1' ? datum.stk1+' '+datum.stk2 : datum.stk2+' '+datum.stk1\\n          as: sortField\\n        }\\n        // Calculate y0 and y1 positions for stacking nodes one on top of the other,\\n        // independently for each stack, and ensuring they are in the proper order,\\n        // alphabetical from the top (reversed on the y axis)\\n        {\\n          type: stack\\n          groupby: [\\\"stack\\\"]\\n          sort: {field: \\\"sortField\\\", order: \\\"descending\\\"}\\n          field: size\\n        }\\n        // calculate vertical center point for each node, used to draw edges\\n        {type: \\\"formula\\\", expr: \\\"(datum.y0+datum.y1)/2\\\", as: \\\"yc\\\"}\\n      ]\\n    }\\n    {\\n      name: groups\\n      source: nodes\\n      transform: [\\n        // combine all nodes into groups, summing up the doc counts\\n        {\\n          type: aggregate\\n          groupby: [\\\"stack\\\", \\\"grpId\\\"]\\n          fields: [\\\"size\\\"]\\n          ops: [\\\"sum\\\"]\\n          as: [\\\"total\\\"]\\n        }\\n        // re-calculate the stacking y0,y1 values\\n        {\\n          type: stack\\n          groupby: [\\\"stack\\\"]\\n          sort: {field: \\\"grpId\\\", order: \\\"descending\\\"}\\n          field: total\\n        }\\n        // project y0 and y1 values to screen coordinates\\n        // doing it once here instead of doing it several times in marks\\n        {type: \\\"formula\\\", expr: \\\"scale('y', datum.y0)\\\", as: \\\"scaledY0\\\"}\\n        {type: \\\"formula\\\", expr: \\\"scale('y', datum.y1)\\\", as: \\\"scaledY1\\\"}\\n        // boolean flag if the label should be on the right of the stack\\n        {type: \\\"formula\\\", expr: \\\"datum.stack == 'stk1'\\\", as: \\\"rightLabel\\\"}\\n        // Calculate percentage for this value using \\\"y\\\" scale\\n        // domain upper bound, which represents the total\\n        {\\n          type: formula\\n          expr: datum.total/domain('y')[1]\\n          as: percentage\\n        }\\n      ]\\n    }\\n    {\\n      // This is a temp lookup table with all the 'stk2' stack nodes\\n      name: destinationNodes\\n      source: nodes\\n      transform: [\\n        {type: \\\"filter\\\", expr: \\\"datum.stack == 'stk2'\\\"}\\n      ]\\n    }\\n    {\\n      name: edges\\n      source: nodes\\n      transform: [\\n        // we only want nodes from the left stack\\n        {type: \\\"filter\\\", expr: \\\"datum.stack == 'stk1'\\\"}\\n        // find corresponding node from the right stack, keep it as \\\"target\\\"\\n        {\\n          type: lookup\\n          from: destinationNodes\\n          key: key\\n          fields: [\\\"key\\\"]\\n          as: [\\\"target\\\"]\\n        }\\n        // calculate SVG link path between stk1 and stk2 stacks for the node pair\\n        {\\n          type: linkpath\\n          orient: horizontal\\n          shape: diagonal\\n          sourceY: {expr: \\\"scale('y', datum.yc)\\\"}\\n          sourceX: {expr: \\\"scale('x', 'stk1') + bandwidth('x')\\\"}\\n          targetY: {expr: \\\"scale('y', datum.target.yc)\\\"}\\n          targetX: {expr: \\\"scale('x', 'stk2')\\\"}\\n        }\\n        // A little trick to calculate the thickness of the line.\\n        // The value needs to be the same as the hight of the node, but scaling\\n        // size to screen's height gives inversed value because screen's Y\\n        // coordinate goes from the top to the bottom, whereas the graph's Y=0\\n        // is at the bottom. So subtracting scaled doc count from screen height\\n        // (which is the \\\"lower\\\" bound of the \\\"y\\\" scale) gives us the right value\\n        {\\n          type: formula\\n          expr: range('y')[0]-scale('y', datum.size)\\n          as: strokeWidth\\n        }\\n        // Tooltip needs individual link's percentage of all values\\n        {\\n          type: formula\\n          expr: datum.size/domain('y')[1]\\n          as: percentage\\n        }\\n      ]\\n    }\\n  ]\\n  scales: [\\n    {\\n      // calculates horizontal stack positioning\\n      name: x\\n      type: band\\n      range: width\\n      domain: [\\\"stk1\\\", \\\"stk2\\\"]\\n      paddingOuter: 0.05\\n      paddingInner: 0.95\\n    }\\n    {\\n      // this scale goes up as high as the highest y1 value of all nodes\\n      name: y\\n      type: linear\\n      range: height\\n      domain: {data: \\\"nodes\\\", field: \\\"y1\\\"}\\n    }\\n    {\\n      // use rawData to ensure the colors stay the same when clicking.\\n      name: color\\n      type: ordinal\\n      range: category\\n      domain: {data: \\\"rawData\\\", fields: [\\\"stk1\\\", \\\"stk2\\\"]}\\n    }\\n    {\\n      // this scale is used to map internal ids (stk1, stk2) to stack names\\n      name: stackNames\\n      type: ordinal\\n      range: [\\\"Source Segment\\\", \\\"Destination Segment\\\"]\\n      domain: [\\\"stk1\\\", \\\"stk2\\\"]\\n    }\\n  ]\\n  axes: [\\n    {\\n      // x axis should use custom label formatting to print proper stack names\\n      orient: bottom\\n      scale: x\\n      encode: {\\n        labels: {\\n          update: {\\n            text: {scale: \\\"stackNames\\\", field: \\\"value\\\"}\\n          }\\n        }\\n      }\\n    }\\n    {orient: \\\"left\\\", scale: \\\"y\\\"}\\n  ]\\n  marks: [\\n    {\\n      // draw the connecting line between stacks\\n      type: path\\n      name: edgeMark\\n      from: {data: \\\"edges\\\"}\\n      // this prevents some autosizing issues with large strokeWidth for paths\\n      clip: true\\n      encode: {\\n        update: {\\n          // By default use color of the left node, except when showing contributors\\n          // from just one value, in which case use destination color.\\n          stroke: [\\n            {\\n              test: groupSelector && groupSelector.stack=='stk1'\\n              scale: color\\n              field: stk2\\n            }\\n            {scale: \\\"color\\\", field: \\\"stk1\\\"}\\n          ]\\n          strokeWidth: {field: \\\"strokeWidth\\\"}\\n          path: {field: \\\"path\\\"}\\n          // when showing all data, and hovering over a value,\\n          // highlight the contributors for that value\\n          strokeOpacity: {\\n            signal: !groupSelector && (groupHover.stk1 == datum.stk1 || groupHover.stk2 == datum.stk2) ? 0.9 : 0.3\\n          }\\n          // Ensure that the hover-selected edges show on top\\n          zindex: {\\n            signal: !groupSelector && (groupHover.stk1 == datum.stk1 || groupHover.stk2 == datum.stk2) ? 1 : 0\\n          }\\n          // format tooltip string\\n          tooltip: {\\n            signal: datum.stk1 + ' → ' + datum.stk2 + '    ' + format(datum.size, ',.0f') + '   (' + format(datum.percentage, '.1%') + ')'\\n          }\\n        }\\n        // Simple mouseover highlighting of a single line\\n        hover: {\\n          strokeOpacity: {value: 1}\\n        }\\n      }\\n    }\\n    {\\n      // draw stack groups (countries)\\n      type: rect\\n      name: groupMark\\n      from: {data: \\\"groups\\\"}\\n      encode: {\\n        enter: {\\n          fill: {scale: \\\"color\\\", field: \\\"grpId\\\"}\\n          width: {scale: \\\"x\\\", band: 1}\\n        }\\n        update: {\\n          x: {scale: \\\"x\\\", field: \\\"stack\\\"}\\n          y: {field: \\\"scaledY0\\\"}\\n          y2: {field: \\\"scaledY1\\\"}\\n          fillOpacity: {value: 0.6}\\n          tooltip: {\\n            signal: datum.grpId + '   ' + format(datum.total, ',.0f') + '   (' + format(datum.percentage, '.1%') + ')'\\n          }\\n        }\\n        hover: {\\n          fillOpacity: {value: 1}\\n        }\\n      }\\n    }\\n    {\\n      // draw labels on the inner side of the stack\\n      type: text\\n      from: {data: \\\"groups\\\"}\\n      // don't process events for the labels - otherwise line mouseover is unclean\\n      interactive: false\\n      encode: {\\n        update: {\\n          // depending on which stack it is, position x with some padding\\n          x: {\\n            signal: scale('x', datum.stack) + (datum.rightLabel ? bandwidth('x') + 8 : -8)\\n          }\\n          // middle of the group\\n          yc: {signal: \\\"(datum.scaledY0 + datum.scaledY1)/2\\\"}\\n          align: {signal: \\\"datum.rightLabel ? 'left' : 'right'\\\"}\\n          baseline: {value: \\\"middle\\\"}\\n          fontWeight: {value: \\\"bold\\\"}\\n          // only show text label if the group's height is large enough\\n          text: {signal: \\\"abs(datum.scaledY0-datum.scaledY1) > 13 ? datum.grpId : ''\\\"}\\n        }\\n      }\\n    }\\n    {\\n      // Create a \\\"show all\\\" button. Shown only when a value is selected.\\n      type: group\\n      data: [\\n        // We need to make the button show only when groupSelector signal is true.\\n        // Each mark is drawn as many times as there are elements in the backing data.\\n        // Which means that if values list is empty, it will not be drawn.\\n        // Here I create a data source with one empty object, and filter that list\\n        // based on the signal value. This can only be done in a group.\\n        {\\n          name: dataForShowAll\\n          values: [{}]\\n          transform: [{type: \\\"filter\\\", expr: \\\"groupSelector\\\"}]\\n        }\\n      ]\\n      // Set button size and positioning\\n      encode: {\\n        enter: {\\n          xc: {signal: \\\"width/2\\\"}\\n          y: {value: 30}\\n          width: {value: 80}\\n          height: {value: 30}\\n        }\\n      }\\n      marks: [\\n        {\\n          // This group is shown as a button with rounded corners.\\n          type: group\\n          // mark name allows signal capturing\\n          name: groupReset\\n          // Only shows button if dataForShowAll has values.\\n          from: {data: \\\"dataForShowAll\\\"}\\n          encode: {\\n            enter: {\\n              cornerRadius: {value: 6}\\n              fill: {value: \\\"#f5f5f5\\\"}\\n              stroke: {value: \\\"#c1c1c1\\\"}\\n              strokeWidth: {value: 2}\\n              // use parent group's size\\n              height: {\\n                field: {group: \\\"height\\\"}\\n              }\\n              width: {\\n                field: {group: \\\"width\\\"}\\n              }\\n            }\\n            update: {\\n              // groups are transparent by default\\n              opacity: {value: 1}\\n            }\\n            hover: {\\n              opacity: {value: 0.7}\\n            }\\n          }\\n          marks: [\\n            {\\n              type: text\\n              // if true, it will prevent clicking on the button when over text.\\n              interactive: false\\n              encode: {\\n                enter: {\\n                  // center text in the paren group\\n                  xc: {\\n                    field: {group: \\\"width\\\"}\\n                    mult: 0.5\\n                  }\\n                  yc: {\\n                    field: {group: \\\"height\\\"}\\n                    mult: 0.5\\n                    offset: 2\\n                  }\\n                  align: {value: \\\"center\\\"}\\n                  baseline: {value: \\\"middle\\\"}\\n                  fontWeight: {value: \\\"bold\\\"}\\n                  text: {value: \\\"Show All\\\"}\\n                }\\n              }\\n            }\\n          ]\\n        }\\n      ]\\n    }\\n  ]\\n  signals: [\\n    {\\n      // used to highlight data to/from the same value\\n      name: groupHover\\n      value: {}\\n      on: [\\n        {\\n          events: @groupMark:mouseover\\n          update: \\\"{stk1:datum.stack=='stk1' && datum.grpId, stk2:datum.stack=='stk2' && datum.grpId}\\\"\\n        }\\n        {events: \\\"mouseout\\\", update: \\\"{}\\\"}\\n      ]\\n    }\\n    // used to filter only the data related to the selected value\\n    {\\n      name: groupSelector\\n      value: false\\n      on: [\\n        {\\n          // Clicking groupMark sets this signal to the filter values\\n          events: @groupMark:click!\\n          update: \\\"datum.stack=='stk1' ? opensearchDashboardsAddFilter({\\\\\\\"match_phrase\\\\\\\": { \\\\\\\"source.segment.name\\\\\\\": datum.grpId } }, 'MALCOLM_NETWORK_INDEX_PATTERN_REPLACER') : opensearchDashboardsAddFilter({\\\\\\\"match_phrase\\\\\\\": { \\\\\\\"destination.segment.name\\\\\\\": datum.grpId } }, 'MALCOLM_NETWORK_INDEX_PATTERN_REPLACER')\\\"\\n        }\\n        {\\n          // Clicking \\\"show all\\\" button, or double-clicking anywhere resets it\\n          events: [\\n            {type: \\\"click\\\", markname: \\\"groupReset\\\"}\\n            {type: \\\"dblclick\\\"}\\n          ]\\n          update: \\\"false\\\"\\n        }\\n      ]\\n    }\\n  ]\\n}\"}}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"tags:cross_segment\",\"language\":\"kuery\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "34fb58a0-9787-11ed-a26e-595ac55a6057",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyNiwxXQ==",
+      "attributes": {
+        "title": "Protocol by Network Segment",
+        "visState": "{\"title\":\"Protocol by Network Segment\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"related.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":50,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Site\"},\"schema\":\"bucket\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"-\",\"customLabel\":\"Network Segment\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.type\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Family\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.transport\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":150,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Transport\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.protocol\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Protocol\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}},\"sortColumn\":{\"colIndex\":4,\"direction\":\"desc\"}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "1d4da4b0-8247-11ed-978d-3910915d0e0c",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyNywxXQ==",
+      "attributes": {
+        "title": "Event Severity by Network Segment",
+        "visState": "{\"title\":\"Event Severity by Network Segment\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"7\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"related.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Site\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Network Segment\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.severity_tags\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Severity Tag\"},\"schema\":\"bucket\"},{\"id\":\"6\",\"enabled\":true,\"type\":\"max\",\"params\":{\"field\":\"event.risk_score\",\"customLabel\":\"High Raw Severity\"},\"schema\":\"metric\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "ac1687d0-8183-11ed-8ccb-af218b39580f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyOCwxXQ==",
+      "attributes": {
+        "title": "Source Device Type",
+        "visState": "{\"title\":\"Source Device Type\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.manufacturer\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Manufacturer\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.device_type\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Type\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.role\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Role\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":18,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"source.device.manufacturer:* OR source.device.device_type:*\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "b8d19d20-8246-11ed-978d-3910915d0e0c",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQyOSwxXQ==",
+      "attributes": {
+        "title": "Notice, Alert and Signature by Network Segment",
+        "visState": "{\"title\":\"Notice, Alert and Signature by Network Segment\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.provider\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Provider\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Dataset\"},\"schema\":\"bucket\"},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"related.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Site\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Network Segment\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"rule.category\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Category\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":15,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":5,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "f9664e00-821c-11ed-9877-cfe49c9ac04f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzMCwxXQ==",
+      "attributes": {
+        "title": "Destination Device Type",
+        "visState": "{\"title\":\"Destination Device Type\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.manufacturer\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Manufacturer\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.device_type\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Type\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.role\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Role\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":18,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"destination.device.manufacturer:* OR destination.device.device_type:*\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "467db3b0-8185-11ed-8ccb-af218b39580f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzMSwxXQ==",
+      "attributes": {
+        "title": "Source Device Role",
+        "visState": "{\"title\":\"Source Device Role\",\"type\":\"horizontal_bar\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.role\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":25,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"customLabel\":\"Role\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":75,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"normal\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"},\"row\":false}}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"source.device.id:*\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "637b1e80-8185-11ed-8ccb-af218b39580f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzMiwxXQ==",
+      "attributes": {
+        "title": "Destination Device Role",
+        "visState": "{\"title\":\"Destination Device Role\",\"type\":\"horizontal_bar\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.role\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":25,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"customLabel\":\"Role\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":200},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":75,\"filter\":true,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"normal\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"right\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"},\"row\":false}}",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"destination.device.id:*\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "e40049c0-821d-11ed-9877-cfe49c9ac04f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzMywxXQ==",
+      "attributes": {
+        "title": "Source Device Log Counts",
+        "visState": "{\"title\":\"Source Device Log Counts\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{\"customLabel\":\"Log Count\"},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.manufacturer\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Manufacturer\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.device_type\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Type\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.role\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Role\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.device.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Name\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":16,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "f0167720-821d-11ed-9877-cfe49c9ac04f",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzNCwxXQ==",
+      "attributes": {
+        "title": "Destination Device Log Counts",
+        "visState": "{\"title\":\"Destination Device Log Counts\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{\"customLabel\":\"Log Count\"},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.manufacturer\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Manufacturer\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.device_type\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Type\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.role\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Role\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.device.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Name\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":18,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":4,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "b1645e70-8182-11ed-8ccb-af218b39580f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "20a4ad80-8acf-11ed-95fa-1ba69c999d66",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzNSwxXQ==",
+      "attributes": {
+        "title": "Uninventoried Internal Source IPs",
+        "visState": "{\"title\":\"Uninventoried Internal Source IPs\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"IP Address\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.segment.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Site\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.segment.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Segment\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"source.device.uninventoried:true\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e27c5e0-809e-11ed-8d5b-07069f823b6f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "5e0b84f0-8acf-11ed-95fa-1ba69c999d66",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzNiwxXQ==",
+      "attributes": {
+        "title": "Uninventoried Internal Destination IPs",
+        "visState": "{\"title\":\"Uninventoried Internal Destination IPs\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"IP Address\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.segment.site\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Site\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.segment.name\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":100,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Segment\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"sort\":{\"columnIndex\":null,\"direction\":null},\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}",
+        "uiStateJSON": "{\"vis\":{\"params\":{\"sort\":{\"columnIndex\":3,\"direction\":\"desc\"}}}}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"destination.device.uninventoried:true\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "name": "search_0",
+          "type": "search",
+          "id": "2e27c5e0-809e-11ed-8d5b-07069f823b6f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "2e27c5e0-809e-11ed-8d5b-07069f823b6f",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzNywxXQ==",
+      "attributes": {
+        "title": "Uninventoried Internal Assets - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "network.transport",
+          "network.protocol",
+          "event.provider",
+          "event.dataset",
+          "related.site",
+          "source.segment.name",
+          "source.oui",
+          "source.ip",
+          "destination.segment.name",
+          "destination.oui",
+          "destination.ip",
+          "event.id"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"query\":\"related.uninventoried:true\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "8d302e10-9b74-11ed-a51c-3fd00aab0ddc",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzOCwxXQ==",
+      "attributes": {
+        "title": "Uninventoried Observed Services - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "event.provider",
+          "event.dataset",
+          "network.type",
+          "network.transport",
+          "network.protocol",
+          "related.site",
+          "source.ip",
+          "destination.ip",
+          "destination.port",
+          "destination.segment.name",
+          "event.id"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":\"(NOT event.provider:arkime) AND ((NOT event.provider:zeek) OR (event.dataset:(conn OR notice OR weird OR signatures OR software OR known*))) AND ((network.direction:(internal OR inbound)) AND (destination.ip:*) AND (destination.port:*) AND (NOT destination.device.service:*))\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "cde50940-5b52-11ef-b245-313a0ac785d6",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T22:07:47.156Z",
+      "version": "WzEwMTQsMV0=",
+      "attributes": {
+        "title": "NetBox Enrichment or Segment - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "_source"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"tags:netbox OR ((source.segment.id:* OR destination.segment.id:*) AND (NOT (network.direction:external)))\",\"language\":\"kuery\"},\"highlightAll\":false,\"version\":true,\"aggs\":{\"2\":{\"date_histogram\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"fixed_interval\":\"30d\",\"min_doc_count\":1}}},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    },
+    {
+      "id": "b1645e70-8182-11ed-8ccb-af218b39580f",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-08-15T21:56:49.347Z",
+      "version": "WzQzOSwxXQ==",
+      "attributes": {
+        "title": "NetBox Enrichment - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "_source"
+        ],
+        "sort": [],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"query\":{\"query\":\"tags:netbox\",\"language\":\"kuery\"},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    }
+  ]
+}

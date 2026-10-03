@@ -1,0 +1,867 @@
+#!/bin/bash
+
+# Copyright (c) 2026 Battelle Energy Alliance, LLC.  All rights reserved.
+
+set -euo pipefail
+shopt -s nocasematch
+
+DASHB_URL=${DASHBOARDS_URL:-"http://dashboards:5601/dashboards"}
+INDEX_PATTERN=${MALCOLM_NETWORK_INDEX_PATTERN:-"arkime_sessions3-*"}
+INDEX_ALIAS=${MALCOLM_NETWORK_INDEX_ALIAS:-}
+INDEX_DEFAULT_PIPELINE=${MALCOLM_NETWORK_INDEX_DEFAULT_PIPELINE:-}
+INDEX_LIFECYCLE_NAME=${MALCOLM_NETWORK_INDEX_LIFECYCLE_NAME:-}
+INDEX_LIFECYCLE_ROLLOVER_ALIAS=${MALCOLM_NETWORK_INDEX_LIFECYCLE_ROLLOVER_ALIAS:-}
+INDEX_TIME_FIELD=${MALCOLM_NETWORK_INDEX_TIME_FIELD:-"firstPacket"}
+OTHER_INDEX_PATTERN=${MALCOLM_OTHER_INDEX_PATTERN:-"malcolm_beats_*"}
+OTHER_INDEX_ALIAS=${MALCOLM_OTHER_INDEX_ALIAS:-}
+OTHER_INDEX_DEFAULT_PIPELINE=${MALCOLM_OTHER_INDEX_DEFAULT_PIPELINE:-}
+OTHER_INDEX_LIFECYCLE_NAME=${MALCOLM_OTHER_INDEX_LIFECYCLE_NAME:-}
+OTHER_INDEX_LIFECYCLE_ROLLOVER_ALIAS=${MALCOLM_OTHER_INDEX_LIFECYCLE_ROLLOVER_ALIAS:-}
+OTHER_INDEX_TIME_FIELD=${MALCOLM_OTHER_INDEX_TIME_FIELD:-"@timestamp"}
+DUMMY_DETECTOR_NAME=${DUMMY_DETECTOR_NAME:-"malcolm_init_dummy"}
+DARK_MODE=${DASHBOARDS_DARKMODE:-"true"}
+TIMEPICKER_FROM=${DASHBOARDS_TIMEPICKER_FROM:-"now-24h"}
+TIMEPICKER_TO=${DASHBOARDS_TIMEPICKER_TO:-"now"}
+
+DASHBOARDS_PREFIX=${DASHBOARDS_PREFIX:-}
+# trim leading and trailing spaces and remove characters that need JSON-escaping from DASHBOARDS_PREFIX
+DASHBOARDS_PREFIX="${DASHBOARDS_PREFIX#"${DASHBOARDS_PREFIX%%[![:space:]]*}"}"
+DASHBOARDS_PREFIX="${DASHBOARDS_PREFIX%"${DASHBOARDS_PREFIX##*[![:space:]]}"}"
+DASHBOARDS_PREFIX="$(echo "$DASHBOARDS_PREFIX" | tr -d '"\\')"
+DASHBOARDS_NAVIGATION_TEXT_FILE=
+
+MALCOLM_TEMPLATES_DIR="/opt/templates"
+MALCOLM_TEMPLATE_FILE_ORIG="$MALCOLM_TEMPLATES_DIR/malcolm_template.json"
+MALCOLM_TEMPLATE_FILE="/data/init/malcolm_template.json"
+DEFAULT_DASHBOARD=${OPENSEARCH_DEFAULT_DASHBOARD:-"0ad3d7c2-3441-485e-9dfe-dbb22e84e576"}
+
+ISM_SNAPSHOT_REPO=${ISM_SNAPSHOT_REPO:-"logs"}
+ISM_SNAPSHOT_COMPRESSED=${ISM_SNAPSHOT_COMPRESSED:-"false"}
+
+OPENSEARCH_PRIMARY=${OPENSEARCH_PRIMARY:-"opensearch-local"}
+OPENSEARCH_SECONDARY=${OPENSEARCH_SECONDARY:-""}
+
+STARTUP_IMPORT_PERFORMED_FILE=/tmp/shared-objects-created
+
+TMP_WORK_DIR="$(mktemp -d -t shared-object-creation-XXXXXX)"
+
+function cleanup_work_dir {
+  rm -rf "$TMP_WORK_DIR"
+}
+
+function get_tmp_output_filename {
+  mktemp -p "$TMP_WORK_DIR" curl-XXXXXXX
+}
+
+function escape_for_dashboard_markdown() {
+  local INPUT_MARKDOWN_FILE="$1"
+  [[ -r "$INPUT_MARKDOWN_FILE" ]] && \
+    awk '
+    {
+      # If the line starts with [ and ends with ), it’s likely a solo link
+      if ($0 ~ /^\[[^]]+\]\([^)]*\)$/) {
+        printf "%s  \\\\n", $0
+      } else {
+        # Escape newlines for all other lines
+        printf "%s\\\\n", $0
+      }
+    }
+    END {
+      print ""
+    }
+    ' "$INPUT_MARKDOWN_FILE"
+}
+
+function DoReplacersInFile() {
+  # Index pattern and time field name may be specified via environment variable, but need
+  #   to be reflected in dashboards, templates, anomaly detectors, etc.
+  # This function takes a file and performs those and other replacements.
+  REPLFILE="$1"
+  DATASTORE_TYPE="$2"
+  CLUSTER_NODE_COUNT="$3"
+  FILE_TYPE="$4"
+  if [[ -n "$REPLFILE" ]] && [[ -f "$REPLFILE" ]]; then
+
+    if [[ "$FILE_TYPE" == "template" ]] && \
+        grep -Pq "\b(MALCOLM_NETWORK_INDEX_PATTERN_REPLACER|MALCOLM_OTHER_INDEX_PATTERN_REPLACER)\b" "${REPLFILE}"; \
+    then
+      if [[ -n "${ARKIME_INIT_SHARDS}" ]]; then
+        SHARDS="${ARKIME_INIT_SHARDS}"
+      else
+        SHARDS="${CLUSTER_NODE_COUNT}"
+        (( SHARDS > 24 )) && SHARDS=24
+      fi
+      (( SHARDS > CLUSTER_NODE_COUNT )) && SHARDS=$CLUSTER_NODE_COUNT
+
+      if [[ -n "${ARKIME_INIT_REPLICAS}" ]]; then
+        REPLICAS="${ARKIME_INIT_REPLICAS}"
+      else
+        (( CLUSTER_NODE_COUNT > 1 )) && REPLICAS=1 || REPLICAS=0
+      fi
+
+      SHARDS_PER_NODE=$(echo "($SHARDS * ($REPLICAS + 1) + $CLUSTER_NODE_COUNT - 1) / $CLUSTER_NODE_COUNT" | bc)
+      if [[ "${ARKIME_INIT_SHARDS_PER_NODE:-}" == "-1" ]]; then
+        # A dedicated cluster controls placement through replicas and disk
+        # watermarks. Do not retain Malcolm's per-index cap: it can strand
+        # replicas when templates and cluster settings are applied at different times.
+        SHARDS_PER_NODE=-1
+      elif [[ -n "${ARKIME_INIT_SHARDS_PER_NODE}" ]] && ( [[ "${ARKIME_INIT_SHARDS_PER_NODE}" == "null" ]] || (( ARKIME_INIT_SHARDS_PER_NODE > SHARDS_PER_NODE )) ); then
+        SHARDS_PER_NODE="${ARKIME_INIT_SHARDS_PER_NODE}"
+      fi
+
+      jq --argjson shards "$SHARDS" 'if has("template") then .template.settings.index.number_of_shards = $shards else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+      jq --argjson replicas "$REPLICAS" 'if has("template") then .template.settings.index.number_of_replicas = $replicas else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+      jq --arg spn "$SHARDS_PER_NODE" 'if has("template") then .template.settings.index.routing.allocation.total_shards_per_node = $spn else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+      REFRESH_WITH_UNITS="${ARKIME_INIT_REFRESH_SEC:-60}s" && \
+      jq --arg refresh "$REFRESH_WITH_UNITS" 'if has("template") then .template.settings.index.refresh_interval = $refresh else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+      if [[ -n "${MALCOLM_INDEX_MAX_RESULT_WINDOW:-}" ]]; then
+        jq --argjson window "$MALCOLM_INDEX_MAX_RESULT_WINDOW" 'if has("template") then .template.settings.index.max_result_window = $window else . end' \
+          "${REPLFILE}" | sponge "${REPLFILE}"
+      else
+        jq 'if has("template") then del(.template.settings.index.max_result_window) else . end' \
+          "${REPLFILE}" | sponge "${REPLFILE}"
+      fi
+    fi
+
+    [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$INDEX_ALIAS" ]] && \
+      grep -q MALCOLM_NETWORK_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg alias "$INDEX_ALIAS" 'if has("template") then .template.aliases = {($alias): {}} else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$OTHER_INDEX_ALIAS" ]] && \
+      grep -q MALCOLM_OTHER_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg alias "$OTHER_INDEX_ALIAS" 'if has("template") then .template.aliases = {($alias): {}} else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$INDEX_DEFAULT_PIPELINE" ]] && \
+      grep -q MALCOLM_NETWORK_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg pipeline "$INDEX_DEFAULT_PIPELINE" 'if has("template") then .template.settings.index.default_pipeline = $pipeline else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$OTHER_INDEX_DEFAULT_PIPELINE" ]] && \
+      grep -q MALCOLM_OTHER_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg pipeline "$OTHER_INDEX_DEFAULT_PIPELINE" 'if has("template") then .template.settings.index.default_pipeline = $pipeline else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$DATASTORE_TYPE" == "elasticsearch" ]] && [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$INDEX_LIFECYCLE_NAME" ]] && \
+      grep -q MALCOLM_NETWORK_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg lifecycle "$INDEX_LIFECYCLE_NAME" 'if has("template") then .template.settings.index["lifecycle.name"] = $lifecycle else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$DATASTORE_TYPE" == "elasticsearch" ]] && [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$OTHER_INDEX_LIFECYCLE_NAME" ]] && \
+      grep -q MALCOLM_OTHER_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg lifecycle "$OTHER_INDEX_LIFECYCLE_NAME" 'if has("template") then .template.settings.index["lifecycle.name"] = $lifecycle else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$DATASTORE_TYPE" == "elasticsearch" ]] && [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$INDEX_LIFECYCLE_ROLLOVER_ALIAS" ]] && \
+      grep -q MALCOLM_NETWORK_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg rollover "$INDEX_LIFECYCLE_ROLLOVER_ALIAS" 'if has("template") then .template.settings.index["lifecycle.rollover_alias"] = $rollover else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$DATASTORE_TYPE" == "elasticsearch" ]] && [[ "$FILE_TYPE" == "template" ]] && \
+      [[ -n "$OTHER_INDEX_LIFECYCLE_ROLLOVER_ALIAS" ]] && \
+      grep -q MALCOLM_OTHER_INDEX_PATTERN_REPLACER "${REPLFILE}" && \
+      jq --arg rollover "$OTHER_INDEX_LIFECYCLE_ROLLOVER_ALIAS" 'if has("template") then .template.settings.index["lifecycle.rollover_alias"] = $rollover else . end' \
+        "${REPLFILE}" | sponge "${REPLFILE}"
+
+    [[ "$FILE_TYPE" == "sa_mapping" ]] && \
+      [[ -z "$INDEX_ALIAS" ]] && \
+      grep -q MALCOLM_NETWORK_INDEX_ALIAS_REPLACER "${REPLFILE}" && \
+      rm -f "${REPLFILE}"
+
+    [[ "$FILE_TYPE" == "sa_mapping" ]] && \
+      [[ -z "$OTHER_INDEX_ALIAS" ]] && \
+      grep -q MALCOLM_OTHER_INDEX_ALIAS_REPLACER "${REPLFILE}" && \
+      rm -f "${REPLFILE}"
+
+    sed -i "s/MALCOLM_NETWORK_INDEX_PATTERN_REPLACER/${INDEX_PATTERN}/g" "${REPLFILE}" || true
+    sed -i "s/MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER/${INDEX_TIME_FIELD}/g" "${REPLFILE}" || true
+    sed -i "s/MALCOLM_OTHER_INDEX_PATTERN_REPLACER/${OTHER_INDEX_PATTERN}/g" "${REPLFILE}" || true
+    sed -i "s/MALCOLM_OTHER_INDEX_TIME_FIELD_REPLACER/${OTHER_INDEX_TIME_FIELD}/g" "${REPLFILE}" || true
+    sed -i "s/MALCOLM_NETWORK_INDEX_ALIAS_REPLACER/${INDEX_ALIAS}/g" "${REPLFILE}" || true
+    sed -i "s/MALCOLM_OTHER_INDEX_ALIAS_REPLACER/${OTHER_INDEX_ALIAS}/g" "${REPLFILE}" || true
+
+    if [[ "$DATASTORE_TYPE" == "elasticsearch" ]] && [[ "$FILE_TYPE" == "template" ]]; then
+      # OpenSearch - flat_object - https://opensearch.org/docs/latest/field-types/supported-field-types/flat-object/
+      # Elasticsearch - flattened - https://www.elastic.co/guide/en/elasticsearch/reference/current/flattened.html
+      sed -i "s/flat_object/flattened/g" "${REPLFILE}" || true
+
+      # the parameters for wildcard field type differ between opensearch and elasticsearch
+      # opensearch - https://docs.opensearch.org/latest/mappings/supported-field-types/wildcard/
+      # elasticsearch - https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/keyword#wildcard-field-type
+      jq '
+        walk(
+          if type == "object" and .type? == "wildcard"
+          then del(.doc_values, .normalizer)
+          else .
+          end
+        )
+      ' "${REPLFILE}" | sponge "${REPLFILE}"
+    fi
+
+    if [[ "$FILE_TYPE" == "dashboard" ]]; then
+
+      # navigation markdown shared by all dashboards
+      if [[ -n "$DASHBOARDS_NAVIGATION_TEXT_FILE" ]] && [[ -r "$DASHBOARDS_NAVIGATION_TEXT_FILE" ]]; then
+        DASHBOARDS_NAVIGATION_TEXT_ESCAPED="$(printf '%q' "$(cat "$DASHBOARDS_NAVIGATION_TEXT_FILE")")"
+        sed -i "s|MALCOLM_NAVIGATION_MARKDOWN_REPLACER|$DASHBOARDS_NAVIGATION_TEXT_ESCAPED|g" "${REPLFILE}"
+      fi
+
+      if [[ "$DATASTORE_TYPE" == "elasticsearch" ]]; then
+        # strip out Arkime and NetBox links from dashboards' navigation pane when doing Kibana import (idaholab/Malcolm#286)
+        sed -i 's/  \\\\n\[↪ NetBox\](\/netbox\/)  \\\\n\[↪ Arkime\](\/arkime)//' "${REPLFILE}"
+        # take care of a few other substitutions
+        sed -i 's/opensearchDashboardsAddFilter/kibanaAddFilter/g' "${REPLFILE}"
+      fi
+
+      # at this point dashboards are the older-style JSON dashboards (top-level objects array)
+      if jq -e 'type == "object" and (.objects | type == "array")' "${REPLFILE}" >/dev/null 2>/dev/null; then
+
+        # prepend $DASHBOARDS_PREFIX to dashboards' titles
+        [[ -n "$DASHBOARDS_PREFIX" ]] && \
+          jq ".objects |= map(if .type == \"dashboard\" then .attributes.title |= \"${DASHBOARDS_PREFIX} \" + . else . end)" \
+            < "${REPLFILE}" \
+            | sponge "${REPLFILE}"
+
+        # convert old-style JSON dashboards to NDJSON format
+        jq -c '.objects[]' < "${REPLFILE}" > "${REPLFILE%.json}.ndjson" && \
+          [[ -s "${REPLFILE%.json}.ndjson" ]] && \
+          rm -f "${REPLFILE}"
+      fi # check for old-school .json dashboards
+    fi # FILE_TYPE is dashboard
+  fi # file exists
+}
+
+function DoReplacersForDir() {
+  REPLDIR="$1"
+  DATASTORE_TYPE="$2"
+  CLUSTER_NODE_COUNT="$3"
+  FILE_TYPE="$4"
+  if [[ -n "$REPLDIR" ]] && [[ -d "$REPLDIR" ]]; then
+    while IFS= read -r -d '' fname; do
+      DoReplacersInFile "$fname" "$DATASTORE_TYPE" "$CLUSTER_NODE_COUNT" "$FILE_TYPE"
+    done < <( find "$REPLDIR"/ -type f -print0 2>/dev/null )
+  fi
+}
+
+# store in an associative array the id, title, and .updated_at timestamp of a JSON/NDJSON file representing a dashboard
+#   arguments:
+#     1 - the name of an associative array hash into which to insert the data
+#     2 - the filename to check
+#     3 - if the timestamp is not found, the fallback timestamp to use
+function GetDashboardJsonInfo() {
+  local -n RESULT_HASH=$1
+  local JSON_FILE_TO_IMPORT="$2"
+  local FALLBACK_TIMESTAMP="$3"
+
+  DASHBOARD_TO_IMPORT_BASE="$(basename "$JSON_FILE_TO_IMPORT")"
+  DASHBOARD_TO_IMPORT_ID=
+  DASHBOARD_TO_IMPORT_TITLE=
+  DASHBOARD_TO_IMPORT_TIMESTAMP=
+
+  if [[ -f "$JSON_FILE_TO_IMPORT" ]]; then
+    set +e
+    if jq -e 'type == "object" and (.objects | type == "array")' "$JSON_FILE_TO_IMPORT" >/dev/null; then
+      # old-school JSON format
+      DASHBOARD_TO_IMPORT_ID="$(jq -r '.objects[] | select(.type == "dashboard") | .id' < "$JSON_FILE_TO_IMPORT" 2>/dev/null | head -n 1)"
+      DASHBOARD_TO_IMPORT_TITLE="$(jq -r '.objects[] | select(.type == "dashboard") | .attributes.title' < "$JSON_FILE_TO_IMPORT" 2>/dev/null | head -n 1)"
+      DASHBOARD_TO_IMPORT_TIMESTAMP="$(jq -r '.objects[] | select(.type == "dashboard") | .updated_at' < "$JSON_FILE_TO_IMPORT" 2>/dev/null | sort | tail -n 1)"
+    else
+      # new NDJSON format
+      DASHBOARD_TO_IMPORT_ID="$(jq -r 'select(.type == "dashboard") | .id' < "$JSON_FILE_TO_IMPORT" 2>/dev/null | head -n 1)"
+      DASHBOARD_TO_IMPORT_TITLE="$(jq -r 'select(.type == "dashboard") | .attributes.title' < "$JSON_FILE_TO_IMPORT" 2>/dev/null | head -n 1)"
+      DASHBOARD_TO_IMPORT_TIMESTAMP="$(jq -r 'select(.type == "dashboard") | .updated_at' < "$JSON_FILE_TO_IMPORT" 2>/dev/null | sort | tail -n 1)"
+    fi
+    set -e
+  fi
+
+  ( [[ -z "${DASHBOARD_TO_IMPORT_ID}" ]] || [[ "${DASHBOARD_TO_IMPORT_ID}" == "null" ]] ) && DASHBOARD_TO_IMPORT_ID="${DASHBOARD_TO_IMPORT_BASE%.*}"
+  ( [[ -z "${DASHBOARD_TO_IMPORT_TITLE}" ]] || [[ "${DASHBOARD_TO_IMPORT_TITLE}" == "null" ]] ) && DASHBOARD_TO_IMPORT_TITLE="${DASHBOARD_TO_IMPORT_BASE%.*}"
+  ( [[ -z "${DASHBOARD_TO_IMPORT_TIMESTAMP}" ]] || [[ "${DASHBOARD_TO_IMPORT_TIMESTAMP}" == "null" ]] ) && DASHBOARD_TO_IMPORT_TIMESTAMP="$FALLBACK_TIMESTAMP"
+
+  RESULT_HASH["id"]="${DASHBOARD_TO_IMPORT_ID}"
+  RESULT_HASH["title"]="${DASHBOARD_TO_IMPORT_TITLE}"
+  RESULT_HASH["timestamp"]="${DASHBOARD_TO_IMPORT_TIMESTAMP}"
+}
+
+trap cleanup_work_dir EXIT
+
+# is the argument to automatically create this index enabled?
+if [[ "${CREATE_OS_ARKIME_SESSION_INDEX:-true}" = "true" ]] ; then
+
+  # give OpenSearch time to start and Arkime to get its own template created before configuring dashboards
+  /usr/local/bin/opensearch_status.sh -l arkime_sessions3_template >/dev/null 2>&1
+
+  CURRENT_ISO_UNIX_SECS="$(date -u +%s)"
+  CURRENT_ISO_TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ" -d@${CURRENT_ISO_UNIX_SECS} | sed "s/Z$/.000Z/")"
+  EPOCH_ISO_TIMESTAMP="$(date -u +"%Y-%m-%dT%H:%M:%SZ" -d @0 | sed "s/Z$/.000Z/")"
+  LAST_IMPORT_CHECK_TIME="$(stat -c %Y "${STARTUP_IMPORT_PERFORMED_FILE}" 2>/dev/null || echo '0')"
+
+  for LOOP in primary secondary; do
+
+    if [[ "$LOOP" == "primary" ]]; then
+      OPENSEARCH_URL_TO_USE=${OPENSEARCH_URL:-"https://opensearch:9200"}
+      OPENSEARCH_CREDS_CONFIG_FILE_TO_USE=${OPENSEARCH_CREDS_CONFIG_FILE:-"/var/local/curlrc/.opensearch.primary.curlrc"}
+      if [[ -r "$OPENSEARCH_CREDS_CONFIG_FILE_TO_USE" ]]; then
+        CURL_CONFIG_PARAMS=(
+          --config
+          "$OPENSEARCH_CREDS_CONFIG_FILE_TO_USE"
+          )
+      else
+        CURL_CONFIG_PARAMS=()
+      fi
+      ( [[ "$OPENSEARCH_PRIMARY" == "opensearch-remote" ]] || [[ "$OPENSEARCH_PRIMARY" == "elasticsearch-remote" ]] ) && \
+        OPENSEARCH_LOCAL=false || \
+        OPENSEARCH_LOCAL=true
+      DATASTORE_TYPE="$(echo "$OPENSEARCH_PRIMARY" | cut -d- -f1)"
+
+    elif [[ "$LOOP" == "secondary" ]] && ( [[ "$OPENSEARCH_SECONDARY" == "opensearch-remote" ]] || [[ "$OPENSEARCH_SECONDARY" == "elasticsearch-remote" ]] ) && [[ -n "${OPENSEARCH_SECONDARY_URL:-""}" ]]; then
+      OPENSEARCH_URL_TO_USE=$OPENSEARCH_SECONDARY_URL
+      OPENSEARCH_LOCAL=false
+      OPENSEARCH_CREDS_CONFIG_FILE_TO_USE=${OPENSEARCH_SECONDARY_CREDS_CONFIG_FILE:-"/var/local/curlrc/.opensearch.secondary.curlrc"}
+      if [[ -r "$OPENSEARCH_CREDS_CONFIG_FILE_TO_USE" ]]; then
+        CURL_CONFIG_PARAMS=(
+          --config
+          "$OPENSEARCH_CREDS_CONFIG_FILE_TO_USE"
+          )
+      else
+        CURL_CONFIG_PARAMS=()
+      fi
+      DATASTORE_TYPE="$(echo "$OPENSEARCH_SECONDARY" | cut -d- -f1)"
+
+    else
+      continue
+    fi
+    [[ -z "$DATASTORE_TYPE" ]] && DATASTORE_TYPE="opensearch"
+    if [[ "$DATASTORE_TYPE" == "elasticsearch" ]]; then
+      DASHBOARDS_URI_PATH="kibana"
+      XSRF_HEADER="kbn-xsrf"
+      ECS_TEMPLATES_DIR=/opt/ecs-templates
+    else
+      DASHBOARDS_URI_PATH="opensearch-dashboards"
+      XSRF_HEADER="osd-xsrf"
+      ECS_TEMPLATES_DIR=/opt/ecs-templates-os
+    fi
+
+    # is the Dashboards process server up and responding to requests?
+    if [[ "$LOOP" != "primary" ]] || curl "${CURL_CONFIG_PARAMS[@]}" --location --silent --output /dev/null --fail -XGET "$DASHB_URL/api/status" ; then
+
+      # has it been a while since we did a full import check (or have we never done one)?
+      if [[ "$LOOP" != "primary" ]] || (( (${CURRENT_ISO_UNIX_SECS} - ${LAST_IMPORT_CHECK_TIME}) >= ${CREATE_OS_ARKIME_SESSION_INDEX_CHECK_INTERVAL_SEC:-86400} )); then
+
+        echo "$DATASTORE_TYPE ($LOOP) is running at \"${OPENSEARCH_URL_TO_USE}\"!"
+
+        # register the repo name/path for opensearch snapshots (but don't count this an unrecoverable failure)
+        if [[ "$LOOP" == "primary" ]] && [[ "$OPENSEARCH_LOCAL" == "true" ]]; then
+          echo "Registering index snapshot repository..."
+          CURL_OUT=$(get_tmp_output_filename)
+          curl "${CURL_CONFIG_PARAMS[@]}" -H "Accept: application/json" \
+            -H "Content-type: application/json" \
+            -XPUT --location --fail-with-body --output "$CURL_OUT" --silent "$OPENSEARCH_URL_TO_USE/_snapshot/$ISM_SNAPSHOT_REPO" \
+            -d "{ \"type\": \"fs\", \"settings\": { \"location\": \"$ISM_SNAPSHOT_REPO\", \"compress\": $ISM_SNAPSHOT_COMPRESSED } }" \
+            || ( cat "$CURL_OUT" && echo )
+        fi
+
+        NODE_COUNT="$(curl "${CURL_CONFIG_PARAMS[@]}" --location --fail --silent -XGET -H "Content-Type: application/json" "$OPENSEARCH_URL_TO_USE/_nodes" 2>/dev/null | jq --raw-output '.nodes | length' 2>/dev/null | head -n 1)"
+        [[ -z "${NODE_COUNT}" ]] && NODE_COUNT=1
+        (( NODE_COUNT < 1 )) && NODE_COUNT=1
+        echo "$DATASTORE_TYPE ($LOOP) node count: ${NODE_COUNT}"
+
+        #############################################################################################################################
+        # Templates
+        #   - a sha256 sum of the combined templates is calculated and the templates are imported if the previously stored hash
+        #     (if any) does not match the files we see currently.
+
+        TEMPLATES_IMPORTED=false
+        TEMPLATES_IMPORT_DIR="$(mktemp -p "$TMP_WORK_DIR" -d -t templates-XXXXXX)"
+        rsync -a "$MALCOLM_TEMPLATES_DIR"/ "$TEMPLATES_IMPORT_DIR"/
+        DoReplacersForDir "$TEMPLATES_IMPORT_DIR" "$DATASTORE_TYPE" "$NODE_COUNT" template
+        MALCOLM_TEMPLATE_FILE_ORIG_TMP="$(echo "$MALCOLM_TEMPLATE_FILE_ORIG" | sed "s@$MALCOLM_TEMPLATES_DIR@$TEMPLATES_IMPORT_DIR@")"
+
+        # calculate combined SHA sum of all templates to save as _meta.hash to determine if
+        # we need to do this import (mostly useful for the secondary loop)
+        TEMPLATE_HASH="$(find "$ECS_TEMPLATES_DIR"/composable "$TEMPLATES_IMPORT_DIR" -type f -name "*.json" -size +2c 2>/dev/null | sort | xargs -r cat | sha256sum | awk '{print $1}')"
+
+        # get the previous stored template hash (if any) to avoid importing if it's already been imported
+        set +e
+        TEMPLATE_HASH_OLD="$(curl "${CURL_CONFIG_PARAMS[@]}" --location --fail --silent -XGET -H "Content-Type: application/json" "$OPENSEARCH_URL_TO_USE/_index_template/malcolm_template" 2>/dev/null | jq --raw-output '.index_templates[]|select(.name=="malcolm_template")|.index_template._meta.hash' 2>/dev/null)"
+        set -e
+
+        # proceed only if the current template HASH doesn't match the previously imported one, or if there
+        # was an error calculating or storing either
+        if [[ "$TEMPLATE_HASH" != "$TEMPLATE_HASH_OLD" ]] || [[ -z "$TEMPLATE_HASH_OLD" ]] || [[ -z "$TEMPLATE_HASH" ]]; then
+
+          if [[ -d "$ECS_TEMPLATES_DIR"/composable/component ]]; then
+            echo "Importing ECS composable templates..."
+            for i in "$ECS_TEMPLATES_DIR"/composable/component/*.json; do
+              TEMP_BASENAME="$(basename "$i")"
+              TEMP_FILENAME="${TEMP_BASENAME%.*}"
+              echo "Importing ECS composable template $TEMP_FILENAME ..."
+              CURL_OUT=$(get_tmp_output_filename)
+              curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent -XPOST -H "Content-Type: application/json" \
+                "$OPENSEARCH_URL_TO_USE/_component_template/ecs_$TEMP_FILENAME" -d "@$i" || ( cat "$CURL_OUT" && echo )
+            done
+          fi
+
+          if [[ -d "$TEMPLATES_IMPORT_DIR"/composable/component ]]; then
+            echo "Importing custom ECS composable templates..."
+            for i in "$TEMPLATES_IMPORT_DIR"/composable/component/*.json; do
+              TEMP_BASENAME="$(basename "$i")"
+              TEMP_FILENAME="${TEMP_BASENAME%.*}"
+              echo "Importing custom ECS composable template $TEMP_FILENAME ..."
+              CURL_OUT=$(get_tmp_output_filename)
+              curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent -XPOST -H "Content-Type: application/json" \
+                "$OPENSEARCH_URL_TO_USE/_component_template/custom_$TEMP_FILENAME" -d "@$i" || ( cat "$CURL_OUT" && echo )
+            done
+          fi
+
+          echo "Importing malcolm_template ($TEMPLATE_HASH)..."
+
+          if [[ -f "$MALCOLM_TEMPLATE_FILE_ORIG_TMP" ]] && [[ ! -f "$MALCOLM_TEMPLATE_FILE" ]]; then
+            cp "$MALCOLM_TEMPLATE_FILE_ORIG_TMP" "$MALCOLM_TEMPLATE_FILE"
+          fi
+
+          # store the TEMPLATE_HASH we calculated earlier as the _meta.hash for the malcolm template
+          MALCOLM_TEMPLATE_FILE_TEMP="$(mktemp -p "$TMP_WORK_DIR")"
+          ( jq "._meta.hash=\"$TEMPLATE_HASH\"" "$MALCOLM_TEMPLATE_FILE" >"$MALCOLM_TEMPLATE_FILE_TEMP" 2>/dev/null ) && \
+            [[ -s "$MALCOLM_TEMPLATE_FILE_TEMP" ]] && \
+            cp -f "$MALCOLM_TEMPLATE_FILE_TEMP" "$MALCOLM_TEMPLATE_FILE"
+
+          # load malcolm_template containing malcolm data source field type mappings (merged from /opt/templates/malcolm_template.json to /data/init/malcolm_template.json in dashboard-helpers on startup)
+          CURL_OUT=$(get_tmp_output_filename)
+          curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent -XPOST -H "Content-Type: application/json" \
+            "$OPENSEARCH_URL_TO_USE/_index_template/malcolm_template" -d "@$MALCOLM_TEMPLATE_FILE" || ( cat "$CURL_OUT" && echo && false )
+
+          # import other templates as well
+          for i in "$TEMPLATES_IMPORT_DIR"/*.json; do
+            TEMP_BASENAME="$(basename "$i")"
+            TEMP_FILENAME="${TEMP_BASENAME%.*}"
+            if [[ "$TEMP_FILENAME" != "malcolm_template" ]]; then
+              echo "Importing template \"$TEMP_FILENAME\"..."
+              CURL_OUT=$(get_tmp_output_filename)
+              curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent -XPOST -H "Content-Type: application/json" \
+                "$OPENSEARCH_URL_TO_USE/_index_template/$TEMP_FILENAME" -d "@$i" || ( cat "$CURL_OUT" && echo )
+            fi
+          done
+
+          TEMPLATES_IMPORTED=true
+
+        else
+          echo "malcolm_template ($TEMPLATE_HASH) already exists ($LOOP) at \"${OPENSEARCH_URL_TO_USE}\""
+        fi # TEMPLATE_HASH check
+
+        # get info for creating the index patterns of "other" templates
+        OTHER_INDEX_PATTERNS=()
+        for i in "$TEMPLATES_IMPORT_DIR"/*.json; do
+          TEMP_BASENAME="$(basename "$i")"
+          TEMP_FILENAME="${TEMP_BASENAME%.*}"
+          TIME_FIELD="@timestamp"
+          if [[ "$TEMP_FILENAME" != "malcolm_template" ]]; then
+            set -f   # template index patterns may contain an asterisk "*" character which bash expands
+            # check if a _meta: {"timeField": "@value"} was provided to override the default @timestamp
+            # or a _meta: {"timeField": null} to specify non-time-series data (like the arkime_stats_v30 index)
+            TIME_FIELD_OVERRIDE=$(jq -r 'if has("_meta") then ._meta.timeField else "__missing__" end' "$i")
+            if [ "$TIME_FIELD_OVERRIDE" != "__missing__" ]; then
+              # _meta: field is available so use the specified value
+              TIME_FIELD=$TIME_FIELD_OVERRIDE
+            fi
+            for TEMPLATE_INDEX_PATTERN in $(jq -r '.index_patterns[]' "$i"); do
+              OTHER_INDEX_PATTERNS+=("$TEMPLATE_INDEX_PATTERN;$TEMPLATE_INDEX_PATTERN;$TIME_FIELD")
+            done
+            set +f
+          fi
+        done
+
+        # end Templates
+        #############################################################################################################################
+
+        if [[ "$LOOP" == "primary" ]]; then
+
+          #############################################################################################################################
+          # Index pattern(s)
+          #   - Only set overwrite=true if we actually updated the templates above; otherwise, overwrite=false and fail silently
+          #     if they already exist (http result code 409)
+          echo "Importing index pattern..."
+          [[ "${TEMPLATES_IMPORTED}" == "true" ]] && SHOW_IMPORT_ERROR="--show-error" || SHOW_IMPORT_ERROR=
+
+          # Save off any custom field formatting prior to an overwrite
+          MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP="$(mktemp -p "$TMP_WORK_DIR")"
+          ( curl "${CURL_CONFIG_PARAMS[@]}" --silent --location --fail -XGET -H "Content-Type: application/json" -H "$XSRF_HEADER: anything" \
+                 "$DASHB_URL/api/saved_objects/index-pattern/${INDEX_PATTERN}" 2>/dev/null | \
+                 jq -r '.attributes.fieldFormatMap' 2>/dev/null | \
+                 jq -c 'with_entries(.value.params.parsedUrl? = null | del(.value.params.parsedUrl))' 2>/dev/null | \
+                 jq '@json' >"$MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP" 2>/dev/null ) || true
+          MALCOLM_FIELD_FORMAT_MAP_FILE_SIZE=$(stat -c%s "$MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP")
+
+          # Create index pattern (preserving custom field formatting)
+          MALCOLM_INDEX_PATTERN_FILE_TEMP="$(mktemp -p "$TMP_WORK_DIR")"
+          echo "{\"attributes\":{\"title\":\"$INDEX_PATTERN\",\"timeFieldName\":\"$INDEX_TIME_FIELD\"}}" > "$MALCOLM_INDEX_PATTERN_FILE_TEMP"
+          if (( $MALCOLM_FIELD_FORMAT_MAP_FILE_SIZE > 64 )); then
+            echo "Preserving existing field formatting for \"$INDEX_PATTERN\"..."
+            jq --slurpfile fieldFormatMap "$MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP" '.attributes.fieldFormatMap = $fieldFormatMap[0]' "$MALCOLM_INDEX_PATTERN_FILE_TEMP" | sponge "$MALCOLM_INDEX_PATTERN_FILE_TEMP"
+          fi
+          echo "Creating index pattern \"$INDEX_PATTERN\"..."
+          CURL_OUT=$(get_tmp_output_filename)
+          curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent ${SHOW_IMPORT_ERROR} -XPOST -H "Content-Type: application/json" -H "$XSRF_HEADER: anything" \
+            "$DASHB_URL/api/saved_objects/index-pattern/${INDEX_PATTERN}?overwrite=${TEMPLATES_IMPORTED}" \
+            -d @"$MALCOLM_INDEX_PATTERN_FILE_TEMP" || ( cat "$CURL_OUT" && echo )
+
+          echo "Setting default index pattern..."
+
+          # Make it the default index
+          CURL_OUT=$(get_tmp_output_filename)
+          curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent ${SHOW_IMPORT_ERROR} -XPOST -H "Content-Type: application/json" -H "$XSRF_HEADER: anything" \
+            "$DASHB_URL/api/$DASHBOARDS_URI_PATH/settings/defaultIndex" \
+            -d"{\"value\":\"$INDEX_PATTERN\"}" || ( cat "$CURL_OUT" && echo )
+
+          # import other index patterns from other templates discovered above
+          for i in ${OTHER_INDEX_PATTERNS[@]}; do
+            IDX_ID="$(echo "$i" | cut -d';' -f1)"
+            IDX_NAME="$(echo "$i" | cut -d';' -f2)"
+            IDX_TIME_FIELD="$(echo "$i" | cut -d';' -f3)"
+
+            # Save off any custom field formatting prior to an overwrite
+            MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP="$(mktemp -p "$TMP_WORK_DIR")"
+            ( curl "${CURL_CONFIG_PARAMS[@]}" --silent --location --fail -XGET -H "Content-Type: application/json" -H "$XSRF_HEADER: anything" \
+                   "$DASHB_URL/api/saved_objects/index-pattern/${IDX_ID}" 2>/dev/null | \
+                   jq -r '.attributes.fieldFormatMap' 2>/dev/null | \
+                   jq -c 'with_entries(.value.params.parsedUrl? = null | del(.value.params.parsedUrl))' 2>/dev/null | \
+                   jq '@json' >"$MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP" 2>/dev/null ) || true
+            MALCOLM_FIELD_FORMAT_MAP_FILE_SIZE=$(stat -c%s "$MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP")
+
+            MALCOLM_INDEX_PATTERN_FILE_TEMP="$(mktemp -p "$TMP_WORK_DIR")"
+            if [[ "$IDX_TIME_FIELD" == "null" ]]; then
+              # omit quotes around null IDX_TIME_FIELD
+              echo "{\"attributes\":{\"title\":\"$IDX_NAME\",\"timeFieldName\":$IDX_TIME_FIELD}}" > "$MALCOLM_INDEX_PATTERN_FILE_TEMP"
+            else
+              # include quotes around IDX_TIME_FIELD value
+              echo "{\"attributes\":{\"title\":\"$IDX_NAME\",\"timeFieldName\":\"$IDX_TIME_FIELD\"}}" > "$MALCOLM_INDEX_PATTERN_FILE_TEMP"
+            fi
+            if (( $MALCOLM_FIELD_FORMAT_MAP_FILE_SIZE > 64 )); then
+              echo "Preserving existing field formatting for \"$IDX_NAME\"..."
+              jq --slurpfile fieldFormatMap "$MALCOLM_FIELD_FORMAT_MAP_FILE_TEMP" '.attributes.fieldFormatMap = $fieldFormatMap[0]' "$MALCOLM_INDEX_PATTERN_FILE_TEMP" | sponge "$MALCOLM_INDEX_PATTERN_FILE_TEMP"
+            fi
+
+            echo "Creating index pattern \"$IDX_NAME\"..."
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent ${SHOW_IMPORT_ERROR} -XPOST -H "Content-Type: application/json" -H "$XSRF_HEADER: anything" \
+              "$DASHB_URL/api/saved_objects/index-pattern/${IDX_ID}?overwrite=${TEMPLATES_IMPORTED}" \
+              -d @"$MALCOLM_INDEX_PATTERN_FILE_TEMP" || ( cat "$CURL_OUT" && echo )
+          done # i in OTHER_INDEX_PATTERNS
+
+          # end Index pattern
+          #############################################################################################################################
+
+          echo "Importing $DATASTORE_TYPE Dashboards saved objects..."
+
+          #############################################################################################################################
+          # Dashboards
+          #   - Dashboard NDJSON files have an .updated_at field with an ISO 8601-formatted date (e.g., "2024-04-29T15:49:16.000Z").
+          #     For each dashboard, query to see if the object exists and get the .updated_at field for the .type == "dashboard"
+          #     objects. If the dashboard doesn't already exist, or if the file-to-be-imported date is newer than the old one,
+          #     then import the dashboard.
+
+
+          DASHBOARDS_IMPORT_DIR="$(mktemp -p "$TMP_WORK_DIR" -d -t dashboards-XXXXXX)"
+          rsync -a /opt/dashboards/ "$DASHBOARDS_IMPORT_DIR"/
+          DASHBOARDS_NAVIGATION_TEXT_FILE="$DASHBOARDS_IMPORT_DIR"/navigation_escaped.txt
+          escape_for_dashboard_markdown "$DASHBOARDS_IMPORT_DIR"/navigation.md >"$DASHBOARDS_NAVIGATION_TEXT_FILE" 2>/dev/null
+          DoReplacersForDir "$DASHBOARDS_IMPORT_DIR" "$DATASTORE_TYPE" "$NODE_COUNT" dashboard
+
+          while IFS= read -r -d '' DASHBOARD_FILE; do
+
+            # get info about the dashboard to be imported
+            declare -A NEW_DASHBOARD_INFO
+            GetDashboardJsonInfo NEW_DASHBOARD_INFO "$DASHBOARD_FILE" "$CURRENT_ISO_TIMESTAMP"
+
+            # get the old dashboard NDJSON and its info
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail --silent --output "${DASHBOARD_FILE}_old" \
+              -XPOST "$DASHB_URL/api/saved_objects/_export" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+              -d "$(jq -n --arg id "$DASHBOARD_TO_IMPORT_ID" '{objects:[{type:"dashboard",id:$id}],includeReferencesDeep:true}')" || true
+            declare -A OLD_DASHBOARD_INFO
+            GetDashboardJsonInfo OLD_DASHBOARD_INFO "${DASHBOARD_FILE}_old" "$EPOCH_ISO_TIMESTAMP"
+            rm -f "${DASHBOARD_FILE}_old"
+
+            # compare the timestamps and import if it's newer
+            if [[ "${NEW_DASHBOARD_INFO["timestamp"]}" > "${OLD_DASHBOARD_INFO["timestamp"]}" ]]; then
+              # import the dashboard
+              echo "Importing dashboard \"${NEW_DASHBOARD_INFO["title"]}\" (${NEW_DASHBOARD_INFO["timestamp"]} > ${OLD_DASHBOARD_INFO["timestamp"]}) ..."
+              CURL_OUT=$(get_tmp_output_filename)
+              curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                -XPOST "$DASHB_URL/api/saved_objects/_import?overwrite=true" \
+                -H "$XSRF_HEADER:true" --form "file=@$DASHBOARD_FILE" || ( cat "$CURL_OUT" && echo )
+            fi # timestamp check
+
+          done < <( find "${DASHBOARDS_IMPORT_DIR}" -type f -name "*.ndjson" -print0 2>/dev/null )
+
+          echo "$DATASTORE_TYPE Dashboards saved objects import complete!"
+
+          # end Dashboards
+          #############################################################################################################################
+
+          if [[ "$DATASTORE_TYPE" == "opensearch" ]]; then
+            # some features and tweaks like anomaly detection, alerting, etc. only exist in opensearch
+
+            #############################################################################################################################
+            # OpenSearch Tweaks
+
+            # set dark theme (or not)
+            echo "Setting $DATASTORE_TYPE dark mode ($DARK_MODE)..."
+            [[ "$DARK_MODE" == "true" ]] && DARK_MODE_ARG='{"value":true}' || DARK_MODE_ARG='{"value":false}'
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPOST "$DASHB_URL/api/$DASHBOARDS_URI_PATH/settings/theme:darkMode" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' -d "$DARK_MODE_ARG" || ( cat "$CURL_OUT" && echo )
+
+            # set default dashboard
+            echo "Setting $DATASTORE_TYPE default dashboard ($DEFAULT_DASHBOARD)..."
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPOST "$DASHB_URL/api/$DASHBOARDS_URI_PATH/settings/defaultRoute" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+              -d "{\"value\":\"/app/dashboards#/view/${DEFAULT_DASHBOARD}\"}" || ( cat "$CURL_OUT" && echo )
+
+            # set default time range
+            echo "Setting $DATASTORE_TYPE default query time frame (\"$TIMEPICKER_FROM\" to \"$TIMEPICKER_TO\")..."
+            TIMEPICKER_ARG="{\"value\":\"{\\\"from\\\":\\\"${TIMEPICKER_FROM}\\\",\\\"to\\\":\\\"${TIMEPICKER_TO}\\\"}\"}"
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPOST "$DASHB_URL/api/$DASHBOARDS_URI_PATH/settings/timepicker:timeDefaults" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' -d "$TIMEPICKER_ARG" || ( cat "$CURL_OUT" && echo )
+
+            # pin filters by default
+            echo "Setting $DATASTORE_TYPE to pin dashboard filters by default..."
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPOST "$DASHB_URL/api/$DASHBOARDS_URI_PATH/settings/filters:pinnedByDefault" \
+                -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+                -d '{"value":true}' || ( cat "$CURL_OUT" && echo )
+
+            # enable in-session storage
+            echo "Enabling $DATASTORE_TYPE in-session storage for dashboards..."
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPOST "$DASHB_URL/api/$DASHBOARDS_URI_PATH/settings/state:storeInSessionStorage" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+              -d '{"value":true}' || ( cat "$CURL_OUT" && echo )
+
+            echo "Enabling Calcite..." && \
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" -H "Content-type: application/json" \
+              -XPUT --location --fail-with-body --output "$CURL_OUT" --silent "$OPENSEARCH_URL_TO_USE/_plugins/_query/settings" \
+              -d "{ \"transient\": { \"plugins.calcite.enabled\": true } }" \
+              || ( cat "$CURL_OUT" && echo )
+
+            # end OpenSearch Tweaks
+            #############################################################################################################################
+
+            # OpenSearch Create Initial Indices
+
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPUT "$OPENSEARCH_URL_TO_USE/${MALCOLM_NETWORK_INDEX_PATTERN%?}initial" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' || ( cat "$CURL_OUT" && echo )
+
+            CURL_OUT=$(get_tmp_output_filename)
+            curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+              -XPUT "$OPENSEARCH_URL_TO_USE/${MALCOLM_OTHER_INDEX_PATTERN%?}initial" \
+              -H "$XSRF_HEADER:true" -H 'Content-type:application/json' || ( cat "$CURL_OUT" && echo )
+
+            # before we go on to create the anomaly detectors, we need to wait for actual network log documents
+            /usr/local/bin/opensearch_status.sh -w >/dev/null 2>&1
+            sleep 60
+
+            #############################################################################################################################
+            # OpenSearch anomaly detectors
+            #   - the .anomaly_detector.last_update_time field in the anomaly detector definition JSON is used to check
+            #     whether or not the anomaly detector needs to be updated
+
+            echo "Creating $DATASTORE_TYPE anomaly detectors..."
+
+            # If the detectors have never been started before, we need to import the "dummy" one,
+            #   but only this first time, not on subsequent runs of this script. We can do that
+            #   by checking for the existence of the .opendistro-anomaly-detection-state index.
+            curl "${CURL_CONFIG_PARAMS[@]}" --head --location --fail --silent --output /dev/null \
+              "$OPENSEARCH_URL_TO_USE"/.opendistro-anomaly-detection-state && \
+              DETECTORS_STARTED=1 || \
+              DETECTORS_STARTED=0
+
+            # Create anomaly detectors here
+            ANOMALY_IMPORT_DIR="$(mktemp -p "$TMP_WORK_DIR" -d -t anomaly-XXXXXX)"
+            rsync -a /opt/anomaly_detectors/ "$ANOMALY_IMPORT_DIR"/
+            DoReplacersForDir "$ANOMALY_IMPORT_DIR" "$DATASTORE_TYPE" "$NODE_COUNT" anomaly_detector
+            for i in "${ANOMALY_IMPORT_DIR}"/*.json; do
+              # identify the name of the anomaly detector, and, if it already exists, its
+              #   ID and previous update time, as well as the update time of the file to import
+              set +e
+              DETECTOR_NAME="$(jq -r '.name' 2>/dev/null < "$i")"
+
+              DETECTOR_NEW_UPDATE_TIME="$(jq -r '.anomaly_detector.last_update_time' 2>/dev/null < "$i")"
+              ( [[ -z "${DETECTOR_NEW_UPDATE_TIME}" ]] || [[ "${DETECTOR_NEW_UPDATE_TIME}" == "null" ]] ) && DETECTOR_NEW_UPDATE_TIME=$CURRENT_ISO_UNIX_SECS
+
+              DETECTOR_EXISTING_UPDATE_TIME=0
+              DETECTOR_EXISTING_ID="$(curl "${CURL_CONFIG_PARAMS[@]}" --location --fail --silent -XPOST "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors/_search" -H "$XSRF_HEADER:true" -H 'Content-type:application/json' -d "{ \"query\": { \"match\": { \"name\": \"$DETECTOR_NAME\" } } }" | jq '.. | ._id? // empty' 2>/dev/null | head -n 1 | tr -d '"')"
+              if [[ -n "${DETECTOR_EXISTING_ID}" ]]; then
+                DETECTOR_EXISTING_UPDATE_TIME="$(curl "${CURL_CONFIG_PARAMS[@]}" --location --fail --silent -XGET "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors/$DETECTOR_EXISTING_ID" -H "$XSRF_HEADER:true" -H 'Content-type:application/json' | jq -r '.anomaly_detector.last_update_time')"
+                ( [[ -z "${DETECTOR_EXISTING_UPDATE_TIME}" ]] || [[ "${DETECTOR_EXISTING_UPDATE_TIME}" == "null" ]] ) && DETECTOR_EXISTING_UPDATE_TIME=0
+              fi
+              set -e
+
+              # if the file to import is newer than the existing anomaly detector, then update it
+              if (( $DETECTOR_NEW_UPDATE_TIME > $DETECTOR_EXISTING_UPDATE_TIME )); then
+
+                # Import the anomaly detector
+                ( [[ $DETECTORS_STARTED == 0 ]] || [[ "$DETECTOR_NAME" != "$DUMMY_DETECTOR_NAME" ]] ) && \
+                  echo "Importing detector \"${DETECTOR_NAME}\" ($DETECTOR_NEW_UPDATE_TIME > $DETECTOR_EXISTING_UPDATE_TIME) ..." && \
+                  CURL_OUT=$(get_tmp_output_filename)
+                  curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                    -XPOST "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors" \
+                    -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+                    -d "@$i" || ( cat "$CURL_OUT" && echo )
+              fi
+            done
+
+            # Trigger a start/stop for the dummy detector to make sure the .opendistro-anomaly-detection-state index gets created
+            # see:
+            # - https://github.com/opensearch-project/anomaly-detection-dashboards-plugin/issues/109
+            # - https://github.com/opensearch-project/anomaly-detection-dashboards-plugin/issues/155
+            # - https://github.com/opensearch-project/anomaly-detection-dashboards-plugin/issues/156
+            # - https://discuss.opendistrocommunity.dev/t/errors-opening-anomaly-detection-plugin-for-dashboards-after-creation-via-api/7711
+            if [[ $DETECTORS_STARTED == 0 ]]; then
+              set +e
+              DUMMY_DETECTOR_ID=""
+              until [[ -n "$DUMMY_DETECTOR_ID" ]]; do
+                sleep 5
+                DUMMY_DETECTOR_ID="$(curl "${CURL_CONFIG_PARAMS[@]}" --location --fail --silent -XPOST "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors/_search" -H "$XSRF_HEADER:true" -H 'Content-type:application/json' -d "{ \"query\": { \"match\": { \"name\": \"$DUMMY_DETECTOR_NAME\" } } }" | jq '.. | ._id? // empty' 2>/dev/null | head -n 1 | tr -d '"')"
+              done
+              set -e
+              if [[ -n "$DUMMY_DETECTOR_ID" ]]; then
+                echo "Starting $DUMMY_DETECTOR_NAME to initialize anomaly detector engine..."
+                CURL_OUT=$(get_tmp_output_filename)
+                curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent -XPOST \
+                  "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors/$DUMMY_DETECTOR_ID/_start" \
+                  -H "$XSRF_HEADER:true" -H 'Content-type:application/json' || ( cat "$CURL_OUT" && echo )
+                sleep 10
+                CURL_OUT=$(get_tmp_output_filename)
+                curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                  -XPOST "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors/$DUMMY_DETECTOR_ID/_stop" \
+                  -H "$XSRF_HEADER:true" -H 'Content-type:application/json' || ( cat "$CURL_OUT" && echo )
+                sleep 10
+                CURL_OUT=$(get_tmp_output_filename)
+                curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                  -XDELETE "$OPENSEARCH_URL_TO_USE/_plugins/_anomaly_detection/detectors/$DUMMY_DETECTOR_ID" \
+                  -H "$XSRF_HEADER:true" -H 'Content-type:application/json' || ( cat "$CURL_OUT" && echo )
+              fi
+            fi
+
+            echo "$DATASTORE_TYPE anomaly detectors creation complete!"
+
+            # end OpenSearch anomaly detectors
+            #############################################################################################################################
+
+            #############################################################################################################################
+            # OpenSearch security analytics fields mappings
+            if [[ -d /opt/security_analytics_mappings ]]; then
+              echo "Creating $DATASTORE_TYPE security analytics mappings..."
+
+              SA_MAPPINGS_IMPORT_DIR="$(mktemp -p "$TMP_WORK_DIR" -d -t sa-mappings-XXXXXX)"
+              rsync -a /opt/security_analytics_mappings/ "$SA_MAPPINGS_IMPORT_DIR"/
+              DoReplacersForDir "$SA_MAPPINGS_IMPORT_DIR" "$DATASTORE_TYPE" "$NODE_COUNT" sa_mapping
+              for i in "${SA_MAPPINGS_IMPORT_DIR}"/*.json; do
+                set +e
+                RULE_TOPIC="$(jq -r '.rule_topic' 2>/dev/null < "$i")"
+                INDEX_NAME="$(jq -r '.index_name' 2>/dev/null < "$i")"
+                echo "Creating mappings for \"${INDEX_NAME}\" / \"${RULE_TOPIC}\" ..." && \
+                CURL_OUT=$(get_tmp_output_filename)
+                curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                  -XPOST "$OPENSEARCH_URL_TO_USE/_plugins/_security_analytics/mappings" \
+                  -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+                  -d "@$i" || ( cat "$CURL_OUT" && echo )
+                set -e
+              done
+            fi
+
+            # end OpenSearch security analytics
+            #############################################################################################################################
+
+            #############################################################################################################################
+            # OpenSearch alerting
+            #   - always attempt to write the default Malcolm alerting objects, regardless of whether they exist or not
+
+            echo "Creating $DATASTORE_TYPE alerting objects..."
+
+            # Create notification/alerting objects here
+
+            # notification channels
+            for i in /opt/notifications/channels/*.json; do
+              CURL_OUT=$(get_tmp_output_filename)
+              curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                -XPOST "$OPENSEARCH_URL_TO_USE/_plugins/_notifications/configs" \
+                -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+                -d "@$i" || ( cat "$CURL_OUT" && echo )
+            done
+
+            # monitors
+            ALERTING_IMPORT_DIR="$(mktemp -p "$TMP_WORK_DIR" -d -t alerting-XXXXXX)"
+            rsync -a /opt/alerting/monitors/ "$ALERTING_IMPORT_DIR"/
+            DoReplacersForDir "$ALERTING_IMPORT_DIR" "$DATASTORE_TYPE" "$NODE_COUNT" monitor
+            for i in "${ALERTING_IMPORT_DIR}"/*.json; do
+
+              # does the monitor exist?
+              MONITOR_NAME=$(jq -r '.name' "$i")
+              MONITOR_ID=$(
+                curl "${CURL_CONFIG_PARAMS[@]}" -s \
+                  "$OPENSEARCH_URL_TO_USE/_plugins/_alerting/monitors/_search" \
+                  -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+                  -d "{ \"query\": { \"match\" : { \"monitor.name\": \"${MONITOR_NAME}\" } } }" \
+                | jq -r '.hits.hits | if length==1 then .[0]._id else empty end' \
+                || true
+              )
+              if [[ "$MONITOR_ID" != "null" ]] && [[ -n "$MONITOR_ID" ]]; then
+                echo "Alerting monitor \"${MONITOR_NAME}\" already exists, skipping"
+                continue
+                # or, uncomment this to overwrite with original
+                # MONITOR_METHOD=PUT
+                # MONITOR_URL="$OPENSEARCH_URL_TO_USE/_plugins/_alerting/monitors/$MONITOR_ID"
+              else
+                MONITOR_METHOD=POST
+                MONITOR_URL="$OPENSEARCH_URL_TO_USE/_plugins/_alerting/monitors"
+              fi
+
+              CURL_OUT=$(get_tmp_output_filename)
+              curl "${CURL_CONFIG_PARAMS[@]}" --location --fail-with-body --output "$CURL_OUT" --silent \
+                -X${MONITOR_METHOD} "${MONITOR_URL}" \
+                -H "$XSRF_HEADER:true" -H 'Content-type:application/json' \
+                -d "@$i" || ( cat "$CURL_OUT" && echo )
+            done # monitors loop
+
+            echo "$DATASTORE_TYPE alerting objects creation complete!"
+
+            # end OpenSearch alerting
+            #############################################################################################################################
+
+          fi # DATASTORE_TYPE == opensearch
+        fi # stuff to only do for primary
+
+        touch "${STARTUP_IMPORT_PERFORMED_FILE}"
+      fi # LAST_IMPORT_CHECK_TIME interval check
+
+    fi # dashboards is running
+  done # primary vs. secondary
+fi # CREATE_OS_ARKIME_SESSION_INDEX is true

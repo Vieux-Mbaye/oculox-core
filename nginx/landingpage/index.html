@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+    <!-- Copyright (c) 2026 Battelle Energy Alliance, LLC. All rights reserved. -->
+    <head>
+        <base target="_blank">
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Portail Oculox de supervision et d'investigation de la sécurité OT" />
+        <title>Oculox | Sécurité OT</title>
+        <link rel="icon" type="image/png" href="assets/img/icone_logo.png" />
+        <style>
+            *, *::before, *::after {
+                box-sizing: border-box;
+            }
+
+            :root {
+                color-scheme: dark;
+                --page: #04080d;
+                --page-alt: #071018;
+                --surface: #0a141c;
+                --surface-strong: #0d1b24;
+                --text: #e9f5f9;
+                --muted: #87a0ad;
+                --accent: #22d3ee;
+                --accent-strong: #00a8c7;
+                --line: rgba(120, 190, 215, 0.20);
+                --line-strong: rgba(34, 211, 238, 0.58);
+                --grid: rgba(120, 190, 215, 0.055);
+                --hero-glow: rgba(34, 211, 238, 0.20);
+                --shadow: rgba(0, 0, 0, 0.45);
+            }
+
+            [data-theme="light"] {
+                color-scheme: light;
+                --page: #eef3f6;
+                --page-alt: #e4edf1;
+                --surface: #ffffff;
+                --surface-strong: #f8fbfc;
+                --text: #07161d;
+                --muted: #58717d;
+                --accent: #0e7f9b;
+                --accent-strong: #08647b;
+                --line: rgba(11, 58, 77, 0.16);
+                --line-strong: rgba(14, 127, 155, 0.56);
+                --grid: rgba(11, 58, 77, 0.05);
+                --hero-glow: rgba(14, 127, 155, 0.14);
+                --shadow: rgba(11, 58, 77, 0.14);
+            }
+
+            html {
+                min-width: 320px;
+                background: var(--page);
+            }
+
+            body {
+                margin: 0;
+                min-height: 100vh;
+                overflow-x: hidden;
+                background: var(--page);
+                color: var(--text);
+                font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                transition: background-color 180ms ease, color 180ms ease;
+            }
+
+            @keyframes floaty {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
+            }
+
+            @keyframes spin {
+                to { transform: rotate(360deg); }
+            }
+
+            @keyframes ringpulse {
+                0%, 100% { opacity: 0.35; transform: scale(1); }
+                50% { opacity: 0.9; transform: scale(1.04); }
+            }
+
+            @keyframes serviceFloat {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-5px); }
+            }
+
+            @keyframes spokePulse {
+                0%, 100% { opacity: 0.28; }
+                50% { opacity: 0.68; }
+            }
+
+            button, a {
+                font: inherit;
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            .top-band {
+                position: relative;
+                min-height: 590px;
+                overflow: hidden;
+                background: radial-gradient(circle at 50% -10%, var(--surface-strong) 0%, var(--page) 62%);
+                border-bottom: 1px solid var(--line);
+            }
+
+            .traffic-canvas,
+            .traffic-grid,
+            .hero-blue-glow {
+                position: absolute;
+                inset: 0;
+                pointer-events: none;
+            }
+
+            .traffic-canvas {
+                z-index: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0.9;
+            }
+
+            .traffic-grid {
+                z-index: 0;
+                background-image:
+                    linear-gradient(var(--grid) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+                background-size: 64px 64px;
+                mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+                -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 78%);
+            }
+
+            .hero-blue-glow {
+                z-index: 0;
+                top: -280px;
+                right: auto;
+                bottom: auto;
+                left: 50%;
+                width: 1100px;
+                height: 760px;
+                transform: translateX(-50%);
+                background: radial-gradient(closest-side, var(--hero-glow), rgba(34, 211, 238, 0));
+            }
+
+            .site-header {
+                position: relative;
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                min-height: 74px;
+                padding: 14px 44px;
+                border-bottom: 1px solid var(--line);
+            }
+
+            .brand-logo {
+                display: block;
+                width: auto;
+                height: 42px;
+                object-fit: contain;
+            }
+
+            .theme-toggle {
+                display: inline-flex;
+                align-items: center;
+                min-width: 102px;
+                height: 38px;
+                gap: 10px;
+                padding: 0 13px;
+                border: 1px solid var(--line);
+                border-radius: 19px;
+                background: var(--surface);
+                color: var(--muted);
+                cursor: pointer;
+            }
+
+            .theme-toggle:hover,
+            .theme-toggle:focus-visible {
+                border-color: var(--line-strong);
+                outline: none;
+            }
+
+            .theme-track {
+                position: relative;
+                width: 34px;
+                height: 18px;
+                flex: 0 0 auto;
+                border: 1px solid var(--line);
+                border-radius: 9px;
+                background: rgba(34, 211, 238, 0.10);
+            }
+
+            .theme-knob {
+                position: absolute;
+                top: 2px;
+                left: 17px;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 8px rgba(34, 211, 238, 0.50);
+                transition: left 180ms ease;
+            }
+
+            [data-theme="light"] .theme-knob {
+                left: 2px;
+            }
+
+            .theme-label {
+                min-width: 34px;
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0;
+                text-transform: uppercase;
+            }
+
+            .hero {
+                position: relative;
+                z-index: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 510px;
+                padding: 62px 24px 76px;
+                text-align: center;
+            }
+
+            .status-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                min-height: 32px;
+                padding: 5px 15px;
+                border: 1px solid var(--line);
+                border-radius: 16px;
+                background: var(--surface);
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0;
+                text-transform: uppercase;
+            }
+
+            .status-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--accent);
+                box-shadow: 0 0 8px var(--accent);
+            }
+
+            .hero-logo {
+                display: block;
+                width: 400px;
+                max-width: 72vw;
+                height: auto;
+                margin: 30px auto 8px;
+                object-fit: contain;
+                filter: drop-shadow(0 16px 26px var(--shadow));
+                animation: floaty 7s ease-in-out infinite;
+            }
+
+            .hero h1 {
+                max-width: 760px;
+                margin: 10px auto 0;
+                color: var(--text);
+                font-size: 52px;
+                line-height: 1.08;
+                font-weight: 750;
+                letter-spacing: 0;
+            }
+
+            .hero-rule {
+                width: 64px;
+                height: 2px;
+                margin: 26px auto 0;
+                background: var(--accent);
+            }
+
+            .hero p {
+                max-width: 610px;
+                margin: 20px auto 0;
+                color: var(--muted);
+                font-size: 17px;
+                line-height: 1.6;
+            }
+
+            .services {
+                padding: 62px 24px 52px;
+                background: var(--page-alt);
+            }
+
+            .section-label {
+                margin: 0;
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 700;
+                letter-spacing: 0;
+                text-align: center;
+                text-transform: uppercase;
+            }
+
+            .orbit {
+                position: relative;
+                width: 820px;
+                height: 820px;
+                margin: 0 auto;
+            }
+
+            .orbit-ring,
+            .orbit-ring-inner {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                border-radius: 50%;
+                pointer-events: none;
+            }
+
+            .orbit-ring {
+                width: 580px;
+                height: 580px;
+                margin: -290px 0 0 -290px;
+                border: 1px dashed var(--line);
+            }
+
+            .orbit-ring-inner {
+                width: 290px;
+                height: 290px;
+                margin: -145px 0 0 -145px;
+                border: 1px solid rgba(34, 211, 238, 0.12);
+                animation: ringpulse 5s ease-in-out infinite;
+            }
+
+            .spokes {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 1;
+                width: 0;
+                height: 0;
+                pointer-events: none;
+            }
+
+            .spoke {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 212px;
+                height: 1px;
+                transform: rotate(var(--angle));
+                transform-origin: 0 50%;
+                background: linear-gradient(90deg, var(--line-strong), rgba(34, 211, 238, 0.08));
+                animation: spokePulse 4.8s ease-in-out infinite;
+                animation-delay: var(--delay);
+            }
+
+            .core {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 2;
+                display: flex;
+                width: 150px;
+                height: 150px;
+                margin: -75px 0 0 -75px;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border: 1px solid var(--line-strong);
+                border-radius: 50%;
+                background: var(--surface-strong);
+                box-shadow: 0 16px 44px var(--shadow);
+            }
+
+            .core::before {
+                position: absolute;
+                inset: -10px;
+                border: 1px solid var(--line);
+                border-top-color: transparent;
+                border-left-color: transparent;
+                border-radius: 50%;
+                content: "";
+                animation: spin 12s linear infinite;
+            }
+
+            .core strong {
+                color: var(--text);
+                font-size: 18px;
+                letter-spacing: 0;
+            }
+
+            .core span {
+                margin-top: 3px;
+                color: var(--accent);
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0;
+            }
+
+            .service-node {
+                --node-x: 0px;
+                --node-y: 0px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                z-index: 3;
+                display: flex;
+                width: 156px;
+                min-height: 192px;
+                margin: -78px 0 0 -78px;
+                transform: translate(var(--node-x), var(--node-y));
+                flex-direction: column;
+                align-items: center;
+                gap: 11px;
+            }
+
+            .service-node:hover,
+            .service-node:focus-visible {
+                outline: none;
+            }
+
+            .service-node:hover .hexagon,
+            .service-node:focus-visible .hexagon {
+                box-shadow: 0 12px 32px var(--shadow), 0 0 0 2px rgba(34, 211, 238, 0.12);
+                transform: translateY(-4px);
+                animation-play-state: paused;
+            }
+
+            .service-node:nth-of-type(1) { --node-x: 0px; --node-y: -290px; }
+            .service-node:nth-of-type(2) { --node-x: 251px; --node-y: -145px; }
+            .service-node:nth-of-type(3) { --node-x: 251px; --node-y: 145px; }
+            .service-node:nth-of-type(4) { --node-x: 0px; --node-y: 290px; }
+            .service-node:nth-of-type(5) { --node-x: -251px; --node-y: 145px; }
+            .service-node:nth-of-type(6) { --node-x: -251px; --node-y: -145px; }
+
+            .hexagon {
+                display: flex;
+                width: 156px;
+                height: 156px;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(150deg, var(--accent), rgba(34, 211, 238, 0.14));
+                clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+                transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+                animation: serviceFloat 6s ease-in-out infinite;
+            }
+
+            .service-node:nth-of-type(2n) .hexagon { animation-delay: -2s; }
+            .service-node:nth-of-type(3n) .hexagon { animation-delay: -4s; }
+
+            .hexagon-inner {
+                display: flex;
+                width: 153px;
+                height: 153px;
+                align-items: center;
+                justify-content: center;
+                background: var(--surface);
+                clip-path: inherit;
+            }
+
+            .service-icon {
+                display: block;
+                width: 78px;
+                height: 78px;
+                object-fit: contain;
+            }
+
+            .service-icon.symbol {
+                width: 64px;
+                height: 64px;
+                color: var(--accent);
+            }
+
+            .service-name {
+                color: var(--text);
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: 0;
+                text-align: center;
+            }
+
+            .site-footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                min-height: 68px;
+                padding: 18px 44px;
+                border-top: 1px solid var(--line);
+                background: var(--page);
+                color: var(--muted);
+                font-size: 12px;
+                font-weight: 600;
+                letter-spacing: 0;
+                text-transform: uppercase;
+            }
+
+            @media (max-width: 900px) {
+                .top-band {
+                    min-height: auto;
+                }
+
+                .site-header {
+                    padding: 12px 20px;
+                }
+
+                .brand-logo {
+                    height: 36px;
+                }
+
+                .hero {
+                    min-height: 500px;
+                    padding: 58px 20px 72px;
+                }
+
+                .hero h1 {
+                    font-size: 42px;
+                }
+
+                .services {
+                    padding: 52px 20px;
+                }
+
+                .orbit {
+                    display: grid;
+                    width: 100%;
+                    max-width: 620px;
+                    height: auto;
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 20px;
+                    padding-top: 32px;
+                }
+
+                .orbit-ring,
+                .orbit-ring-inner,
+                .core,
+                .spokes {
+                    display: none;
+                }
+
+                .service-node,
+                .service-node:nth-of-type(n) {
+                    position: static;
+                    width: 100%;
+                    min-height: 180px;
+                    margin: 0;
+                    transform: none;
+                }
+            }
+
+            @media (max-width: 560px) {
+                .theme-toggle {
+                    min-width: 80px;
+                }
+
+                .theme-label {
+                    display: none;
+                }
+
+                .hero {
+                    min-height: 460px;
+                }
+
+                .hero h1 {
+                    font-size: 36px;
+                }
+
+                .hero p {
+                    font-size: 15px;
+                }
+
+                .orbit {
+                    grid-template-columns: 1fr;
+                }
+
+                .site-footer {
+                    flex-direction: column;
+                    justify-content: center;
+                    gap: 5px;
+                    padding: 18px 20px;
+                    text-align: center;
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                *, *::before, *::after {
+                    scroll-behavior: auto !important;
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="top-band">
+            <canvas class="traffic-canvas" id="trafficCanvas" aria-hidden="true"></canvas>
+            <div class="traffic-grid" aria-hidden="true"></div>
+            <div class="hero-blue-glow" aria-hidden="true"></div>
+            <header class="site-header">
+                <a href="/" target="_self" aria-label="Accueil Oculox">
+                    <img class="brand-logo" src="assets/img/icone_logo.png" alt="Oculox" />
+                </a>
+                <button class="theme-toggle" id="themeToggle" type="button" title="Basculer le thème" aria-label="Basculer le thème" aria-pressed="true">
+                    <span class="theme-track" aria-hidden="true"><span class="theme-knob"></span></span>
+                    <span class="theme-label" id="themeLabel">Dark</span>
+                </button>
+            </header>
+
+            <main>
+                <section class="hero">
+                    <div class="status-badge"><span class="status-dot"></span>Plateforme de supervision OT</div>
+                    <img class="hero-logo" src="assets/img/logo_Oculox.png" alt="Plateforme Oculox" />
+                    <h1>Une vision totale.<br />Zéro angle mort.</h1>
+                    <div class="hero-rule" aria-hidden="true"></div>
+                    <p>Supervision, analyse et protection de vos infrastructures IT et OT.</p>
+                </section>
+            </main>
+        </div>
+
+        <section class="services" aria-labelledby="servicesTitle">
+            <h2 class="section-label" id="servicesTitle">Outils</h2>
+            <div class="orbit">
+                <div class="orbit-ring" aria-hidden="true"></div>
+                <div class="orbit-ring-inner" aria-hidden="true"></div>
+                <div class="spokes" aria-hidden="true">
+                    <span class="spoke" style="--angle: -90deg; --delay: 0s"></span>
+                    <span class="spoke" style="--angle: -30deg; --delay: -0.8s"></span>
+                    <span class="spoke" style="--angle: 30deg; --delay: -1.6s"></span>
+                    <span class="spoke" style="--angle: 90deg; --delay: -2.4s"></span>
+                    <span class="spoke" style="--angle: 150deg; --delay: -3.2s"></span>
+                    <span class="spoke" style="--angle: 210deg; --delay: -4s"></span>
+                </div>
+                <div class="core" aria-hidden="true"><strong>OCULOX</strong><span>CORE</span></div>
+
+                <a class="service-node" href="MALCOLM_DASHBOARDS_URL_REPLACER">
+                    <span class="hexagon">
+                        <span class="hexagon-inner"><img class="service-icon" src="assets/img/MALCOLM_DASHBOARDS_ICON_REPLACER" alt="OpenSearch Dashboards" /></span>
+                    </span>
+                    <span class="service-name">Dashboards</span>
+                </a>
+
+                <a class="service-node" href="/arkime/">
+                    <span class="hexagon">
+                        <span class="hexagon-inner"><img class="service-icon" src="assets/img/arkime.svg" alt="Arkime" /></span>
+                    </span>
+                    <span class="service-name">Sessions</span>
+                </a>
+
+                <a class="service-node" href="MALCOLM_NETBOX_URL_REPLACER">
+                    <span class="hexagon">
+                        <span class="hexagon-inner"><img class="service-icon" src="assets/img/netbox_icon.svg" alt="NetBox" /></span>
+                    </span>
+                    <span class="service-name">Actifs</span>
+                </a>
+
+                <a class="service-node" href="/arkime/cyberchef.html">
+                    <span class="hexagon">
+                        <span class="hexagon-inner"><img class="service-icon" src="assets/img/cyberchef.svg" alt="CyberChef" /></span>
+                    </span>
+                    <span class="service-name">Conversion</span>
+                </a>
+
+                <a class="service-node" href="/upload/">
+                    <span class="hexagon">
+                        <span class="hexagon-inner">
+                            <svg class="service-icon symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 16V4" />
+                                <path d="m7 9 5-5 5 5" />
+                                <path d="M20 15v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4" />
+                            </svg>
+                        </span>
+                    </span>
+                    <span class="service-name">Import</span>
+                </a>
+
+                <a class="service-node" href="MALCOLM_AUTH_URL_REPLACER">
+                    <span class="hexagon">
+                        <span class="hexagon-inner">
+                            <svg class="service-icon symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="8" r="4" />
+                                <path d="M4 21a8 8 0 0 1 16 0" />
+                            </svg>
+                        </span>
+                    </span>
+                    <span class="service-name">Utilisateurs</span>
+                </a>
+
+            </div>
+        </section>
+
+        <footer class="site-footer">
+            <span>© 2026 Oculox</span>
+            <span>Cybersécurité industrielle</span>
+        </footer>
+
+        <script>
+            (() => {
+                const root = document.documentElement;
+                const toggle = document.getElementById('themeToggle');
+                const label = document.getElementById('themeLabel');
+                const canvas = document.getElementById('trafficCanvas');
+                const savedTheme = localStorage.getItem('oculox-theme');
+                const initialTheme = savedTheme === 'light' ? 'light' : 'dark';
+                let scene;
+                let width = 0;
+                let height = 0;
+
+                const randomBetween = (min, max) => min + Math.random() * (max - min);
+
+                const buildTrafficScene = () => {
+                    const box = canvas.getBoundingClientRect();
+                    const nextWidth = Math.round(box.width);
+                    const nextHeight = Math.round(box.height);
+                    const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+                    if (!nextWidth || !nextHeight || (width === nextWidth && height === nextHeight && scene)) return;
+                    width = nextWidth;
+                    height = nextHeight;
+                    canvas.width = width * pixelRatio;
+                    canvas.height = height * pixelRatio;
+                    canvas.getContext('2d').setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+                    const levels = [0.16, 0.38, 0.62, 0.86];
+                    const buses = levels.map((level, index) => ({
+                        y: Math.round(height * level) + 0.5,
+                        x0: -20,
+                        x1: width + 20,
+                        weight: index === 1 || index === 2 ? 1.4 : 1
+                    }));
+                    const kinds = ['plc', 'sensor', 'valve', 'hmi', 'drive'];
+                    const devices = [];
+                    const drops = [];
+                    const step = Math.max(150, width / 7);
+
+                    buses.forEach((bus, busIndex) => {
+                        let x = randomBetween(30, step * 0.7);
+                        while (x < width - 20) {
+                            const up = (busIndex + Math.round(x)) % 2 === 0 ? -1 : 1;
+                            const length = randomBetween(26, 58);
+                            const kind = kinds[Math.floor(Math.random() * kinds.length)];
+                            const deviceY = bus.y + up * length;
+                            drops.push({ x: Math.round(x) + 0.5, y0: bus.y, y1: deviceY });
+                            devices.push({
+                                x: Math.round(x) + 0.5,
+                                y: deviceY,
+                                kind,
+                                up,
+                                size: kind === 'plc' ? randomBetween(11, 15) : kind === 'hmi' ? randomBetween(12, 16) : randomBetween(5, 7.5),
+                                phase: Math.random() * Math.PI * 2,
+                                alarm: Math.random() < 0.08
+                            });
+                            x += randomBetween(step * 0.55, step * 1.15);
+                        }
+                    });
+
+                    const risers = [];
+                    for (let index = 0; index < buses.length - 1; index += 1) {
+                        const count = 1 + Math.floor(Math.random() * 2);
+                        for (let item = 0; item < count; item += 1) {
+                            risers.push({
+                                x: Math.round(randomBetween(width * 0.08, width * 0.92)) + 0.5,
+                                y0: buses[index].y,
+                                y1: buses[index + 1].y
+                            });
+                        }
+                    }
+
+                    const packets = [];
+                    buses.forEach((bus, index) => {
+                        const count = 2 + (index % 2);
+                        for (let item = 0; item < count; item += 1) {
+                            packets.push({
+                                type: 'horizontal',
+                                y: bus.y,
+                                x: randomBetween(0, width),
+                                speed: randomBetween(0.5, 1.25) * (index % 2 ? -1 : 1),
+                                length: randomBetween(26, 64)
+                            });
+                        }
+                    });
+                    risers.forEach((riser) => packets.push({
+                        type: 'vertical',
+                        x: riser.x,
+                        y: randomBetween(riser.y0, riser.y1),
+                        y0: riser.y0,
+                        y1: riser.y1,
+                        speed: randomBetween(0.35, 0.8),
+                        length: randomBetween(18, 34)
+                    }));
+
+                    scene = { buses, devices, drops, risers, packets, sweep: 0 };
+                };
+
+                const drawTrafficScene = () => {
+                    if (!scene) return;
+                    const context = canvas.getContext('2d');
+                    const time = performance.now();
+                    const dark = root.getAttribute('data-theme') !== 'light';
+                    const accent = dark ? '34,211,238' : '14,127,155';
+                    const wireColor = dark ? '160,215,235' : '11,58,77';
+                    const wire = (alpha) => `rgba(${wireColor},${alpha})`;
+                    const cyan = (alpha) => `rgba(${accent},${alpha})`;
+
+                    context.clearRect(0, 0, width, height);
+                    context.lineCap = 'round';
+                    scene.buses.forEach((bus) => {
+                        context.strokeStyle = wire(dark ? 0.14 : 0.13);
+                        context.lineWidth = bus.weight;
+                        context.beginPath();
+                        context.moveTo(bus.x0, bus.y);
+                        context.lineTo(bus.x1, bus.y);
+                        context.stroke();
+                    });
+
+                    context.lineWidth = 1;
+                    context.strokeStyle = wire(0.10);
+                    context.beginPath();
+                    scene.risers.forEach((riser) => {
+                        context.moveTo(riser.x, riser.y0);
+                        context.lineTo(riser.x, riser.y1);
+                    });
+                    scene.drops.forEach((drop) => {
+                        context.moveTo(drop.x, drop.y0);
+                        context.lineTo(drop.x, drop.y1);
+                    });
+                    context.stroke();
+
+                    scene.devices.forEach((device) => {
+                        const blink = 0.5 + 0.5 * Math.sin(time * 0.0018 + device.phase);
+                        const activity = dark ? 0.35 + 0.5 * blink : 0.3 + 0.45 * blink;
+                        context.lineWidth = 1;
+                        context.strokeStyle = wire(dark ? 0.28 : 0.26);
+                        context.fillStyle = dark ? 'rgba(6,14,20,0.9)' : 'rgba(255,255,255,0.92)';
+
+                        if (device.kind === 'plc' || device.kind === 'hmi') {
+                            const deviceWidth = device.size * 1.7;
+                            const deviceHeight = device.size;
+                            const x = device.x - deviceWidth / 2;
+                            const y = device.y - (device.up < 0 ? deviceHeight : 0);
+                            context.beginPath();
+                            context.rect(x, y, deviceWidth, deviceHeight);
+                            context.fill();
+                            context.stroke();
+                            for (let index = 0; index < 3; index += 1) {
+                                context.fillStyle = cyan(index === 0 ? activity : 0.18 + 0.12 * blink);
+                                context.fillRect(x + 3 + index * 4, y + deviceHeight - 3.5, 2.2, 2);
+                            }
+                            if (device.kind === 'hmi') {
+                                context.strokeStyle = cyan(0.22);
+                                context.beginPath();
+                                context.moveTo(x + 3, y + 3.5);
+                                context.lineTo(x + deviceWidth - 3, y + 3.5);
+                                context.stroke();
+                            }
+                        } else if (device.kind === 'valve') {
+                            const radius = device.size;
+                            context.beginPath();
+                            context.moveTo(device.x - radius, device.y - radius * 0.8);
+                            context.lineTo(device.x, device.y);
+                            context.lineTo(device.x - radius, device.y + radius * 0.8);
+                            context.closePath();
+                            context.moveTo(device.x + radius, device.y - radius * 0.8);
+                            context.lineTo(device.x, device.y);
+                            context.lineTo(device.x + radius, device.y + radius * 0.8);
+                            context.closePath();
+                            context.fill();
+                            context.stroke();
+                        } else if (device.kind === 'drive') {
+                            const radius = device.size;
+                            context.beginPath();
+                            context.arc(device.x, device.y, radius, 0, Math.PI * 2);
+                            context.fill();
+                            context.stroke();
+                            context.strokeStyle = cyan(0.3 + 0.3 * blink);
+                            context.beginPath();
+                            context.arc(device.x, device.y, radius * 0.55, time * 0.002 % (Math.PI * 2), time * 0.002 % (Math.PI * 2) + 2.2);
+                            context.stroke();
+                        } else {
+                            const radius = device.size * 0.7;
+                            context.beginPath();
+                            context.arc(device.x, device.y, radius, 0, Math.PI * 2);
+                            context.fill();
+                            context.stroke();
+                            context.fillStyle = cyan(activity);
+                            context.beginPath();
+                            context.arc(device.x, device.y, radius * 0.42, 0, Math.PI * 2);
+                            context.fill();
+                        }
+
+                        if (device.alarm) {
+                            const pulse = 0.5 + 0.5 * Math.sin(time * 0.006 + device.phase);
+                            context.strokeStyle = dark ? `rgba(255,176,86,${0.25 + 0.5 * pulse})` : `rgba(200,110,20,${0.2 + 0.4 * pulse})`;
+                            context.beginPath();
+                            context.arc(device.x, device.y, device.size * 1.7, 0, Math.PI * 2);
+                            context.stroke();
+                        }
+                    });
+
+                    scene.packets.forEach((packet) => {
+                        if (packet.type === 'horizontal') {
+                            packet.x += packet.speed;
+                            if (packet.speed > 0 && packet.x - packet.length > width) packet.x = -packet.length;
+                            if (packet.speed < 0 && packet.x + packet.length < 0) packet.x = width + packet.length;
+                            const direction = Math.sign(packet.speed);
+                            const trail = context.createLinearGradient(packet.x - direction * packet.length, 0, packet.x, 0);
+                            trail.addColorStop(0, cyan(0));
+                            trail.addColorStop(1, cyan(dark ? 0.85 : 0.7));
+                            context.strokeStyle = trail;
+                            context.lineWidth = 1.8;
+                            context.beginPath();
+                            context.moveTo(packet.x - direction * packet.length, packet.y);
+                            context.lineTo(packet.x, packet.y);
+                            context.stroke();
+                            const glow = context.createRadialGradient(packet.x, packet.y, 0, packet.x, packet.y, 7);
+                            glow.addColorStop(0, cyan(dark ? 0.7 : 0.5));
+                            glow.addColorStop(1, cyan(0));
+                            context.fillStyle = glow;
+                            context.beginPath();
+                            context.arc(packet.x, packet.y, 7, 0, Math.PI * 2);
+                            context.fill();
+                        } else {
+                            packet.y += packet.speed;
+                            const low = Math.min(packet.y0, packet.y1);
+                            const high = Math.max(packet.y0, packet.y1);
+                            if (packet.y > high) packet.y = low;
+                            const trail = context.createLinearGradient(0, packet.y - packet.length, 0, packet.y);
+                            trail.addColorStop(0, cyan(0));
+                            trail.addColorStop(1, cyan(dark ? 0.6 : 0.5));
+                            context.strokeStyle = trail;
+                            context.lineWidth = 1.4;
+                            context.beginPath();
+                            context.moveTo(packet.x, packet.y - packet.length);
+                            context.lineTo(packet.x, packet.y);
+                            context.stroke();
+                        }
+                    });
+
+                    scene.sweep = (scene.sweep + 0.9) % (width + 340);
+                    const sweepX = scene.sweep - 170;
+                    const sweep = context.createLinearGradient(sweepX - 170, 0, sweepX + 170, 0);
+                    sweep.addColorStop(0, cyan(0));
+                    sweep.addColorStop(0.5, cyan(dark ? 0.05 : 0.04));
+                    sweep.addColorStop(1, cyan(0));
+                    context.fillStyle = sweep;
+                    context.fillRect(sweepX - 170, 0, 340, height);
+                };
+
+                const animateTraffic = () => {
+                    drawTrafficScene();
+                    window.requestAnimationFrame(animateTraffic);
+                };
+
+                const setTheme = (theme) => {
+                    const isDark = theme === 'dark';
+                    root.setAttribute('data-theme', theme);
+                    toggle.setAttribute('aria-pressed', String(isDark));
+                    label.textContent = isDark ? 'Dark' : 'Light';
+                    localStorage.setItem('oculox-theme', theme);
+                };
+
+                setTheme(initialTheme);
+                buildTrafficScene();
+                window.addEventListener('resize', buildTrafficScene);
+                if (window.ResizeObserver) new ResizeObserver(buildTrafficScene).observe(canvas.parentElement);
+                window.requestAnimationFrame(animateTraffic);
+                toggle.addEventListener('click', () => {
+                    setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+                });
+            })();
+        </script>
+    </body>
+</html>

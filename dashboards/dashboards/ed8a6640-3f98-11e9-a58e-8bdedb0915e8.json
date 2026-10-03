@@ -1,0 +1,138 @@
+{
+  "version": "7.10.0",
+  "objects": [
+    {
+      "id": "ed8a6640-3f98-11e9-a58e-8bdedb0915e8",
+      "type": "dashboard",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2024-04-29T15:49:16.000Z",
+      "version": "WzgzMywxXQ==",
+      "attributes": {
+        "title": "Connections - Source - Responder Bytes (region map)",
+        "hits": 0,
+        "description": "",
+        "panelsJSON": "[{\"gridData\":{\"x\":0,\"y\":0,\"w\":8,\"h\":44,\"i\":\"2\"},\"panelIndex\":\"2\",\"version\":\"7.6.2\",\"panelRefName\":\"panel_0\"},{\"gridData\":{\"x\":8,\"y\":0,\"w\":40,\"h\":40,\"i\":\"3\"},\"version\":\"7.6.2\",\"panelIndex\":\"3\",\"embeddableConfig\":{\"mapCenter\":[0,0],\"mapZoom\":3},\"panelRefName\":\"panel_1\"}]",
+        "optionsJSON": "{\"useMargins\":true}",
+        "version": 1,
+        "timeRestore": false,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"filter\":[],\"highlightAll\":false,\"version\":true,\"query\":{\"language\":\"lucene\",\"query\":{\"query_string\":{\"analyze_wildcard\":true,\"default_field\":\"*\",\"query\":\"*\"}}}}"
+        }
+      },
+      "references": [
+        {
+          "name": "panel_0",
+          "type": "visualization",
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3"
+        },
+        {
+          "name": "panel_1",
+          "type": "visualization",
+          "id": "18420e50-3f95-11e9-a58e-8bdedb0915e8"
+        }
+      ],
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      }
+    },
+    {
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:25:09.616Z",
+      "version": "Wzg3MiwxXQ==",
+      "attributes": {
+        "title": "Navigation",
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}",
+        "uiStateJSON": "{}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        }
+      },
+      "references": [],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "18420e50-3f95-11e9-a58e-8bdedb0915e8",
+      "type": "visualization",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:25:05.562Z",
+      "version": "WzgzNSwxXQ==",
+      "attributes": {
+        "title": "Connections - Source - Responder Bytes (region map)",
+        "visState": "{\"title\":\"Connections - Source - Responder Bytes (region map)\",\"type\":\"region_map\",\"params\":{\"addTooltip\":true,\"colorSchema\":\"Green to Red\",\"emsHotLink\":null,\"isDisplayWarning\":false,\"legendPosition\":\"bottomright\",\"mapCenter\":[0,0],\"mapZoom\":3,\"outlineWeight\":1,\"selectedJoinField\":{\"description\":\"Country Code\",\"name\":\"ISO_A2\"},\"selectedLayer\":{\"attribution\":\"https://exploratory.io/maps\",\"fields\":[{\"description\":\"Country Code\",\"name\":\"ISO_A2\"},{\"description\":\"Country Code2\",\"name\":\"WB_A2\"},{\"description\":\"Country Name\",\"name\":\"NAME\"}],\"format\":{\"type\":\"geojson\"},\"isEMS\":false,\"layerId\":\"self_hosted.World (offline)\",\"meta\":{\"feature_collection_path\":\"data\"},\"name\":\"World (offline)\",\"url\":\"/world.geojson\"},\"showAllShapes\":true,\"wms\":{\"enabled\":false,\"options\":{\"format\":\"image/png\",\"transparent\":true}}},\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"cardinality\",\"schema\":\"metric\",\"params\":{\"field\":\"server.bytes\",\"customLabel\":\"Responder Bytes\"}},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"segment\",\"params\":{\"field\":\"source.geo.country_iso_code\",\"size\":250,\"order\":\"desc\",\"orderBy\":\"1\",\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Originator Country\"}}]}",
+        "uiStateJSON": "{\"mapCenter\":[0,0],\"mapZoom\":3}",
+        "description": "",
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0"
+      },
+      "references": [
+        {
+          "type": "search",
+          "name": "search_0",
+          "id": "52570870-e9d4-444f-a3df-e44c6757ed9f"
+        }
+      ],
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      }
+    },
+    {
+      "id": "52570870-e9d4-444f-a3df-e44c6757ed9f",
+      "type": "search",
+      "namespaces": [
+        "default"
+      ],
+      "updated_at": "2021-02-10T21:25:07.590Z",
+      "version": "Wzg1NiwxXQ==",
+      "attributes": {
+        "title": "Connections - Logs",
+        "description": "",
+        "hits": 0,
+        "columns": [
+          "network.transport",
+          "network.protocol",
+          "source.ip",
+          "source.port",
+          "destination.ip",
+          "destination.port",
+          "network.bytes",
+          "event.id"
+        ],
+        "sort": [
+          [
+            "MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER",
+            "desc"
+          ]
+        ],
+        "version": 1,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"highlightAll\":false,\"version\":true,\"filter\":[],\"query\":{\"query\":{\"query_string\":{\"query\":\"(event.provider:zeek AND event.dataset:conn) OR (event.provider:suricata AND event.dataset:flow)\",\"analyze_wildcard\":true}},\"language\":\"lucene\"},\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        }
+      },
+      "references": [
+        {
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern",
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER"
+        }
+      ],
+      "migrationVersion": {
+        "search": "7.9.3"
+      }
+    }
+  ]
+}

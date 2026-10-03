@@ -1,0 +1,453 @@
+{
+  "objects": [
+    {
+      "attributes": {
+        "description": "",
+        "hits": 0,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"language\":\"kuery\",\"query\":\"\"},\"filter\":[]}"
+        },
+        "optionsJSON": "{\"hidePanelTitles\":false,\"useMargins\":true}",
+        "panelsJSON": "[{\"embeddableConfig\":{},\"gridData\":{\"h\":33,\"i\":\"93a55ef0-2531-4e0f-b541-007b15675877\",\"w\":8,\"x\":0,\"y\":0},\"panelIndex\":\"93a55ef0-2531-4e0f-b541-007b15675877\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_0\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":33,\"i\":\"1feca6e6-3466-4ff7-bcbf-267e3e78df54\",\"w\":10,\"x\":8,\"y\":0},\"panelIndex\":\"1feca6e6-3466-4ff7-bcbf-267e3e78df54\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_1\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":14,\"i\":\"cfb1f39f-52c9-4e69-938a-8ea3a7d98449\",\"w\":30,\"x\":18,\"y\":0},\"panelIndex\":\"cfb1f39f-52c9-4e69-938a-8ea3a7d98449\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_2\"},{\"embeddableConfig\":{\"vis\":{\"sortColumn\":{\"colIndex\":2,\"direction\":\"desc\"}}},\"gridData\":{\"h\":19,\"i\":\"8af980bf-56dd-4d6e-b7bf-8edf0d2fb319\",\"w\":30,\"x\":18,\"y\":14},\"panelIndex\":\"8af980bf-56dd-4d6e-b7bf-8edf0d2fb319\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_3\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"438627ba-9c90-4820-a50d-afe9a7bb2d6d\",\"w\":9,\"x\":0,\"y\":33},\"panelIndex\":\"438627ba-9c90-4820-a50d-afe9a7bb2d6d\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_4\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"4924e5a6-8301-4eb0-897a-fe4f434a423a\",\"w\":10,\"x\":9,\"y\":33},\"panelIndex\":\"4924e5a6-8301-4eb0-897a-fe4f434a423a\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_5\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"f470af29-165f-405f-b7d7-645daa139a33\",\"w\":17,\"x\":19,\"y\":33},\"panelIndex\":\"f470af29-165f-405f-b7d7-645daa139a33\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_6\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"a98fe06a-c49c-47ee-a696-555df58f7fbb\",\"w\":12,\"x\":36,\"y\":33},\"panelIndex\":\"a98fe06a-c49c-47ee-a696-555df58f7fbb\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_7\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"daf32d2d-164d-418a-b1f1-1f329ce71ff0\",\"w\":13,\"x\":0,\"y\":52},\"panelIndex\":\"daf32d2d-164d-418a-b1f1-1f329ce71ff0\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_8\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"140856ec-a808-4b4d-b576-083f94388bf5\",\"w\":16,\"x\":13,\"y\":52},\"panelIndex\":\"140856ec-a808-4b4d-b576-083f94388bf5\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_9\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":19,\"i\":\"15fb5c1b-0f41-42fc-9bb5-06402e78e215\",\"w\":19,\"x\":29,\"y\":52},\"panelIndex\":\"15fb5c1b-0f41-42fc-9bb5-06402e78e215\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_10\"},{\"embeddableConfig\":{},\"gridData\":{\"h\":29,\"i\":\"d8e534f2-e1e2-4a4d-a5a9-d086db6116af\",\"w\":48,\"x\":0,\"y\":71},\"panelIndex\":\"d8e534f2-e1e2-4a4d-a5a9-d086db6116af\",\"version\":\"2.18.0\",\"panelRefName\":\"panel_11\"}]",
+        "timeRestore": false,
+        "title": "Omron FINS",
+        "version": 1
+      },
+      "id": "c899f8b0-d36b-11ef-b619-17836b3bbf47",
+      "migrationVersion": {
+        "dashboard": "7.9.3"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+          "name": "panel_0",
+          "type": "visualization"
+        },
+        {
+          "id": "3ed65fa0-d36c-11ef-b619-17836b3bbf47",
+          "name": "panel_1",
+          "type": "visualization"
+        },
+        {
+          "id": "7c385510-d36c-11ef-b619-17836b3bbf47",
+          "name": "panel_2",
+          "type": "visualization"
+        },
+        {
+          "id": "801920a0-d38b-11ef-8ae2-0dd19e7f01ed",
+          "name": "panel_3",
+          "type": "visualization"
+        },
+        {
+          "id": "9dcfba60-d36c-11ef-b619-17836b3bbf47",
+          "name": "panel_4",
+          "type": "visualization"
+        },
+        {
+          "id": "d44dec60-d36c-11ef-b619-17836b3bbf47",
+          "name": "panel_5",
+          "type": "visualization"
+        },
+        {
+          "id": "5a1a7eb0-d38d-11ef-8ae2-0dd19e7f01ed",
+          "name": "panel_6",
+          "type": "visualization"
+        },
+        {
+          "id": "685f7d80-d38e-11ef-8ae2-0dd19e7f01ed",
+          "name": "panel_7",
+          "type": "visualization"
+        },
+        {
+          "id": "5c20abc0-d389-11ef-b66a-3bee4dc3b330",
+          "name": "panel_8",
+          "type": "visualization"
+        },
+        {
+          "id": "d4ac0ef0-d38d-11ef-8ae2-0dd19e7f01ed",
+          "name": "panel_9",
+          "type": "visualization"
+        },
+        {
+          "id": "27315d80-d391-11ef-8ae2-0dd19e7f01ed",
+          "name": "panel_10",
+          "type": "visualization"
+        },
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "panel_11",
+          "type": "search"
+        }
+      ],
+      "type": "dashboard",
+      "updated_at": "2025-01-16T15:46:51.481Z",
+      "version": "WzEwODcsMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":{\"query_string\":{\"query\":\"*\"}},\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "title": "Navigation",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Navigation\",\"type\":\"markdown\",\"params\":{\"markdown\":\"MALCOLM_NAVIGATION_MARKDOWN_REPLACER\",\"type\":\"markdown\",\"fontSize\":10,\"openLinksInNewTab\":false},\"aggs\":[]}"
+      },
+      "id": "df9e399b-efa5-4e33-b0ac-a7668a8ac2b3",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:55:17.645Z",
+      "version": "WzEwNzUsMV0="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Log Counts",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Log Counts\",\"type\":\"metric\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{\"customLabel\":\"\"},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":20,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Log Type\"},\"schema\":\"group\"}],\"params\":{\"addTooltip\":true,\"addLegend\":false,\"type\":\"metric\",\"metric\":{\"percentageMode\":false,\"useRanges\":false,\"colorSchema\":\"Green to Red\",\"metricColorMode\":\"None\",\"colorsRange\":[{\"from\":0,\"to\":10000}],\"labels\":{\"show\":true},\"invertColors\":false,\"style\":{\"bgFill\":\"#000\",\"bgColor\":false,\"labelColor\":false,\"subText\":\"\",\"fontSize\":36}}}}"
+      },
+      "id": "3ed65fa0-d36c-11ef-b619-17836b3bbf47",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc2NiwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Logs Over Time",
+        "uiStateJSON": "{}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Logs Over Time\",\"type\":\"histogram\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"date_histogram\",\"params\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"useNormalizedOpenSearchInterval\":true,\"scaleMetricValues\":false,\"interval\":\"auto\",\"drop_partials\":false,\"min_doc_count\":1,\"extended_bounds\":{}},\"schema\":\"segment\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.dataset\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":20,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Log Type\"},\"schema\":\"group\"}],\"params\":{\"type\":\"histogram\",\"grid\":{\"categoryLines\":false},\"categoryAxes\":[{\"id\":\"CategoryAxis-1\",\"type\":\"category\",\"position\":\"bottom\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"linear\"},\"labels\":{\"show\":true,\"filter\":true,\"truncate\":100},\"title\":{}}],\"valueAxes\":[{\"id\":\"ValueAxis-1\",\"name\":\"LeftAxis-1\",\"type\":\"value\",\"position\":\"left\",\"show\":true,\"style\":{},\"scale\":{\"type\":\"square root\",\"mode\":\"normal\"},\"labels\":{\"show\":true,\"rotate\":0,\"filter\":false,\"truncate\":100},\"title\":{\"text\":\"Count\"}}],\"seriesParams\":[{\"show\":true,\"type\":\"histogram\",\"mode\":\"stacked\",\"data\":{\"label\":\"Count\",\"id\":\"1\"},\"valueAxis\":\"ValueAxis-1\",\"drawLinesBetweenPoints\":true,\"lineWidth\":2,\"showCircles\":true}],\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"times\":[],\"addTimeMarker\":false,\"labels\":{\"show\":false},\"thresholdLine\":{\"show\":false,\"value\":10,\"width\":1,\"style\":\"full\",\"color\":\"#E7664C\"}}}"
+      },
+      "id": "7c385510-d36c-11ef-b619-17836b3bbf47",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc2NywxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Action and Result",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":2,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Action and Result\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.action\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Action\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"event.result\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Result\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "801920a0-d38b-11ef-8ae2-0dd19e7f01ed",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc2OCwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Source IP",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":1,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Source IP\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"source.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Source IP\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "9dcfba60-d36c-11ef-b619-17836b3bbf47",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc2OSwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Destination IP",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":2,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Destination IP\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.ip\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination IP\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"destination.port\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Destination Port\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\",\"row\":true}}"
+      },
+      "id": "d44dec60-d36c-11ef-b619-17836b3bbf47",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc3MCwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Controller Model and Version",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":2,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Controller Model and Version\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins_detail.controller_model\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Controller Model\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins_detail.controller_version\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Controller Version\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\",\"row\":true}}"
+      },
+      "id": "5a1a7eb0-d38d-11ef-8ae2-0dd19e7f01ed",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc3MSwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Files/Volumes",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":1,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Files/Volumes\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"file.path\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Volume Label\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "685f7d80-d38e-11ef-8ae2-0dd19e7f01ed",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc3MiwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Transport Protocol",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Transport Protocol\",\"type\":\"pie\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"network.transport\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Transport Protocol\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}}}"
+      },
+      "id": "5c20abc0-d389-11ef-b66a-3bee4dc3b330",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc3MywxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Data Type",
+        "uiStateJSON": "{\"vis\":{\"legendOpen\":false}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Data Type\",\"type\":\"pie\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.icf_data_type\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":5,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"},\"schema\":\"segment\"}],\"params\":{\"type\":\"pie\",\"addTooltip\":true,\"addLegend\":true,\"legendPosition\":\"bottom\",\"isDonut\":true,\"labels\":{\"show\":true,\"values\":true,\"last_level\":true,\"truncate\":100}}}"
+      },
+      "id": "d4ac0ef0-d38d-11ef-8ae2-0dd19e7f01ed",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc3NCwxXQ=="
+    },
+    {
+      "attributes": {
+        "description": "",
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"lucene\"},\"filter\":[]}"
+        },
+        "savedSearchRefName": "search_0",
+        "title": "Omron FINS - Address, Node, and Unit",
+        "uiStateJSON": "{\"vis\":{\"sortColumn\":{\"colIndex\":7,\"direction\":\"desc\"}}}",
+        "version": 1,
+        "visState": "{\"title\":\"Omron FINS - Address, Node, and Unit\",\"type\":\"table\",\"aggs\":[{\"id\":\"1\",\"enabled\":true,\"type\":\"count\",\"params\":{},\"schema\":\"metric\"},{\"id\":\"2\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.source_network_address\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Src Net Addr\"},\"schema\":\"bucket\"},{\"id\":\"3\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.source_node_number\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Src Node Num\"},\"schema\":\"bucket\"},{\"id\":\"4\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.source_unit_address\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Src Unit Addr\"},\"schema\":\"bucket\"},{\"id\":\"5\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.destination_network_address\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Dst Net Addr\"},\"schema\":\"bucket\"},{\"id\":\"6\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.destination_node_number\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Dst Node Num\"},\"schema\":\"bucket\"},{\"id\":\"7\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.destination_unit_address\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\",\"customLabel\":\"Dst Unit Addr\"},\"schema\":\"bucket\"},{\"id\":\"8\",\"enabled\":true,\"type\":\"terms\",\"params\":{\"field\":\"zeek.omron_fins.service_id\",\"orderBy\":\"1\",\"order\":\"desc\",\"size\":250,\"otherBucket\":true,\"otherBucketLabel\":\"Other\",\"missingBucket\":true,\"missingBucketLabel\":\"-\",\"customLabel\":\"Service ID\"},\"schema\":\"bucket\"}],\"params\":{\"perPage\":10,\"showPartialRows\":false,\"showMetricsAtAllLevels\":false,\"showTotal\":false,\"totalFunc\":\"sum\",\"percentageCol\":\"\"}}"
+      },
+      "id": "27315d80-d391-11ef-8ae2-0dd19e7f01ed",
+      "migrationVersion": {
+        "visualization": "7.10.0"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+          "name": "search_0",
+          "type": "search"
+        }
+      ],
+      "type": "visualization",
+      "updated_at": "2025-01-16T15:46:38.688Z",
+      "version": "WzEwODYsMV0="
+    },
+    {
+      "attributes": {
+        "columns": [
+          "event.dataset",
+          "network.transport",
+          "source.ip",
+          "destination.ip",
+          "event.action",
+          "event.result",
+          "zeek.omron_fins.link_id",
+          "event.id"
+        ],
+        "description": "",
+        "hits": 0,
+        "kibanaSavedObjectMeta": {
+          "searchSourceJSON": "{\"query\":{\"query\":\"event.dataset:omron*\",\"language\":\"lucene\"},\"highlightAll\":false,\"version\":true,\"aggs\":{\"2\":{\"date_histogram\":{\"field\":\"MALCOLM_NETWORK_INDEX_TIME_FIELD_REPLACER\",\"fixed_interval\":\"30d\",\"min_doc_count\":1}}},\"filter\":[],\"indexRefName\":\"kibanaSavedObjectMeta.searchSourceJSON.index\"}"
+        },
+        "sort": [],
+        "title": "Omron FINS - All Logs",
+        "version": 1
+      },
+      "id": "ddec0a50-d36b-11ef-b619-17836b3bbf47",
+      "migrationVersion": {
+        "search": "7.9.3"
+      },
+      "namespaces": [
+        "default"
+      ],
+      "references": [
+        {
+          "id": "MALCOLM_NETWORK_INDEX_PATTERN_REPLACER",
+          "name": "kibanaSavedObjectMeta.searchSourceJSON.index",
+          "type": "index-pattern"
+        }
+      ],
+      "type": "search",
+      "updated_at": "2025-01-16T14:54:49.054Z",
+      "version": "Wzc3NiwxXQ=="
+    }
+  ],
+  "version": "2.18.0"
+}

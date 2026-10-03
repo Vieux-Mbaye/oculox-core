@@ -1,0 +1,114 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zeek-live-deployment
+  namespace: malcolm
+  labels:
+    app: zeek-live
+    role: capture
+spec:
+  selector:
+    matchLabels:
+      app: zeek-live
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zeek-live
+        role: capture
+        workload-group: heavy
+    spec:
+      containers:
+      - name: zeek-live-container
+        image: ghcr.io/idaholab/malcolm/zeek:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        securityContext:
+          capabilities:
+            add:
+              # NET_ADMIN and NET_RAW - to turn on promiscuous mode and capture raw packets
+              - NET_ADMIN
+              - NET_RAW
+              # SYS_NICE - to set process nice values, real-time scheduling policies, I/O scheduling
+              - SYS_NICE
+        envFrom:
+          - configMapRef:
+              name: process-env
+          - configMapRef:
+              name: ssl-env
+          - configMapRef:
+              name: upload-common-env
+          - configMapRef:
+              name: pcap-capture-env
+          - configMapRef:
+              name: zeek-env
+          - configMapRef:
+              name: zeek-live-env
+        livenessProbe:
+          exec:
+            command:
+            - /usr/local/bin/container_health.sh
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 15
+          successThreshold: 1
+          failureThreshold: 10
+        volumeMounts:
+          - mountPath: /var/local/ca-trust/configmap
+            name: zeek-live-var-local-catrust-volume
+          - mountPath: "/zeek/extract_files"
+            name: zeek-live-zeek-volume
+            subPath: "extract_files"
+          - mountPath: "/zeek/live"
+            name: zeek-live-zeek-volume
+            subPath: "live"
+          - mountPath: "/usr/local/zeek/share/zeek/site/custom/configmap"
+            name: zeek-live-custom-volume
+          - mountPath: "/usr/local/zeek/share/zeek/site/intel-preseed/configmap"
+            name: zeek-live-intel-preseed-volume
+          - mountPath: "/usr/local/zeek/share/zeek/site/intel"
+            name: zeek-live-intel-volume
+            subPath: "zeek/intel"
+      terminationGracePeriodSeconds: 30
+      initContainers:
+      - name: zeek-live-dirinit-container
+        image: ghcr.io/idaholab/malcolm/dirinit:26.07.1
+        imagePullPolicy: Always
+        stdin: false
+        tty: true
+        resources:
+          requests:
+            cpu: "0.25"
+            memory: "128Mi"
+          limits:
+            cpu: "0.5"
+            memory: "256Mi"
+        envFrom:
+          - configMapRef:
+              name: process-env
+        env:
+          - name: PUSER_MKDIR
+            value: "/data/config:zeek/intel/Google,zeek/intel/Mandiant,zeek/intel/MISP,zeek/intel/STIX;/data/zeek-logs:extract_files/filescan,live"
+        volumeMounts:
+          - name: zeek-live-intel-volume
+            mountPath: "/data/config"
+          - name: zeek-live-zeek-volume
+            mountPath: "/data/zeek-logs"
+      volumes:
+        - name: zeek-live-var-local-catrust-volume
+          configMap:
+            name: var-local-catrust
+        - name: zeek-live-zeek-volume
+          persistentVolumeClaim:
+            claimName: zeek-claim
+        - name: zeek-live-custom-volume
+          configMap:
+            name: zeek-custom
+        - name: zeek-live-intel-preseed-volume
+          configMap:
+            name: zeek-intel-preseed
+        - name: zeek-live-intel-volume
+          persistentVolumeClaim:
+            claimName: config-claim

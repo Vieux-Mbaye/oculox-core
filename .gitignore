@@ -1,0 +1,58 @@
+# code editor files
+.vscode/
+# arkime
+/arkime/etc/GeoLite2-*
+/arkime/etc/oui.txt*
+/arkime/etc/wise.ini
+/arkime/wiseini
+/arkime/etc/ipv4-address-space.csv*
+/README.css
+
+# auth-related
+/.ldap_config_defaults
+/config/*.env
+/.opensearch*.curlrc
+/logstash/certs
+/filebeat/certs
+/nginx/certs
+/nginx/ca-trust
+/nginx/htpasswd
+/nginx/nginx_ldap*.conf
+/htadmin/config.ini
+/htadmin/metadata
+*.keystore
+
+# runtime
+.tmp
+.configured
+.os-info
+config.*/
+/valkey
+/postgres
+/filescan-logs
+malcolm-config_2*.json
+malcolm-config_2*.yaml
+
+# development
+.envrc
+.direnv
+.vagrant
+.fuse_*
+.venv
+shared/bin/malcolm_constants.py
+shared/bin/malcolm_utils.py
+malcolm_*images.tar.gz
+malcolm_*images.tar.xz
+malcolm_netbox_backup_*.gz
+*.iso
+*.img
+*-build.log
+Gemfile.lock
+_site
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+__pypackages__/
+*.py[cod]
+*$py.class
+.DS_Store

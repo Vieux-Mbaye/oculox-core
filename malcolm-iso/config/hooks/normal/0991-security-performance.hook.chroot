@@ -1,0 +1,198 @@
+#!/bin/bash
+
+# configure firewall
+sed -i "s/LOGLEVEL=.*/LOGLEVEL=off/" /etc/ufw/ufw.conf
+sed -i 's/DEFAULT_FORWARD_POLICY=.*/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw
+sed -i "s/#net\/ipv4\/ip_forward=1/net\/ipv4\/ip_forward=1/" /etc/ufw/sysctl.conf
+read -r -d '' MASQUERADECFG <<- EOM
+# NAT table rules
+*nat
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING ! -o docker0 -s 172.29.0.0/16 -j MASQUERADE
+COMMIT
+EOM
+awk '1' <(echo "$MASQUERADECFG") /etc/ufw/before.rules > /tmp/before.rules && \
+  cat /tmp/before.rules > /etc/ufw/before.rules && \
+  rm -f /tmp/before.rules
+/usr/sbin/ufw --force enable
+/usr/sbin/ufw default deny incoming
+/usr/sbin/ufw default allow outgoing
+UFW_ALLOW_RULES=(
+  https
+  ntp
+  ssh
+  9009:9013/tcp
+)
+for i in ${UFW_ALLOW_RULES[@]}; do
+  ufw allow "$i"
+done
+ufw allow proto tcp from 172.29.0.0/16 to any port 8005
+
+# docker (disallow overriding firewall)
+mkdir -p /etc/docker/
+cat << 'EOF' > /etc/docker/daemon.json
+{
+  "iptables": false,
+  "default-address-pools":[
+    {"base":"172.29.0.0/16","size":24}
+  ]
+}
+EOF
+
+# performance parameters for networking, disk, etc.
+cat << 'EOF' >> /etc/sysctl.d/99-sysctl-performance.conf
+# don't restrict dmesg to root
+kernel.dmesg_restrict=0
+
+# the maximum number of open file handles
+fs.file-max=2097152
+
+# increase maximums for inotify watches
+fs.inotify.max_user_watches=131072
+fs.inotify.max_queued_events=131072
+fs.inotify.max_user_instances=512
+
+# the maximum number of memory map areas a process may have
+vm.max_map_count=524288
+
+# decrease "swappiness" (swapping out runtime memory vs. dropping pages)
+vm.swappiness=1
+
+# the % of system memory fillable with "dirty" pages before flushing
+vm.dirty_background_ratio=5
+
+# maximum % of dirty system memory before committing everything
+vm.dirty_ratio=10
+
+# virtual memory accounting mode: always overcommit, never check
+vm.overcommit_memory=1
+
+net.core.netdev_max_backlog=250000
+net.core.optmem_max=33554432
+net.core.rmem_default=425984
+net.core.rmem_max=33554432
+net.core.somaxconn=65535
+net.core.wmem_default=425984
+net.core.wmem_max=33554432
+net.ipv4.tcp_rmem=10240 425984 33554432
+net.ipv4.tcp_wmem=10240 425984 33554432
+net.ipv4.udp_mem=10240 425984 33554432
+
+net.ipv4.conf.all.accept_redirects=0
+net.ipv4.conf.all.accept_source_route=0
+net.ipv4.conf.all.send_redirects=0
+net.ipv4.conf.default.accept_redirects=0
+net.ipv4.conf.default.accept_source_route=0
+net.ipv4.conf.default.send_redirects=0
+net.ipv4.icmp_echo_ignore_broadcasts=1
+net.ipv4.ip_forward=1
+net.ipv4.tcp_retries2=5
+net.ipv6.conf.all.accept_source_route=0
+net.ipv6.conf.all.accept_ra=0
+net.ipv6.conf.default.accept_ra=0
+net.ipv6.conf.all.disable_ipv6=1
+net.ipv6.conf.default.disable_ipv6=1
+net.ipv6.conf.lo.disable_ipv6=1
+EOF
+
+mkdir -p /etc/polkit-1/rules.d/
+cat << 'EOF' > /etc/polkit-1/rules.d/50-networkmanager-netdev.rules
+polkit.addRule(function(action, subject) {
+    if (subject.isInGroup("netdev")) {
+        if (
+            action.id == "org.freedesktop.NetworkManager.network-control" ||
+            action.id == "org.freedesktop.NetworkManager.settings.modify.system" ||
+            action.id == "org.freedesktop.NetworkManager.settings.modify.own" ||
+            action.id == "org.freedesktop.NetworkManager.enable-disable-network" ||
+            action.id == "org.freedesktop.NetworkManager.enable-disable-wifi"
+        ) {
+            return polkit.Result.YES;
+        }
+    }
+});
+EOF
+chmod 755 /etc/polkit-1/rules.d/
+chmod 644 /etc/polkit-1/rules.d/50-networkmanager-netdev.rules
+
+# password requirement hardening
+sed -i -e 's/[[:space:]]*nullok[[:alnum:]_]*//g' /etc/pam.d/common-auth
+sed -i -r "s/(pam_faildelay.so.*delay)[[:space:]]*=[[:space:]]*[[:digit:]]+/\1=4000000/g" /etc/pam.d/login
+sed -i -r "s/([[:space:]]*session[[:space:]]*)[[:alnum:]_]*([[:space:]]*pam_lastlog.so[[:space:]]*)/\1required\2\tshowfailed/g" /etc/pam.d/login
+sed -i "s/^[[:space:]]*password[[:space:]]*requisite[[:space:]]*pam_pwquality\.so.*/password requisite pam_pwquality.so retry=3 ucredit=-1 lcredit=-1 dcredit=-1 ocredit=-1 difok=8 minclass=4 maxrepeat=2 maxclassrepeat=4 minlen=15/g" /etc/pam.d/common-password
+
+# enable cryptsetup support on boot
+sed -i "s/#CRYPTSETUP=.*/CRYPTSETUP=y/" /etc/cryptsetup-initramfs/conf-hook
+
+# enable guests to mount vmware/etc. fuse-based mounts with allow_other
+sed -i "s/#user_allow_other.*/user_allow_other/" /etc/fuse.conf
+
+# don't store ssh_host keys in image
+rm -f /etc/ssh/ssh_host_*
+
+# some permissions
+find /etc/audit -type d -exec chmod 750 "{}" \;
+find /etc/audit -type f -exec chmod 640 "{}" \;
+chmod 600 /etc/ssh/sshd_config
+
+# set DIR_MODE to 750 for new users
+sed -i "s/^DIR_MODE=.*/DIR_MODE=0750/" /etc/adduser.conf
+
+# new directories default to 750, new files to 640
+echo -e "\n\n# new directories default to 700, new files to 600" >> /etc/profile
+echo "umask 077" >> /etc/profile
+echo "export UMASK=077" >> /etc/profile
+echo "export PYTHONDONTWRITEBYTECODE=1" >> /etc/profile
+
+# put sudoers log into its own logfile
+awk 'FNR==NR{ if (/^Defaults/) p=NR; next} 1; FNR==p{ print "Defaults\t!syslog\nDefaults\tlogfile=/var/log/sudo.log" }' /etc/sudoers /etc/sudoers > /tmp/newsudoers
+mv /tmp/newsudoers /etc/sudoers && chmod 440 /etc/sudoers
+cat << 'EOF' > /etc/logrotate.d/sudoers
+/var/log/sudo.log
+{
+  weekly
+  missingok
+  rotate 4
+  compress
+  delaycompress
+  copytruncate
+  minsize 100k
+}
+EOF
+
+# tweak some auditd settings
+sed -r -i "s/((disk_full_action|disk_error_action)\s*=\s*).*/\1 SYSLOG/" /etc/audit/auditd.conf
+sed -r -i "s/(network_failure_action\s*=\s*).*/\1 syslog/" /etc/audit/audisp-remote.conf
+
+# disable ntp for now, and disable servers, but it could be turned back on later
+systemctl disable ntpsec || true
+sed -i "s/^\(pool \)/# \1/" /etc/ntpsec/ntp.conf
+sed -i "s/^\(restrict -6\)/# \1/" /etc/ntpsec/ntp.conf
+sed -i "s/^\(restrict ::1\)/# \1/" /etc/ntpsec/ntp.conf
+sed -r -i "s/^(NTPD_OPTS=).*/\1'-4 -g'/" /etc/default/ntpsec
+usermod -d /var/lib/ntpsec ntpsec
+
+# disable default fluentbit configuration
+systemctl disable fluent-bit || true
+rm -f /etc/fluent-bit/fluent-bit.conf
+
+# add fluentbit logfmt parser
+cat << 'EOF' >> /etc/fluent-bit/parsers.conf
+
+[PARSER]
+    Name logfmt
+    Format logfmt
+EOF
+
+# remove identifying operating system information from /etc/issue*
+truncate -s 0 /etc/motd
+sed -i "s/Debian/Hedgehog/g" /etc/issue
+sed -i "s/Debian/Hedgehog/g" /etc/issue.net
+
+# set up /etc/os-release information (override values in /etc/os-release with custom values)
+if [[ -f /etc/skel/Malcolm/.os-info ]]; then
+  awk '
+    BEGIN {FS = OFS = "="}
+    {v1[$1] = $2}
+    END {for (key in v1) {print key, v1[key]}}
+  ' /etc/os-release /etc/skel/Malcolm/.os-info | sort | sponge /etc/os-release
+fi

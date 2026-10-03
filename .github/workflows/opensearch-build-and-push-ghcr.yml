@@ -1,0 +1,34 @@
+name: opensearch-build-and-push-ghcr
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'opensearch-config/**'
+      - 'Dockerfiles/opensearch.Dockerfile'
+      - 'container-health-scripts/opensearch.sh'
+      - 'scripts/malcolm_constants.py'
+      - 'scripts/malcolm_utils.py'
+      - 'shared/bin/docker-uid-gid-setup.sh'
+      - 'shared/bin/jdk-cacerts-auto-import.sh'
+      - 'shared/bin/keystore-bootstrap.sh'
+      - 'shared/bin/opensearch_status.sh'
+      - 'shared/bin/self_signed_key_gen.sh'
+      - 'shared/bin/service_check_passthrough.sh'
+      - '.trigger_workflow_build'
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  docker:
+    uses: ./.github/workflows/docker-build-push-scan.yml
+    permissions:
+      actions: write
+      packages: write
+      contents: read
+      security-events: write
+    with:
+      service: opensearch
+      dockerfile: ./Dockerfiles/opensearch.Dockerfile

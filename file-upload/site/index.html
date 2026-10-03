@@ -1,0 +1,755 @@
+<!DOCTYPE HTML>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="upload/oculox-icon.png" />
+    <title>Oculox — Import de données</title>
+
+    <!-- FilePond & Tagger (chemins originaux conservés) -->
+    <link href="upload/filepond/dist/filepond.css" rel="stylesheet">
+    <link href="upload/@jcubic/tagger/tagger.css" rel="stylesheet">
+
+    <style>
+        /* ===== THEMES ===== */
+        :root, [data-theme="light"] {
+            --bg:               #ffffff;
+            --bg-form:          #f8f9fa;
+            --bg-card:          #ffffff;
+            --bg-input:         #ffffff;
+            --bg-drop:          #fafafa;
+            --bg-drop-hover:    #e9f7fb;
+            --bg-file:          #ffffff;
+            --bg-ext:           #e4f4f8;
+            --text:             #1e2a38;
+            --text-muted:       #888888;
+            --border:           #d0d0d0;
+            --border-file:      #e8e8e8;
+            --primary:          #008fc7;
+            --primary-h:        #006e9d;
+            --prog-bg:          #eeeeee;
+            --btn-dis-bg:       #cccccc;
+            --btn-dis-txt:      #666666;
+            --shadow:           0 4px 20px rgba(0,0,0,0.08);
+            --tooltip-bg:       #f9f9f9;
+            --tooltip-border:   #cccccc;
+            --tooltip-txt:      #333333;
+            --toggle-bg:        #e2e8f0;
+            --toggle-knob:      #ffffff;
+        }
+
+        [data-theme="dark"] {
+            --bg:               #0f1523;
+            --bg-form:          #151d2e;
+            --bg-card:          #1c2540;
+            --bg-input:         #1c2540;
+            --bg-drop:          #1c2540;
+            --bg-drop-hover:    #22304a;
+            --bg-file:          #1c2540;
+            --bg-ext:           #12354a;
+            --text:             #e2e8f0;
+            --text-muted:       #94a3b8;
+            --border:           #2d3a55;
+            --border-file:      #2d3a55;
+            --primary:          #36c8e8;
+            --primary-h:        #68d8ee;
+            --prog-bg:          #2d3a55;
+            --btn-dis-bg:       #2d3a55;
+            --btn-dis-txt:      #64748b;
+            --shadow:           0 4px 20px rgba(0,0,0,0.4);
+            --tooltip-bg:       #1c2540;
+            --tooltip-border:   #2d3a55;
+            --tooltip-txt:      #e2e8f0;
+            --toggle-bg:        #2d3a55;
+            --toggle-knob:      #36c8e8;
+        }
+
+        /* ===== RESET ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        a { text-decoration: none; color: inherit; }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            background-color: #07131f;
+            border-bottom: 1px solid #17344a;
+            padding: 0.75rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .navbar-brand img {
+            height: 42px;
+            object-fit: contain;
+        }
+
+        /* ===== TOGGLE ===== */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+        }
+
+        .toggle-switch input {
+            opacity: 0; width: 0; height: 0;
+            position: absolute;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background-color: var(--toggle-bg);
+            border-radius: 26px;
+            transition: 0.3s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 3px;
+        }
+
+        .toggle-slider::before {
+            content: '';
+            width: 20px; height: 20px;
+            background-color: var(--toggle-knob);
+            border-radius: 50%;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        input:checked + .toggle-slider::before {
+            transform: translateX(22px);
+        }
+
+        /* ===== LOGO ===== */
+        .logo-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 36px 20px;
+            background-color: #07131f;
+            border-bottom: 1px solid #17344a;
+        }
+
+        .logo-wrap img {
+            width: 50%;
+            max-width: 380px;
+            height: auto;
+        }
+
+        /* ===== TITRE ===== */
+        .panel-title {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 18px 0 28px;
+            transition: color 0.3s ease;
+        }
+
+        /* ===== FORMULAIRE ===== */
+        .form-wrap {
+            width: 90%;
+            max-width: 680px;
+            margin: 0 auto;
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+
+        .top-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        /* ===== CHAMP TAGS ===== */
+        .tags-field {
+            flex: 1;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            color: var(--text);
+            background-color: var(--bg-input);
+            transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .tags-field::placeholder { color: var(--text-muted); }
+        .tags-field:focus { border-color: var(--primary); }
+
+        /* ===== DROPDOWN SITE ===== */
+        .site-dropdown {
+            font-family: inherit;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            padding: 10px 14px;
+            color: var(--primary);
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            background-color: var(--bg-input);
+            transition: border-color 0.2s, background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .site-dropdown:focus { border-color: var(--primary); }
+
+        /* ===== BOUTON VALIDER ===== */
+        .button {
+            background-color: var(--primary);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px 14px;
+            font-family: inherit;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+
+        .button:hover:not(:disabled) { background-color: var(--primary-h); }
+
+        .button:disabled {
+            background-color: var(--btn-dis-bg);
+            color: var(--btn-dis-txt);
+            cursor: not-allowed;
+        }
+
+        /* ===== ZONE DE DÉPÔT ===== */
+        .drop-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 52px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s;
+            background-color: var(--bg-drop);
+            position: relative;
+        }
+
+        .drop-area:hover,
+        .drop-area.drag-over {
+            border-color: var(--primary);
+            background-color: var(--bg-drop-hover);
+        }
+
+        .drop-area p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        .drop-link {
+            color: var(--primary);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .drop-link:hover { color: var(--primary-h); }
+        #file-input-hidden { display: none; }
+
+        /* ===== LISTE FICHIERS ===== */
+        .file-list {
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border-file);
+            border-radius: 10px;
+            padding: 10px 14px;
+            background-color: var(--bg-file);
+            animation: fadein 0.2s ease both;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        @keyframes fadein {
+            from { opacity: 0; transform: translateY(5px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .file-ext {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--primary);
+            background-color: var(--bg-ext);
+            border-radius: 6px;
+            padding: 3px 8px;
+            flex-shrink: 0;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .file-info { flex: 1; min-width: 0; }
+
+        .file-name {
+            font-size: 0.88rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text);
+        }
+
+        .file-size {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        /* Barre de progression */
+        .prog-wrap { width: 88px; flex-shrink: 0; }
+
+        .prog-bg {
+            height: 3px;
+            background-color: var(--prog-bg);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 3px;
+            transition: background-color 0.3s ease;
+        }
+
+        .prog-bar {
+            height: 100%;
+            background-color: var(--primary);
+            width: 0%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .prog-pct {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        /* Bouton supprimer */
+        .file-del {
+            width: 22px; height: 22px;
+            border: none; background: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            cursor: pointer; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            transition: color 0.15s, background-color 0.15s;
+            flex-shrink: 0;
+        }
+
+        .file-del:hover {
+            color: var(--primary-h);
+            background-color: var(--bg-drop-hover);
+        }
+
+        /* ===== FOOTER / STATUT ===== */
+        footer {
+            display: flex;
+            justify-content: center;
+            padding: 24px 20px 28px;
+        }
+
+        #malcolm-readiness-container {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+            font-family: inherit;
+            font-size: 0.88rem;
+            cursor: default;
+            color: var(--text);
+            transition: color 0.3s ease;
+        }
+
+        #malcolm-details {
+            display: none;
+            text-align: left;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-txt);
+            border: 1px solid var(--tooltip-border);
+            padding: 12px;
+            font-size: 13px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+            white-space: normal;
+            min-width: 260px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        #malcolm-readiness-container:hover #malcolm-details { display: block; }
+
+        #malcolm-details ul {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 5px 14px;
+            list-style: none;
+        }
+
+        #malcolm-details ul li { margin: 0; padding: 0; }
+
+        /* ===== TAGGER SURCHARGE ===== */
+        .tagger {
+            border-radius: 12px !important;
+            border: 1px solid var(--border) !important;
+            background-color: var(--bg-input) !important;
+            color: var(--text) !important;
+        }
+
+        .tagger > ul > li:not(.tagger-new) > :first-child {
+            background: var(--primary) !important;
+            border-radius: 12px !important;
+        }
+
+        .tagger > ul > li:not(.tagger-new) > span,
+        .tagger > ul > li:not(.tagger-new) > a > span,
+        .tagger > ul > li:not(.tagger-new) a,
+        .tagger > ul > li:not(.tagger-new) a:visited {
+            color: white !important;
+        }
+
+        .tagger input {
+            background: transparent !important;
+            color: var(--text) !important;
+        }
+
+        .tagger input::placeholder { color: var(--text-muted) !important; }
+    </style>
+</head>
+<body>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <a class="navbar-brand" href="/" target="_self">
+            <img src="upload/icone_logo.png" alt="Oculox" />
+        </a>
+        <label class="theme-toggle" for="themeToggle" title="Changer de thème">
+            <span>☀️</span>
+            <div class="toggle-switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="toggle-slider"></span>
+            </div>
+            <span>🌙</span>
+        </label>
+    </nav>
+
+    <!-- ===== LOGO ===== -->
+    <div class="logo-wrap">
+        <img src="upload/logo_Oculox.png" alt="Plateforme Oculox" />
+    </div>
+
+    <h1 class="panel-title">Téléversement d'Artefacts de Trafic Réseau</h1>
+
+    <!-- ===== FORMULAIRE — action/method/enctype conservés pour PHP ===== -->
+    <div class="form-wrap">
+        <form id="commit_files" action="server/php/submit.php" method="post" enctype="multipart/form-data">
+
+            <!-- Ligne tags + site (name= conservés pour PHP) -->
+            <div class="top-row">
+                <!-- name="tags" → submit.php -->
+                <input
+                    type="text"
+                    name="tags"
+                    id="tags-input"
+                    class="tags-field"
+                    placeholder="Étiquettes personnalisées (ex: OT, modbus, site-A…)"
+                />
+                <!-- name="site-dropdown" → submit.php -->
+                <select name="site-dropdown" id="site-dropdown" class="site-dropdown" title="Site NetBox">
+                    <option value="0">Pas d'enrichissement NetBox</option>
+                </select>
+            </div>
+
+            <!-- Bouton valider -->
+            <button type="submit" id="commit_button" class="button" disabled>
+                Valider les fichiers téléversés
+            </button>
+
+            <!-- Zone de dépôt custom -->
+            <div class="drop-area" id="drop-area">
+                <!-- name="filepond[]" conservé pour submit.php -->
+                <input type="file" id="file-input-hidden" name="filepond[]" multiple
+                       accept=".pcap,.pcapng,.log,.json,.zeek,.evtx,.csv,.gz,.zip" />
+                <p>
+                    Glissez-déposez vos fichiers ici ou
+                    <span class="drop-link" id="browse-link">parcourir</span>
+                </p>
+            </div>
+
+            <!-- Liste des fichiers avec progression -->
+            <div class="file-list" id="file-list"></div>
+
+        </form>
+    </div>
+
+    <!-- ===== FOOTER STATUT ===== -->
+    <footer>
+        <div id="malcolm-readiness-container">
+            <span id="malcolm-summary">🔄 Vérification en cours…</span>
+            <div id="malcolm-details"></div>
+        </div>
+    </footer>
+
+    <!-- Scripts (chemins originaux conservés) -->
+    <script src="upload/@jcubic/tagger/tagger.js"></script>
+    <script src="upload/filepond/dist/filepond.js"></script>
+    <script src="upload/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.js"></script>
+    <script src="upload/filepond-plugin-file-metadata/dist/filepond-plugin-file-metadata.js"></script>
+    <script src="upload/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+
+    <script>
+    /* ===== DARK / LIGHT MODE ===== */
+    const toggle = document.getElementById('themeToggle');
+    const html   = document.documentElement;
+
+    const saved = localStorage.getItem('oculox-theme');
+    if (saved === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+        toggle.checked = true;
+    }
+
+    toggle.addEventListener('change', () => {
+        const isDark = toggle.checked;
+        html.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('oculox-theme', isDark ? 'dark' : 'light');
+    });
+
+    /* ===== LOGIQUE PRINCIPALE ===== */
+    window.addEventListener("DOMContentLoaded", function () {
+
+        const commitBtn  = document.getElementById("commit_button");
+        const dropArea   = document.getElementById("drop-area");
+        const fileInput  = document.getElementById("file-input-hidden");
+        const browseLink = document.getElementById("browse-link");
+        const fileListEl = document.getElementById("file-list");
+
+        let files = [];
+
+        /* ── Drag & drop ── */
+        ["dragenter","dragover"].forEach(evt =>
+            dropArea.addEventListener(evt, e => {
+                e.preventDefault();
+                dropArea.classList.add("drag-over");
+            })
+        );
+        ["dragleave","dragend"].forEach(evt =>
+            dropArea.addEventListener(evt, () => dropArea.classList.remove("drag-over"))
+        );
+        dropArea.addEventListener("drop", e => {
+            e.preventDefault();
+            dropArea.classList.remove("drag-over");
+            addFiles([...e.dataTransfer.files]);
+        });
+        dropArea.addEventListener("click", e => {
+            if (e.target !== browseLink) fileInput.click();
+        });
+        browseLink.addEventListener("click", e => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+        fileInput.addEventListener("change", () => addFiles([...fileInput.files]));
+
+        /* ── Ajouter fichiers ── */
+        function addFiles(newFiles) {
+            newFiles.forEach(f => {
+                if (!files.find(x => x.name === f.name && x.size === f.size))
+                    files.push(f);
+            });
+            render();
+            updateButton();
+        }
+
+        /* ── Rendu liste ── */
+        function render() {
+            fileListEl.innerHTML = "";
+            files.forEach((f, i) => {
+                const ext = f.name.split(".").pop().toUpperCase().slice(0, 7);
+                const el  = document.createElement("div");
+                el.className = "file-item";
+                el.innerHTML = `
+                    <span class="file-ext">${ext}</span>
+                    <div class="file-info">
+                        <div class="file-name">${f.name}</div>
+                        <div class="file-size">${fmt(f.size)}</div>
+                    </div>
+                    <div class="prog-wrap">
+                        <div class="prog-bg"><div class="prog-bar" id="pb${i}"></div></div>
+                        <div class="prog-pct" id="pct${i}">—</div>
+                    </div>
+                    <button type="button" class="file-del" onclick="removeFile(${i})">×</button>
+                `;
+                fileListEl.appendChild(el);
+            });
+        }
+
+        window.removeFile = function(i) {
+            files.splice(i, 1);
+            render();
+            updateButton();
+        };
+
+        function updateButton() {
+            commitBtn.disabled = files.length === 0;
+        }
+
+        function fmt(b) {
+            if (!b) return "0 o";
+            const u = ["o","Ko","Mo","Go"];
+            const i = Math.floor(Math.log(b) / Math.log(1024));
+            return (b / Math.pow(1024, i)).toFixed(1) + " " + u[i];
+        }
+
+        /* ── Soumission → PHP submit.php ── */
+        document.getElementById("commit_files").addEventListener("submit", function(e) {
+            if (!files.length || commitBtn.disabled) {
+                e.preventDefault();
+                return;
+            }
+            commitBtn.disabled = true;
+            commitBtn.textContent = "Téléversement en cours…";
+
+            /* Simulation barre de progression (le vrai upload se fait via PHP) */
+            let done = 0;
+            files.forEach((f, i) => {
+                let p = 0;
+                const pb  = document.getElementById("pb"  + i);
+                const pct = document.getElementById("pct" + i);
+                const iv  = setInterval(() => {
+                    p += Math.random() * 14 + 4;
+                    if (p >= 100) {
+                        p = 100; clearInterval(iv); done++;
+                        if (done === files.length) onDone();
+                    }
+                    if (pb)  pb.style.width = p + "%";
+                    if (pct) pct.textContent = Math.round(p) + "%";
+                }, 80 + i * 25);
+            });
+        });
+
+        function onDone() {
+            commitBtn.textContent = "Téléversement terminé — analyse en cours…";
+            setTimeout(() => {
+                files = [];
+                fileInput.value = "";
+                render();
+                updateButton();
+                commitBtn.textContent = "Valider les fichiers téléversés";
+            }, 3000);
+        }
+
+        /* ── Tagger sur name="tags" ── */
+        if (typeof tagger !== 'undefined') {
+            tagger(document.querySelector('input[name="tags"]'), {
+                allow_duplicates: false,
+                allow_spaces: true,
+                completion: { list: [], delay: 400, min_length: 2 },
+                tag_limit: 16,
+                wrap: true,
+                add_on_blur: true,
+                placeholder: 'Étiquettes personnalisées',
+                link: () => false,
+                filter: name => name,
+            });
+        }
+
+        /* ── NetBox sites — fetch /mapi/netbox-sites ── */
+        function populatenetBoxSiteDropdown(data) {
+            const sel = document.getElementById("site-dropdown");
+            sel.innerHTML = "";
+            const skip = document.createElement("option");
+            skip.value = 0;
+            skip.textContent = "Pas d'enrichissement NetBox";
+            sel.appendChild(skip);
+
+            const entries = Object.entries(data).map(([id, s]) => ({
+                id: parseInt(id),
+                text: s.display || s.name || `Site ${id}`
+            }));
+            if (entries.length > 0) {
+                const minId = Math.min(...entries.map(s => s.id));
+                entries.forEach(s => {
+                    const opt = document.createElement("option");
+                    opt.value = s.id;
+                    opt.textContent = s.text;
+                    if (s.id === minId) opt.selected = true;
+                    sel.appendChild(opt);
+                });
+            }
+        }
+
+        function fetchNetBoxSites() {
+            fetch('/mapi/netbox-sites')
+                .then(r => r.json())
+                .then(data => populatenetBoxSiteDropdown(data))
+                .catch(() => {});
+        }
+
+        /* ── Malcolm readiness — fetch /mapi/ready ── */
+        function populateMalcolmReadiness(data) {
+            const isReady = Object.values(data).every(v => v);
+            document.getElementById("malcolm-summary").textContent = isReady
+                ? "✅ Prêt pour le téléversement de fichiers (jusqu'à 50 Go chacun)"
+                : "❌ Non prêt pour le téléversement 🔄";
+            const list = Object.entries(data)
+                .map(([k, v]) => `<li>${k}</li><li>${v ? "✅" : "❌"}</li>`)
+                .join("");
+            document.getElementById("malcolm-details").innerHTML = `<ul>${list}</ul>`;
+        }
+
+        function fetchMalcolmReadiness() {
+            fetch('/mapi/ready')
+                .then(r => r.json())
+                .then(data => populateMalcolmReadiness(data))
+                .catch(() => {
+                    document.getElementById("malcolm-summary").textContent = "";
+                });
+        }
+
+        document.getElementById("malcolm-summary").addEventListener("click", function () {
+            fetchNetBoxSites();
+            fetchMalcolmReadiness();
+        });
+
+        fetchNetBoxSites();
+        fetchMalcolmReadiness();
+    });
+    </script>
+</body>
+</html>

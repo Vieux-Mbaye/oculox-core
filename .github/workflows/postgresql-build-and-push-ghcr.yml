@@ -1,0 +1,28 @@
+name: postgresql-build-and-push-ghcr
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'postgres-scripts/**'
+      - 'Dockerfiles/postgresql.Dockerfile'
+      - 'container-health-scripts/postgres.sh'
+      - 'shared/bin/docker-uid-gid-setup.sh'
+      - 'shared/bin/service_check_passthrough.sh'
+      - '.trigger_workflow_build'
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  docker:
+    uses: ./.github/workflows/docker-build-push-scan.yml
+    permissions:
+      actions: write
+      packages: write
+      contents: read
+      security-events: write
+    with:
+      service: postgresql
+      dockerfile: ./Dockerfiles/postgresql.Dockerfile

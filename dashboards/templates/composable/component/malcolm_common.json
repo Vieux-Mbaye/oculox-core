@@ -1,0 +1,261 @@
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "destination": {
+          "properties": {
+            "ip_reverse_dns": {
+              "type": "keyword"
+            },
+            "oui": {
+              "type": "keyword"
+            },
+            "device": {
+              "properties": {
+                "discovered": {
+                  "type": "keyword"
+                },
+                "uninventoried": {
+                  "type": "keyword"
+                },
+                "cluster": {
+                  "type": "keyword"
+                },
+                "device_type": {
+                  "type": "keyword"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "manufacturer": {
+                  "type": "keyword"
+                },
+                "name": {
+                  "type": "keyword"
+                },
+                "role": {
+                  "type": "keyword"
+                },
+                "service": {
+                  "type": "keyword"
+                },
+                "site": {
+                  "type": "keyword"
+                },
+                "url": {
+                  "type": "keyword"
+                },
+                "details": {
+                  "type": "flat_object"
+                }
+              }
+            },
+            "segment": {
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "keyword"
+                },
+                "site": {
+                  "type": "keyword"
+                },
+                "tenant": {
+                  "type": "keyword"
+                },
+                "url": {
+                  "type": "keyword"
+                },
+                "details": {
+                  "type": "flat_object"
+                }
+              }
+            }
+          }
+        },
+        "event": {
+          "properties": {
+            "freq_score_v1": {
+              "type": "float"
+            },
+            "freq_score_v2": {
+              "type": "float"
+            },
+            "hits": {
+              "type": "long"
+            },
+            "result": {
+              "type": "keyword"
+            },
+            "severity_tags": {
+              "type": "keyword"
+            }
+          }
+        },
+        "file": {
+          "properties": {
+            "source": {
+              "type": "keyword"
+            },
+            "entropy": {
+              "type": "float"
+            },
+            "strings": {
+              "type": "wildcard",
+              "ignore_above": 16384,
+              "doc_values": false,
+              "normalizer": "lowercase"
+            }
+          }
+        },
+        "network": {
+          "properties": {
+            "is_orig": {
+              "type": "keyword"
+            },
+            "protocol_version": {
+              "type": "keyword"
+            }
+          }
+        },
+        "related": {
+          "properties": {
+            "discovered": {
+              "type": "keyword"
+            },
+            "uninventoried": {
+              "type": "keyword"
+            },
+            "mac": {
+              "type": "keyword"
+            },
+            "oui": {
+              "type": "keyword"
+            },
+            "password": {
+              "type": "keyword",
+              "ignore_above": 256,
+              "fields": {
+                "text": {
+                  "type": "text"
+                }
+              }
+            },
+            "device_id": {
+              "type": "integer"
+            },
+            "device_name": {
+              "type": "keyword"
+            },
+            "device_type": {
+              "type": "keyword"
+            },
+            "manufacturer": {
+              "type": "keyword"
+            },
+            "role": {
+              "type": "keyword"
+            },
+            "service": {
+              "type": "keyword"
+            },
+            "site": {
+              "type": "keyword"
+            }
+          }
+        },
+        "source": {
+          "properties": {
+            "ip_reverse_dns": {
+              "type": "keyword"
+            },
+            "oui": {
+              "type": "keyword"
+            },
+            "device": {
+              "properties": {
+                "discovered": {
+                  "type": "keyword"
+                },
+                "uninventoried": {
+                  "type": "keyword"
+                },
+                "cluster": {
+                  "type": "keyword"
+                },
+                "device_type": {
+                  "type": "keyword"
+                },
+                "id": {
+                  "type": "integer"
+                },
+                "manufacturer": {
+                  "type": "keyword"
+                },
+                "name": {
+                  "type": "keyword"
+                },
+                "role": {
+                  "type": "keyword"
+                },
+                "service": {
+                  "type": "keyword"
+                },
+                "site": {
+                  "type": "keyword"
+                },
+                "url": {
+                  "type": "keyword"
+                },
+                "details": {
+                  "type": "flat_object"
+                }
+              }
+            },
+            "segment": {
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "keyword"
+                },
+                "site": {
+                  "type": "keyword"
+                },
+                "tenant": {
+                  "type": "keyword"
+                },
+                "url": {
+                  "type": "keyword"
+                },
+                "details": {
+                  "type": "flat_object"
+                }
+              }
+            }
+          }
+        },
+        "tls": {
+          "properties": {
+            "client": {
+              "properties": {
+                "ja4": {
+                  "type": "keyword"
+                }
+              }
+            },
+            "server": {
+              "properties": {
+                "ja4s": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

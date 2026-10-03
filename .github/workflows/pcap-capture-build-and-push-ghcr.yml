@@ -1,0 +1,30 @@
+name: pcap-capture-build-and-push-ghcr
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'pcap-capture/**'
+      - 'Dockerfiles/pcap-capture.Dockerfile'
+      - 'container-health-scripts/pcap-capture.sh'
+      - 'shared/bin/docker-uid-gid-setup.sh'
+      - 'shared/bin/netdev-json.sh'
+      - 'shared/bin/nic-capture-setup.sh'
+      - 'shared/bin/service_check_passthrough.sh'
+      - '.trigger_workflow_build'
+  workflow_dispatch:
+  repository_dispatch:
+
+jobs:
+  docker:
+    uses: ./.github/workflows/docker-build-push-scan.yml
+    permissions:
+      actions: write
+      packages: write
+      contents: read
+      security-events: write
+    with:
+      service: pcap-capture
+      dockerfile: ./Dockerfiles/pcap-capture.Dockerfile
