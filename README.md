@@ -53,23 +53,28 @@ recette locale.
 
 ## 4. Recuperer Et Verifier Le Bundle OpenSearch
 
-Le bundle est cree sur la VM Cluster avec :
+L'installation du Cluster cree automatiquement le bundle Core dans :
 
-```bash
-./oculox cluster client-bundle core ~/oculox-bundles/core
+```text
+~/oculox-cluster/dev/generated/opensearch-cluster/client-bundles/core
 ```
 
-Puis transfere sur le Core par un canal administre :
+Le transferer directement sur le Core par un canal administre :
 
 ```bash
 mkdir -p ~/oculox-bundles
-scp -r <UTILISATEUR_CLUSTER>@<IP_CLUSTER>:~/oculox-bundles/core ~/oculox-bundles/
+scp -r <UTILISATEUR_CLUSTER>@<IP_CLUSTER>:~/oculox-cluster/dev/generated/opensearch-cluster/client-bundles/core ~/oculox-bundles/
 cd ~/oculox-bundles/core
 sha256sum -c SHA256SUMS
 cd ~/oculox-core
 ```
 
 `SHA256SUMS` doit retourner uniquement `OK`.
+
+Il n'est pas necessaire d'executer `cluster client-bundle` dans le parcours
+normal. Cette commande reste disponible sur le Cluster uniquement pour
+reexporter le bundle si sa copie automatique est absente ou doit etre placee
+dans un autre repertoire securise.
 
 ## 5. Installer Le Core Sans Changer La Procedure
 
