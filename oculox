@@ -64,6 +64,7 @@ Exploitation :
   ./oculox keycloak credentials
   ./oculox keycloak report
   ./oculox verify clients
+  ./oculox verify wise
   ./oculox verify ingestion baseline --output <rapport-core.json>
   ./oculox verify ingestion inject --pcap <fichier.pcap> \
       --run-id <identifiant> --output <rapport-collecteur.json>
@@ -151,6 +152,12 @@ apply_remote_opensearch_bundle() {
     ./dev/scripts/configure-remote-opensearch.py \
         --bundle "$OPENSEARCH_BUNDLE" \
         --role "$ROLE"
+}
+
+provision_wise_service_account() {
+    local role="${1:-${ROLE:-}}"
+    [[ "$role" == principal ]] || return 0
+    ./dev/scripts/provision-wise-service-account.py
 }
 
 protect_existing_role() {
@@ -431,12 +438,16 @@ continue_install() {
     apply_remote_opensearch_bundle
     printf 'Étape 2/4 - Authentification et secrets officiels\n'
     ./scripts/auth_setup
+    provision_wise_service_account "$ROLE"
     printf 'Étape 3/4 - Application du rôle et de la résilience Oculox\n'
     prepare_role
     printf 'Étape 4/4 - Démarrage de la plateforme complète\n'
     read_state
     compose --profile "$PROFILE" pull
     official_start
+    if [[ "$ROLE" == principal ]]; then
+        ./dev/scripts/validate-wise-runtime.py --wait 300
+    fi
     ./oculox status
 }
 
@@ -572,6 +583,7 @@ case "$COMMAND" in
     configure-opensearch-remote)
         ./dev/scripts/configure-remote-opensearch.py "$@"
         read_state
+        provision_wise_service_account "$OCULOX_ROLE"
         render_runtime_compose
         docker compose -f "$RUNTIME_COMPOSE_FILE" --profile "$PROFILE" config --quiet
         printf '%s\n' 'Configuration OpenSearch distante et Compose d’exécution validés.'
@@ -587,6 +599,10 @@ case "$COMMAND" in
             clients)
                 shift
                 ./dev/tests/opensearch-cluster/validate-client-connectivity.py "$@"
+                ;;
+            wise)
+                shift
+                ./dev/scripts/validate-wise-runtime.py "$@"
                 ;;
             ingestion)
                 shift

@@ -26,6 +26,7 @@ CLIENT_DIR = PROJECT_DIR / "dev/generated/opensearch-clients"
 CA_FILE = PROJECT_DIR / "nginx/ca-trust/oculox-opensearch-ca.crt"
 FILEBEAT_DIR = PROJECT_DIR / "dev/generated/filebeat"
 RESULT_ROOT = PROJECT_DIR / "dev/generated/validation/client-connectivity"
+RUNTIME_COMPOSE = PROJECT_DIR / "dev/generated/docker-compose.runtime.yml"
 EXPECTED = {
     "principal": {
         "logstash": "logstash",
@@ -79,7 +80,7 @@ def container_for(service: str) -> str | None:
         "ps",
         "-a",
         "--filter",
-        "label=com.docker.compose.project=oculox",
+        f"label=com.docker.compose.project.config_files={RUNTIME_COMPOSE}",
         "--filter",
         f"label=com.docker.compose.service={service}",
         "--format",

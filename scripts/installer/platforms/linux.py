@@ -163,6 +163,7 @@ class LinuxInstaller(BaseInstaller):
                     'make',
                     'openssl',
                     'python3-yaml',
+                    'ripgrep',
                     'xz-utils',
                 ]
             )
@@ -180,6 +181,7 @@ class LinuxInstaller(BaseInstaller):
                     'make',
                     'openssl',
                     'python3-pyyaml',
+                    'ripgrep',
                     'xz',
                 ]
             )

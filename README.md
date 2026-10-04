@@ -156,12 +156,20 @@ Ne relancez pas `install` uniquement pour reprendre apres `auth_setup`.
 ./oculox status
 ./oculox validate
 ./oculox verify clients
+./oculox verify wise
 ./oculox logs nginx-proxy dashboards logstash logstash-2
 ```
 
 Tous les conteneurs doivent etre `running` et, lorsqu'un healthcheck existe,
 `healthy`. `./oculox verify clients` doit terminer par
-`CLIENT_CONNECTIVITY_RESULT=PASS`.
+`CLIENT_CONNECTIVITY_RESULT=PASS`. Si une URL WISE HTTPS a ete configuree,
+`./oculox verify wise` doit terminer par `WISE_RUNTIME=PASS`. L'installation
+ajoute automatiquement le compte technique Arkime a Nginx sans afficher son
+mot de passe. Il ne faut pas incorporer d'identifiants dans l'URL WISE.
+
+Les liens de champ IP et protocole de Dashboards sont generes avec l'URL
+publique declaree par `--server-name`. Un clic doit rediriger vers Arkime et ne
+doit jamais rester sur `/dashboards/app/iddash2ark/`.
 
 ## 7. Provisionner Keycloak
 
