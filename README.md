@@ -25,6 +25,21 @@ Ordre complet :
 
 Le Cluster doit donc etre installe avant ce Core.
 
+### Fiche De Deploiement
+
+Avant de commencer, noter les valeurs definitives :
+
+| Valeur | Exemple de recette | Regle |
+|---|---|---|
+| `IP_CORE_OU_DNS` | `192.168.1.103` | stable et joignable par toutes les VM |
+| `IP_CLUSTER` | `192.168.1.250` | endpoint OpenSearch |
+| `INTERFACE_CAPTURE` | `ens33` | interface SPAN/TAP si capture Core |
+| `NOM_COLLECTEUR` | `collector-01` | unique par capteur |
+
+Une IP stable suffit en laboratoire. Chez un client, utiliser de preference un
+DNS stable. La valeur `--server-name` devient l'identite HTTPS et la base des
+URL Keycloak ; ne pas la changer ensuite sans rotation planifiee.
+
 ## 2. Prerequis
 
 - Debian ou Ubuntu recent ;
@@ -35,6 +50,18 @@ Le Cluster doit donc etre installe avant ce Core.
 - ports utilisateurs `443/TCP` et `5601/TCP` ;
 - ports `5044/TCP` et `5045/TCP` autorises depuis les collecteurs ;
 - endpoint OpenSearch `9200/TCP` joignable depuis le Core.
+
+Verifier avant le clone :
+
+```bash
+hostname -I
+timedatectl status
+ip -br link
+df -h /
+```
+
+WISE utilise `8081` uniquement entre conteneurs. L'URL utilisateur est
+`https://<IP_CORE_OU_DNS>/wise/` ; ne pas publier directement `8081`.
 
 Ne placez jamais les bundles, mots de passe, PCAP ou fichiers `config/*.env`
 dans Git.
@@ -115,6 +142,26 @@ sont les suivants :
 | Allow Arkime WISE Configuration | `Yes` permet aux administrateurs de gerer les sources dans `WISE > Config` ; `No` rend la configuration consultable seulement |
 | Arkime WISE URL | conserver `http://arkime:8081` pour le WISE local du Core ; utiliser une URL HTTPS sans identifiants uniquement pour un WISE distant |
 
+Pour une capture Core standard avec Arkime :
+
+| Reglage | Valeur recommandee |
+|---|---|
+| Capture Live Traffic with Arkime | `Yes` |
+| Arkime Node Host | vide pour le nom automatique |
+| PCAP Compression | `none`, sauf politique explicite |
+| Capture with netsniff-ng | `No` |
+| Capture with tcpdump | `No` |
+
+Arkime capture deja le PCAP. Plusieurs moteurs simultanes peuvent dupliquer les
+paquets et augmenter fortement CPU et disque. Zeek et Suricata peuvent rester
+actifs pour l'analyse. Si le Core ne recoit aucun SPAN/TAP, desactiver la
+capture dans l'assistant ne supprime pas les capacites du depot.
+
+`http://arkime:8081` est l'adresse WISE interne. Ne saisir ni
+`https://<IP_CORE>/wise/`, ni `https://<IP_CORE>:8081/wise/`, ni un mot de passe
+dans cette valeur. Si WISE est desactive, l'installation continue et sa
+validation devient non applicable sans bloquer les autres services.
+
 Le bundle importe ensuite les valeurs OpenSearch definitives. Ne remplacez pas
 ses comptes techniques par un compte administrateur partage.
 
@@ -174,6 +221,26 @@ Les liens de champ IP et protocole de Dashboards sont generes avec l'URL
 publique declaree par `--server-name`. Un clic doit rediriger vers Arkime et ne
 doit jamais rester sur `/dashboards/app/iddash2ark/`.
 
+URL de controle :
+
+| Service | URL |
+|---|---|
+| Portail | `https://<IP_CORE_OU_DNS>/` |
+| Dashboards | `https://<IP_CORE_OU_DNS>:5601/dashboards/` |
+| Arkime | `https://<IP_CORE_OU_DNS>/arkime/` |
+| WISE | `https://<IP_CORE_OU_DNS>/wise/` |
+| Keycloak | `https://<IP_CORE_OU_DNS>/keycloak/` |
+
+Les avertissements Logstash `zeek-parse unavailable` sont normaux pendant
+l'initialisation. Ils doivent cesser apres le demarrage du pipeline
+`malcolm-zeek`. S'ils persistent plusieurs minutes :
+
+```bash
+./oculox logs logstash logstash-2
+./oculox restart logstash logstash-2
+./oculox status
+```
+
 ## 7. Provisionner Keycloak
 
 Le provisionnement ne remplace pas encore le mode Basic : il cree le realm,
@@ -190,6 +257,11 @@ les clients, groupes, roles, secrets et le compte administrateur initial.
 sont generes dans `dev/generated/keycloak-initial-credentials.env`, protege en
 mode `600` et ignore par Git. Enregistrez-les dans un coffre. `report` doit
 contenir `"result": "PASS"`.
+
+Quelques `connection refused` ou `503` peuvent apparaitre pendant le premier
+demarrage de Keycloak. Le script attend automatiquement. Ne pas interrompre :
+la validite est determinee par le code retour final, le rapport `PASS` et
+`verify-hardening`, pas par une tentative transitoire.
 
 Le meme rapport doit contenir `arkime_wise_read_access` et
 `arkime_wise_read_write_access`. Le groupe `oculox-admins` doit posseder les
@@ -264,6 +336,9 @@ Les autres groupes fonctionnels disposent uniquement de la consultation WISE.
 Lorsque WISE est desactive, les roles restent presents dans Keycloak mais
 n'activent aucun service et ne bloquent pas l'installation.
 
+Apres une modification de groupe ou de role, fermer la session navigateur et
+se reconnecter : un jeton deja emis ne contient pas les nouveaux roles.
+
 ## 10. Preparer Un Collecteur
 
 ```bash
@@ -289,6 +364,38 @@ Chaque collecteur doit recevoir son propre bundle.
 ```
 
 `stop` conserve les volumes. N'utilisez pas `docker compose down -v`.
+
+Apres un redemarrage de VM :
+
+```bash
+cd ~/oculox-core
+./oculox start
+./oculox status
+./oculox verify clients
+./oculox verify wise
+```
+
+`restart` reconcilie d'abord le Compose rendu puis redemarre les services
+demandes. Cela applique les changements de ports, mounts et variables que
+`docker compose restart` seul n'appliquerait pas.
+
+## 12. Depannage Et Recette Finale
+
+| Symptome | Cause probable | Action |
+|---|---|---|
+| Docker refuse l'acces | groupe Docker non recharge | reconnecter SSH puis `resume-install` |
+| checksum bundle invalide | transfert incomplet | recopier depuis le Cluster |
+| OpenSearch refuse TLS | CA, heure ou endpoint incorrect | verifier bundle et horloge |
+| WISE retourne `401` | session/role ou compte technique | nouvelle connexion puis `verify wise` |
+| WISE affiche zero requete | aucune recherche Arkime | generer du trafic puis consulter Stats |
+| Dashboards: Application Not Found | ancien lien/session | redemarrer Dashboards et rouvrir la session |
+| Logstash attend `zeek-parse` | pipeline en initialisation | attendre puis lire les deux logs |
+
+Le Core est accepte lorsque les services sont sains, `validate`,
+`verify clients`, `verify wise` et les trois controles Keycloak passent, les
+liens Dashboards ouvrent Arkime, et une recette Collecteur se termine par
+`INGESTION_RESULT=PASS`. Sauvegarder hors Git `config/*.env`, les identifiants
+Keycloak, les bundles non distribues et les donnees persistantes.
 
 Documentation technique complementaire :
 
