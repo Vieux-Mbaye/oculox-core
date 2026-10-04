@@ -260,10 +260,10 @@ Chaque client possède son propre secret et des URI de redirection exactes.
 | Groupe | Rôles proposés |
 | --- | --- |
 | `/oculox-users` | autorisation d'entrer dans Oculox |
-| `/oculox-admins` | `admin` |
-| `/oculox-analysts` | `read_write_access`, `dashboards_read_write_access`, `arkime_hunt_access` |
-| `/oculox-viewers` | `read_access`, `dashboards_read_access`, `arkime_read_access` |
-| `/oculox-incident-response` | `arkime_pcap_access`, `arkime_hunt_access` |
+| `/oculox-admins` | `admin`, `arkime_wise_read_access`, `arkime_wise_read_write_access` |
+| `/oculox-analysts` | `read_write_access`, `dashboards_read_write_access`, `arkime_hunt_access`, `arkime_wise_read_access` |
+| `/oculox-viewers` | `read_access`, `dashboards_read_access`, `arkime_read_access`, `arkime_wise_read_access` |
+| `/oculox-incident-response` | `arkime_pcap_access`, `arkime_hunt_access`, `arkime_wise_read_access` |
 
 L'accès PCAP doit rester indépendant du rôle générique de lecture.
 

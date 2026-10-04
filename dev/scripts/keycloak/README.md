@@ -38,6 +38,21 @@ nginx/nginx_auth_keycloak.conf
 Les scripts ne doivent jamais ecrire de secret dans Git. Les valeurs reelles
 restent dans `config/*.env`, ignores par le depot.
 
+## Autorisations WISE
+
+Le provisionnement Keycloak configure aussi WISE, sans commande supplementaire :
+
+- `oculox-admins` recoit `arkime_wise_read_access` et
+  `arkime_wise_read_write_access` ;
+- les groupes analyste, reponse a incident et consultation recoivent seulement
+  `arkime_wise_read_access`.
+
+Ces roles sont sans effet lorsque WISE est desactive dans le profil Oculox. Si
+WISE est actif, un membre de `oculox-admins` voit dans `WISE > Config` les
+commandes `Add Source`, `Import Config`, modification et suppression. Apres un
+changement de role, il faut se deconnecter puis se reconnecter pour renouveler
+le jeton Keycloak.
+
 ## VM Neuves
 
 Lorsqu'une VM Core change d'adresse ou de nom DNS, il faut regenerer les URLs :

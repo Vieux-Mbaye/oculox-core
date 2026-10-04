@@ -111,6 +111,9 @@ sont les suivants :
 | Capture live sur le Core | conserver le besoin du deploiement ; ne supprimer aucun service Compose |
 | Interface de capture | interface SPAN/TAP reelle si la capture Core est active |
 | Zeek, Suricata, Arkime | activer selon le mode de capture retenu, comme dans le depot fusionne |
+| Enable Arkime WISE | `Yes` charge WISE et permet l'enrichissement ; `No` le laisse desactive sans bloquer l'installation |
+| Allow Arkime WISE Configuration | `Yes` permet aux administrateurs de gerer les sources dans `WISE > Config` ; `No` rend la configuration consultable seulement |
+| Arkime WISE URL | conserver `http://arkime:8081` pour le WISE local du Core ; utiliser une URL HTTPS sans identifiants uniquement pour un WISE distant |
 
 Le bundle importe ensuite les valeurs OpenSearch definitives. Ne remplacez pas
 ses comptes techniques par un compte administrateur partage.
@@ -188,6 +191,11 @@ sont generes dans `dev/generated/keycloak-initial-credentials.env`, protege en
 mode `600` et ignore par Git. Enregistrez-les dans un coffre. `report` doit
 contenir `"result": "PASS"`.
 
+Le meme rapport doit contenir `arkime_wise_read_access` et
+`arkime_wise_read_write_access`. Le groupe `oculox-admins` doit posseder les
+deux. Aucune commande Keycloak supplementaire n'est requise, que WISE ait ete
+active ou non dans l'assistant.
+
 La CA publique Web necessaire au Cluster est :
 
 ```text
@@ -248,6 +256,13 @@ puis creer chaque utilisateur dans le realm `oculox`. Affecter l'utilisateur a
 Ne donnez pas les roles techniques `oculox_logstash`, `oculox_dashboards` ou
 `oculox_api` aux humains. Exiger le changement du mot de passe initial et
 l'enrolement TOTP lors de la premiere connexion.
+
+Le provisionnement attribue automatiquement l'administration WISE aux membres
+de `/oculox-admins`. Lorsque WISE a ete active dans l'assistant, ces
+administrateurs peuvent ajouter et modifier les sources dans `WISE > Config`.
+Les autres groupes fonctionnels disposent uniquement de la consultation WISE.
+Lorsque WISE est desactive, les roles restent presents dans Keycloak mais
+n'activent aucun service et ne bloquent pas l'installation.
 
 ## 10. Preparer Un Collecteur
 

@@ -71,6 +71,14 @@ class WiseServiceAccountTests(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 WISE.wise_requires_service_account(env)
 
+    def test_local_or_disabled_wise_needs_no_service_account(self):
+        with tempfile.TemporaryDirectory() as directory:
+            env = Path(directory) / "arkime.env"
+            for value in ("", "disabled", "http://arkime:8081", "http://arkime:8081/"):
+                with self.subTest(value=value):
+                    env.write_text(f"ARKIME_WISE_SERVICE_URL={value}\n", encoding="utf-8")
+                    self.assertFalse(WISE.wise_requires_service_account(env))
+
 
 class DashboardsLinkTests(unittest.TestCase):
     def test_installer_provides_repository_audit_dependency(self):

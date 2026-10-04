@@ -96,10 +96,10 @@ manuellement a chaque personne.
 | Groupe | Roles | But |
 | --- | --- | --- |
 | `/oculox-users` | aucun role metier | Groupe d'entree obligatoire du futur portail. |
-| `/oculox-admins` | `admin` | Administration Oculox. |
-| `/oculox-analysts` | `read_write_access`, `dashboards_read_write_access`, `arkime_hunt_access` | Analyse et investigation. |
-| `/oculox-viewers` | `read_access`, `dashboards_read_access`, `arkime_read_access` | Consultation seulement. |
-| `/oculox-incident-response` | `read_access`, `dashboards_read_access`, `arkime_pcap_access`, `arkime_hunt_access` | Lecture Dashboards et investigation PCAP/Hunt sans ecriture generale. |
+| `/oculox-admins` | `admin`, `arkime_wise_read_access`, `arkime_wise_read_write_access` | Administration Oculox et configuration des sources WISE. |
+| `/oculox-analysts` | `read_write_access`, `dashboards_read_write_access`, `arkime_hunt_access`, `arkime_wise_read_access` | Analyse, investigation et consultation WISE. |
+| `/oculox-viewers` | `read_access`, `dashboards_read_access`, `arkime_read_access`, `arkime_wise_read_access` | Consultation seulement, y compris WISE. |
+| `/oculox-incident-response` | `read_access`, `dashboards_read_access`, `arkime_pcap_access`, `arkime_hunt_access`, `arkime_wise_read_access` | Lecture Dashboards, WISE et investigation PCAP/Hunt sans ecriture generale. |
 
 Les comptes operationnels de demonstration prouvent la matrice : administrateur,
 analyste, lecteur, intervenant incident et `oculox-denied` sans groupe. Leurs

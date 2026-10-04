@@ -25,6 +25,7 @@ class PortableWebIdentityTest(unittest.TestCase):
         self.base = Path(self.temp.name)
         self.identity = self.base / "public-endpoint.env"
         self.keycloak = self.base / "keycloak.env"
+        self.dashboards_helper = self.base / "dashboards-helper.env"
         self.deployment = self.base / "deployment.env"
         self.pki = self.base / "web-pki"
         self.certs = self.base / "nginx-certs"
@@ -40,6 +41,7 @@ class PortableWebIdentityTest(unittest.TestCase):
             "KC_HOSTNAME_STRICT=false\n"
         )
         self.deployment.write_text("OCULOX_ROLE=principal\nOCULOX_SERVER_NAME=old\n")
+        self.dashboards_helper.write_text("MALCOLM_URL=https://old.invalid\n")
 
     def tearDown(self):
         self.temp.cleanup()
@@ -54,6 +56,8 @@ class PortableWebIdentityTest(unittest.TestCase):
                 str(self.identity),
                 "--keycloak-env",
                 str(self.keycloak),
+                "--dashboards-helper-env",
+                str(self.dashboards_helper),
                 "--deployment-env",
                 str(self.deployment),
             ],

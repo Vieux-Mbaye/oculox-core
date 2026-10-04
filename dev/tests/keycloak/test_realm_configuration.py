@@ -166,6 +166,10 @@ class RealmConfigurationTest(unittest.TestCase):
         self.assertIn("KEYCLOAK_RECOVERY_CLIENT_ID", realm_setup)
         self.assertIn("--rolename admin", realm_setup)
         self.assertIn(".id = $id", realm_setup)
+        self.assertIn('"${ROLE_ARKIME_WISE_READ_ACCESS}" "${ROLE_ARKIME_WISE_READ_WRITE_ACCESS}"', realm_setup)
+        self.assertIn('[$admin, $wise_read, $wise_write]', realm_setup)
+        self.assertIn('[$read_write, $dashboards_write, $hunt, $wise_read]', realm_setup)
+        self.assertIn('[$read, $dashboards_read, $arkime_read, $wise_read]', realm_setup)
 
 
 if __name__ == "__main__":

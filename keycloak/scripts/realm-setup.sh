@@ -416,11 +416,17 @@ apply_realm() {
   for group_name in oculox-users oculox-admins oculox-analysts oculox-viewers oculox-incident-response; do
     ensure_group "${group_name}"
   done
-  ensure_group_roles oculox-admins "${ROLE_ADMIN}"
-  ensure_group_roles oculox-analysts "${ROLE_READ_WRITE_ACCESS}" "${ROLE_DASHBOARDS_READ_WRITE_ACCESS}" "${ROLE_ARKIME_HUNT_ACCESS}"
-  ensure_group_roles oculox-viewers "${ROLE_READ_ACCESS}" "${ROLE_DASHBOARDS_READ_ACCESS}" "${ROLE_ARKIME_READ_ACCESS}"
+  ensure_group_roles oculox-admins "${ROLE_ADMIN}" \
+    "${ROLE_ARKIME_WISE_READ_ACCESS}" "${ROLE_ARKIME_WISE_READ_WRITE_ACCESS}"
+  ensure_group_roles oculox-analysts "${ROLE_READ_WRITE_ACCESS}" \
+    "${ROLE_DASHBOARDS_READ_WRITE_ACCESS}" "${ROLE_ARKIME_HUNT_ACCESS}" \
+    "${ROLE_ARKIME_WISE_READ_ACCESS}"
+  ensure_group_roles oculox-viewers "${ROLE_READ_ACCESS}" \
+    "${ROLE_DASHBOARDS_READ_ACCESS}" "${ROLE_ARKIME_READ_ACCESS}" \
+    "${ROLE_ARKIME_WISE_READ_ACCESS}"
   ensure_group_roles oculox-incident-response "${ROLE_READ_ACCESS}" "${ROLE_DASHBOARDS_READ_ACCESS}" \
-    "${ROLE_ARKIME_PCAP_ACCESS}" "${ROLE_ARKIME_HUNT_ACCESS}"
+    "${ROLE_ARKIME_PCAP_ACCESS}" "${ROLE_ARKIME_HUNT_ACCESS}" \
+    "${ROLE_ARKIME_WISE_READ_ACCESS}"
 
   ensure_client "${KEYCLOAK_PORTAL_CLIENT_ID:-${KEYCLOAK_CLIENT_ID:-}}" \
     "${KEYCLOAK_PORTAL_CLIENT_SECRET:-${KEYCLOAK_CLIENT_SECRET:-}}" \
@@ -450,6 +456,7 @@ verify_realm() {
   local initial_admin_id admin_id analyst_id viewer_id incident_response_id denied_id
   expected_roles=$(printf '%s\n' "${ROLE_ADMIN}" "${ROLE_READ_ACCESS}" "${ROLE_READ_WRITE_ACCESS}" \
     "${ROLE_ARKIME_HUNT_ACCESS}" "${ROLE_ARKIME_PCAP_ACCESS}" \
+    "${ROLE_ARKIME_WISE_READ_ACCESS}" "${ROLE_ARKIME_WISE_READ_WRITE_ACCESS}" \
     "${ROLE_DASHBOARDS_READ_ACCESS}" "${ROLE_DASHBOARDS_READ_WRITE_ACCESS}" | jq -R . | jq -s .)
   expected_groups='["oculox-users","oculox-admins","oculox-analysts","oculox-viewers","oculox-incident-response"]'
   expected_clients=$(printf '%s\n' "${KEYCLOAK_PORTAL_CLIENT_ID}" "${KEYCLOAK_DASHBOARDS_CLIENT_ID}" | jq -R . | jq -s .)
@@ -508,6 +515,8 @@ verify_realm() {
     --arg dashboards_read "${ROLE_DASHBOARDS_READ_ACCESS}" \
     --arg arkime_read "${ROLE_ARKIME_READ_ACCESS}" \
     --arg pcap "${ROLE_ARKIME_PCAP_ACCESS}" \
+    --arg wise_read "${ROLE_ARKIME_WISE_READ_ACCESS}" \
+    --arg wise_write "${ROLE_ARKIME_WISE_READ_WRITE_ACCESS}" \
     --argjson admins "${admins_roles}" \
     --argjson analysts "${analysts_roles}" \
     --argjson viewers "${viewers_roles}" \
@@ -590,10 +599,10 @@ verify_realm() {
       } as $details |
       $details + {
         result: (
-          contains_all($details.group_roles.admins; [$admin]) and
-          contains_all($details.group_roles.analysts; [$read_write, $dashboards_write, $hunt]) and
-          contains_all($details.group_roles.viewers; [$read, $dashboards_read, $arkime_read]) and
-          contains_all($details.group_roles.incident_response; [$read, $dashboards_read, $pcap, $hunt]) and
+          contains_all($details.group_roles.admins; [$admin, $wise_read, $wise_write]) and
+          contains_all($details.group_roles.analysts; [$read_write, $dashboards_write, $hunt, $wise_read]) and
+          contains_all($details.group_roles.viewers; [$read, $dashboards_read, $arkime_read, $wise_read]) and
+          contains_all($details.group_roles.incident_response; [$read, $dashboards_read, $pcap, $hunt, $wise_read]) and
           contains_all($details.user_groups.initial_admin; ["oculox-users", "oculox-admins"]) and
           contains_all($details.user_groups.admin; ["oculox-users", "oculox-admins"]) and
           contains_all($details.user_groups.analyst; ["oculox-users", "oculox-analysts"]) and

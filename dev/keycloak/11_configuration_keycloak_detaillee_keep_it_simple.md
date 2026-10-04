@@ -660,16 +660,18 @@ ROLE_DASHBOARDS_READ_WRITE_ACCESS=dashboards_read_write_access
 ROLE_ARKIME_READ_ACCESS=arkime_read_access
 ROLE_ARKIME_PCAP_ACCESS=arkime_pcap_access
 ROLE_ARKIME_HUNT_ACCESS=arkime_hunt_access
+ROLE_ARKIME_WISE_READ_ACCESS=arkime_wise_read_access
+ROLE_ARKIME_WISE_READ_WRITE_ACCESS=arkime_wise_read_write_access
 ```
 
 Matrice actuelle :
 
 | Compte | Groupe Keycloak | Rôles reçus | Ce que cela veut dire |
 | --- | --- | --- | --- |
-| `oculox-admin` | `oculox-users`, `oculox-admins` | `admin` | Accès administrateur Oculox et Dashboards. |
-| `oculox-analyst` | `oculox-users`, `oculox-analysts` | `read_write_access`, `dashboards_read_write_access`, `arkime_hunt_access` | Peut analyser, chercher, créer ou modifier les objets nécessaires au travail d'analyste. |
-| `oculox-viewer` | `oculox-users`, `oculox-viewers` | `read_access`, `dashboards_read_access`, `arkime_read_access` | Peut consulter sans modifier. |
-| `oculox-incident-response` | `oculox-users`, `oculox-incident-response` | `read_access`, `dashboards_read_access`, `arkime_pcap_access`, `arkime_hunt_access` | Peut consulter Dashboards et travailler sur les investigations Arkime/PCAP. |
+| `oculox-admin` | `oculox-users`, `oculox-admins` | `admin`, `arkime_wise_read_access`, `arkime_wise_read_write_access` | Accès administrateur Oculox, Dashboards et configuration WISE. |
+| `oculox-analyst` | `oculox-users`, `oculox-analysts` | `read_write_access`, `dashboards_read_write_access`, `arkime_hunt_access`, `arkime_wise_read_access` | Peut analyser, chercher et consulter WISE sans modifier ses sources. |
+| `oculox-viewer` | `oculox-users`, `oculox-viewers` | `read_access`, `dashboards_read_access`, `arkime_read_access`, `arkime_wise_read_access` | Peut consulter sans modifier, y compris WISE. |
+| `oculox-incident-response` | `oculox-users`, `oculox-incident-response` | `read_access`, `dashboards_read_access`, `arkime_pcap_access`, `arkime_hunt_access`, `arkime_wise_read_access` | Peut consulter Dashboards et WISE et travailler sur les investigations Arkime/PCAP. |
 | `oculox-denied` | aucun groupe | aucun rôle | Compte de refus contrôlé : il doit être bloqué par le portail. |
 | `oculox-keycloak-admin` | realm `master` | `admin` Keycloak | Administre Keycloak lui-même, pas un profil utilisateur Oculox normal. |
 
