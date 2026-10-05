@@ -56,10 +56,6 @@ Verifier avant le clone :
 ```bash
 sudo apt update
 sudo apt install -y git curl ca-certificates
-hostname -I
-timedatectl status
-ip -br link
-df -h /
 ```
 
 WISE utilise `8081` uniquement entre conteneurs. L'URL utilisateur est
