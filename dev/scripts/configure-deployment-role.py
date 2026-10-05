@@ -31,6 +31,18 @@ def update_env(path: Path, key: str, value: str) -> None:
     path.chmod(0o600)
 
 
+def configure_live_viewer_host(project_dir: Path, role: str, server_name: str | None) -> None:
+    """Advertise a Core address that Arkime viewers can actually resolve."""
+    if role == "principal":
+        if not server_name:
+            raise ValueError("server_name is required for the principal role")
+        update_env(
+            project_dir / "config" / "arkime-live.env",
+            "ARKIME_LIVE_NODE_HOST",
+            server_name,
+        )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--role", choices=("principal", "hedgehog"), required=True)
@@ -49,6 +61,7 @@ def main() -> None:
 
     update_env(PROJECT_DIR / "config" / "process.env", "MALCOLM_PROFILE", "malcolm" if args.role == "principal" else "hedgehog")
     update_env(PROJECT_DIR / "config" / "beats-common.env", "BEATS_SSL", "true")
+    configure_live_viewer_host(PROJECT_DIR, args.role, args.server_name)
 
     GENERATED_DIR.mkdir(parents=True, exist_ok=True)
     state = {

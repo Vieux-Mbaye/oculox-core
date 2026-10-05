@@ -25,7 +25,50 @@ def load_wise_module():
     return module
 
 
+def load_deployment_role_module():
+    path = ROOT / "dev/scripts/configure-deployment-role.py"
+    spec = importlib.util.spec_from_file_location("configure_deployment_role", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(module)
+    return module
+
+
 WISE = load_wise_module()
+DEPLOYMENT_ROLE = load_deployment_role_module()
+
+
+class ArkimeViewerRoutingTests(unittest.TestCase):
+    def test_principal_advertises_public_server_name_for_live_viewer(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = root / "config"
+            config.mkdir()
+            env = config / "arkime-live.env"
+            env.write_text("ARKIME_LIVE_NODE_HOST=\nWISE=on\n", encoding="utf-8")
+
+            DEPLOYMENT_ROLE.configure_live_viewer_host(
+                root, "principal", "core.example.test"
+            )
+
+            self.assertIn(
+                "ARKIME_LIVE_NODE_HOST=core.example.test\n",
+                env.read_text(encoding="utf-8"),
+            )
+            self.assertEqual(0o600, os.stat(env).st_mode & 0o777)
+
+    def test_hedgehog_does_not_override_live_viewer_host(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            config = root / "config"
+            config.mkdir()
+            env = config / "arkime-live.env"
+            original = "ARKIME_LIVE_NODE_HOST=collector.example.test\n"
+            env.write_text(original, encoding="utf-8")
+
+            DEPLOYMENT_ROLE.configure_live_viewer_host(root, "hedgehog", None)
+
+            self.assertEqual(original, env.read_text(encoding="utf-8"))
 
 
 @unittest.skipUnless(shutil.which("htpasswd"), "htpasswd is required")

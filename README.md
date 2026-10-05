@@ -54,6 +54,8 @@ URL Keycloak ; ne pas la changer ensuite sans rotation planifiee.
 Verifier avant le clone :
 
 ```bash
+sudo apt update
+sudo apt install -y git curl ca-certificates
 hostname -I
 timedatectl status
 ip -br link
@@ -147,7 +149,7 @@ Pour une capture Core standard avec Arkime :
 | Reglage | Valeur recommandee |
 |---|---|
 | Capture Live Traffic with Arkime | `Yes` |
-| Arkime Node Host | vide pour le nom automatique |
+| Arkime Node Host | laisser vide ; `install principal` applique ensuite `--server-name` |
 | PCAP Compression | `none`, sauf politique explicite |
 | Capture with netsniff-ng | `No` |
 | Capture with tcpdump | `No` |
@@ -156,6 +158,13 @@ Arkime capture deja le PCAP. Plusieurs moteurs simultanes peuvent dupliquer les
 paquets et augmenter fortement CPU et disque. Zeek et Suricata peuvent rester
 actifs pour l'analyse. Si le Core ne recoit aucun SPAN/TAP, desactiver la
 capture dans l'assistant ne supprime pas les capacites du depot.
+
+Apres l'assistant, Oculox renseigne automatiquement
+`ARKIME_LIVE_NODE_HOST=<IP_CORE_OU_DNS>` dans `config/arkime-live.env`. Le nom
+logique de capture reste `oculox`, mais Arkime utilise une adresse resolvable
+pour recuperer les paquets sur le port interne Viewer `8005`. Cela evite
+`Error talking to node 'oculox' using host 'oculox:8005'` sans exposer un port
+utilisateur supplementaire.
 
 `http://arkime:8081` est l'adresse WISE interne. Ne saisir ni
 `https://<IP_CORE>/wise/`, ni `https://<IP_CORE>:8081/wise/`, ni un mot de passe
