@@ -37,10 +37,20 @@ for command_name in bash docker git jq openssl python3 rg; do
 done
 
 printf '\n=== Version Et Hygiène Git ===\n'
-if git merge-base --is-ancestor v26.07.1 HEAD; then
-    pass 'la branche contient Malcolm v26.07.1'
+if python3 - <<'PY'
+import yaml
+
+with open('docker-compose.yml', encoding='utf-8') as compose_file:
+    services = yaml.safe_load(compose_file)['services']
+
+images = [service['image'] for service in services.values()
+          if isinstance(service, dict) and service.get('image', '').startswith('ghcr.io/idaholab/malcolm/')]
+assert images and all(image.endswith(':26.07.1') for image in images)
+PY
+then
+    pass 'images Malcolm du Compose epinglees sur 26.07.1'
 else
-    fail 'la branche ne contient pas Malcolm v26.07.1'
+    fail 'images Malcolm du Compose non epinglees sur 26.07.1'
 fi
 
 if git diff --check; then
