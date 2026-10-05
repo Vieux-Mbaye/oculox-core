@@ -36,10 +36,17 @@ printf 'official-start %s\n' "$*" >> "$OCULOX_TEST_LOG"
 EOF
 chmod +x "$TEST_ROOT/project/scripts/start"
 
+cat > "$TEST_ROOT/project/dev/scripts/configure-arkime-identity.py" <<'EOF'
+#!/usr/bin/env bash
+printf 'configure-arkime-identity\n' >> "$OCULOX_TEST_LOG"
+EOF
+chmod +x "$TEST_ROOT/project/dev/scripts/configure-arkime-identity.py"
+
 export OCULOX_TEST_LOG="$TEST_ROOT/commands.log"
 PATH="$TEST_ROOT/bin:$PATH" "$TEST_ROOT/project/oculox" restart nginx-proxy >/dev/null
 
 grep -q '^official-start ' "$OCULOX_TEST_LOG"
+grep -q '^configure-arkime-identity$' "$OCULOX_TEST_LOG"
 grep -q ' config$' "$OCULOX_TEST_LOG"
 grep -q ' restart nginx-proxy$' "$OCULOX_TEST_LOG"
 

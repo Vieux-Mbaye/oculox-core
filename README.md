@@ -71,14 +71,14 @@ dans Git.
 ## 3. Cloner Le Depot Core
 
 ```bash
-git clone <URL_DEPOT_OCULOX_CORE> ~/oculox-core
+git clone https://github.com/Vieux-Mbaye/oculox-core.git ~/oculox-core
 cd ~/oculox-core
 git status --short
 ```
 
-La derniere commande ne doit rien afficher. Utilisez la meme version ou le meme
-tag Oculox sur les trois VM. L'URL sera celle du depot Core publie apres la
-recette locale.
+La derniere commande ne doit rien afficher. Le depot est prive : configurez
+l'authentification GitHub de la VM avant le clone (cle SSH ou identifiant Git
+avec jeton de lecture). Ne placez jamais le jeton dans l'URL clonee.
 
 ## 4. Recuperer Et Verifier Le Bundle OpenSearch
 
