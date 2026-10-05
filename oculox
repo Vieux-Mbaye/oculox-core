@@ -104,6 +104,7 @@ render_runtime_compose() {
 }
 
 official_start() {
+    ./dev/scripts/configure-arkime-identity.py
     render_runtime_compose
     COMPOSE_PROJECT_NAME="$COMPOSE_PROJECT_NAME" \
         ./scripts/start -f "$RUNTIME_COMPOSE_FILE" -p "$PROFILE"

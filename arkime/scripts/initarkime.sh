@@ -142,7 +142,7 @@ if [[ "$MALCOLM_PROFILE" == "malcolm" ]]; then
   fi
 
   # before running viewer, call _refresh to make sure everything is available for search first
-  curl "${CURL_CONFIG_PARAMS[@]}" -sS -XPOST "${OPENSEARCH_URL}/_refresh"
+  curl "${CURL_CONFIG_PARAMS[@]}" -sS -XPOST "${OPENSEARCH_URL}/arkime_*/_refresh"
 
   # the (viewer|wise)_service.sh scripts will start/restart those processes
 fi

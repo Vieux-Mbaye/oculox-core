@@ -34,8 +34,100 @@ def load_deployment_role_module():
     return module
 
 
+def load_arkime_identity_module():
+    path = ROOT / "dev/scripts/configure-arkime-identity.py"
+    spec = importlib.util.spec_from_file_location("configure_arkime_identity", path)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader
+    spec.loader.exec_module(module)
+    return module
+
+
 WISE = load_wise_module()
 DEPLOYMENT_ROLE = load_deployment_role_module()
+ARKIME_IDENTITY = load_arkime_identity_module()
+
+
+class ArkimeIdentityTests(unittest.TestCase):
+    def test_wise_identity_sections_are_idempotent_and_preserve_sources(self):
+        source = """[wiseService]
+authMode=header
+userNameHeader=x-forwarded-user
+
+[virustotal]
+key=keep-this-secret
+"""
+        sections = ARKIME_IDENTITY.managed_sections(
+            {
+                "ROLE_ARKIME_WISE_READ_ACCESS": "custom_wise_read",
+                "ROLE_ARKIME_WISE_READ_WRITE_ACCESS": "custom_wise_admin",
+            }
+        )
+        updated = source
+        for section, values in sections.items():
+            updated = ARKIME_IDENTITY.upsert_section(updated, section, values)
+        once = updated
+        for section, values in sections.items():
+            updated = ARKIME_IDENTITY.upsert_section(updated, section, values)
+
+        self.assertEqual(once, updated)
+        self.assertIn("key=keep-this-secret", updated)
+        self.assertIn("userName=vals['x-forwarded-user']", updated)
+        self.assertIn("includes('custom_wise_read')", updated)
+        self.assertIn("includes('custom_wise_admin')", updated)
+        self.assertEqual(1, updated.count("[user-auto-create]"))
+        self.assertEqual(1, updated.count("[user-role-mappings]"))
+
+    def test_invalid_role_value_is_rejected(self):
+        with self.assertRaises(ValueError):
+            ARKIME_IDENTITY.role_expression("role'); process.exit()")
+
+    def test_runtime_file_is_private_when_created(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            template = root / "wise.ini.example"
+            runtime = root / "wise.ini"
+            template.write_text("[wiseService]\nauthMode=header\n", encoding="utf-8")
+            shutil.copyfile(template, runtime)
+            os.chmod(runtime, 0o600)
+            ARKIME_IDENTITY.update_file(
+                runtime, ARKIME_IDENTITY.managed_sections({})
+            )
+            self.assertEqual(0o600, runtime.stat().st_mode & 0o777)
+
+    def test_runtime_reconciliation_does_not_modify_tracked_template(self):
+        source = (ROOT / "dev/scripts/configure-arkime-identity.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("update_file(args.template", source)
+        self.assertIn("update_file(args.runtime", source)
+
+    def test_production_compose_mounts_reviewed_arkime_configuration(self):
+        compose = (ROOT / "dev/compose/docker-compose.dev.yml").read_text(
+            encoding="utf-8"
+        )
+        self.assertEqual(
+            2,
+            compose.count(
+                "./arkime/scripts/docker_entrypoint.sh:/usr/local/bin/docker_entrypoint.sh:ro"
+            ),
+        )
+        self.assertEqual(
+            2,
+            compose.count("./arkime/scripts/initarkime.sh:/usr/local/bin/initarkime.sh:ro"),
+        )
+
+    def test_arkime_refresh_is_limited_to_arkime_indices(self):
+        source = (ROOT / "arkime/scripts/initarkime.sh").read_text(encoding="utf-8")
+        self.assertIn('${OPENSEARCH_URL}/arkime_*/_refresh', source)
+        self.assertNotIn('${OPENSEARCH_URL}/_refresh', source)
+
+    def test_launcher_reconciles_identity_before_compose_render(self):
+        source = (ROOT / "oculox").read_text(encoding="utf-8")
+        start = source.index("official_start() {")
+        identity = source.index("./dev/scripts/configure-arkime-identity.py", start)
+        render = source.index("render_runtime_compose", identity)
+        self.assertLess(identity, render)
 
 
 class ArkimeViewerRoutingTests(unittest.TestCase):
@@ -149,7 +241,10 @@ class DashboardsLinkTests(unittest.TestCase):
         self.assertIn('./dev/scripts/validate-wise-runtime.py --wait 300', source)
 
         validator = (ROOT / "dev/scripts/validate-wise-runtime.py").read_text(encoding="utf-8")
-        self.assertIn('"docker", "top", container.splitlines()[0], "-eo", "pid,args"', validator)
+        self.assertIn('"docker", "top", container, "-eo", "pid,args"', validator)
+        self.assertIn("WISE Keycloak user auto-provisioning configuration is incomplete", validator)
+        self.assertIn('"[user-auto-create]"', validator)
+        self.assertIn('"[user-role-mappings]"', validator)
 
     def test_public_endpoint_configures_absolute_dashboards_links(self):
         source = (ROOT / "dev/scripts/configure-public-endpoint.py").read_text(encoding="utf-8")

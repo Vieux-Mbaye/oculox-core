@@ -10,9 +10,17 @@ services:
 
   arkime:
     restart: unless-stopped
+    volumes:
+      - ./arkime/etc/config.ini:/opt/arkime/etc/config.orig.ini:ro
+      - ./arkime/scripts/docker_entrypoint.sh:/usr/local/bin/docker_entrypoint.sh:ro
+      - ./arkime/scripts/initarkime.sh:/usr/local/bin/initarkime.sh:ro
 
   arkime-live:
     restart: unless-stopped
+    volumes:
+      - ./arkime/etc/config.ini:/opt/arkime/etc/config.orig.ini:ro
+      - ./arkime/scripts/docker_entrypoint.sh:/usr/local/bin/docker_entrypoint.sh:ro
+      - ./arkime/scripts/initarkime.sh:/usr/local/bin/initarkime.sh:ro
 
   dashboards:
     restart: unless-stopped

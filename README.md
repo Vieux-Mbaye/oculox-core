@@ -142,7 +142,7 @@ sont les suivants :
 | Zeek, Suricata, Arkime | activer selon le mode de capture retenu, comme dans le depot fusionne |
 | Enable Arkime WISE | `Yes` charge WISE et permet l'enrichissement ; `No` le laisse desactive sans bloquer l'installation |
 | Allow Arkime WISE Configuration | `Yes` permet aux administrateurs de gerer les sources dans `WISE > Config` ; `No` rend la configuration consultable seulement |
-| Arkime WISE URL | conserver `http://arkime:8081` pour le WISE local du Core ; utiliser une URL HTTPS sans identifiants uniquement pour un WISE distant |
+| Arkime WISE URL | avec Arkime Live actif : `https://<IP_CORE_OU_DNS>/wise/` ; sans Arkime Live : `http://arkime:8081` convient au reseau Docker |
 
 Pour une capture Core standard avec Arkime :
 
@@ -166,10 +166,13 @@ pour recuperer les paquets sur le port interne Viewer `8005`. Cela evite
 `Error talking to node 'oculox' using host 'oculox:8005'` sans exposer un port
 utilisateur supplementaire.
 
-`http://arkime:8081` est l'adresse WISE interne. Ne saisir ni
-`https://<IP_CORE>/wise/`, ni `https://<IP_CORE>:8081/wise/`, ni un mot de passe
-dans cette valeur. Si WISE est desactive, l'installation continue et sa
-validation devient non applicable sans bloquer les autres services.
+`http://arkime:8081` est l'adresse WISE interne au reseau Docker. Elle convient
+au service Arkime standard. En revanche, `arkime-live` utilise le reseau hote et
+ne peut pas resoudre le nom Docker `arkime` : lorsque **Capture Live Traffic
+with Arkime** vaut `Yes`, saisir `https://<IP_CORE_OU_DNS>/wise/`. Ne jamais
+utiliser `https://<IP_CORE>:8081/wise/` et ne jamais incorporer d'identifiants
+dans l'URL. Si WISE est desactive, l'installation continue et sa validation
+devient non applicable sans bloquer les autres services.
 
 Le bundle importe ensuite les valeurs OpenSearch definitives. Ne remplacez pas
 ses comptes techniques par un compte administrateur partage.
@@ -345,6 +348,13 @@ Les autres groupes fonctionnels disposent uniquement de la consultation WISE.
 Lorsque WISE est desactive, les roles restent presents dans Keycloak mais
 n'activent aucun service et ne bloquent pas l'installation.
 
+A la premiere ouverture de WISE, Arkime cree automatiquement l'utilisateur
+authentifie par Keycloak a partir des en-tetes valides par Nginx, puis traduit
+les roles `arkime_wise_read_access` et `arkime_wise_read_write_access` en roles
+WISE. Aucun utilisateur ne doit etre cree manuellement dans Arkime. La commande
+`./oculox verify wise` controle l'endpoint authentifie, les sections
+d'auto-provisionnement et le processus de capture Arkime Live.
+
 Apres une modification de groupe ou de role, fermer la session navigateur et
 se reconnecter : un jeton deja emis ne contient pas les nouveaux roles.
 
@@ -395,7 +405,8 @@ demandes. Cela applique les changements de ports, mounts et variables que
 | Docker refuse l'acces | groupe Docker non recharge | reconnecter SSH puis `resume-install` |
 | checksum bundle invalide | transfert incomplet | recopier depuis le Cluster |
 | OpenSearch refuse TLS | CA, heure ou endpoint incorrect | verifier bundle et horloge |
-| WISE retourne `401` | session/role ou compte technique | nouvelle connexion puis `verify wise` |
+| WISE retourne `401` | session/role ou compte technique | nouvelle connexion puis `./oculox verify wise` |
+| WISE retourne `User not found` | configuration d'auto-provisionnement absente ou ancien deploiement | `./oculox restart arkime arkime-live`, puis `./oculox verify wise` |
 | WISE affiche zero requete | aucune recherche Arkime | generer du trafic puis consulter Stats |
 | Dashboards: Application Not Found | ancien lien/session | redemarrer Dashboards et rouvrir la session |
 | Logstash attend `zeek-parse` | pipeline en initialisation | attendre puis lire les deux logs |

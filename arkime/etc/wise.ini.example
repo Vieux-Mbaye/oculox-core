@@ -15,6 +15,25 @@ userAuthIps=::,0.0.0.0/0
 userNameHeader=x-forwarded-user
 webBasePath=/wise/
 
+[user-auto-create]
+userName=vals['x-forwarded-user']
+enabled=true
+webEnabled=true
+headerAuthEnabled=true
+emailSearch=true
+createEnabled=false
+removeEnabled=false
+packetSearch=true
+hideStats=false
+hideFiles=false
+hidePcap=false
+disablePcapDownload=false
+roles=['arkimeUser']
+
+[user-role-mappings]
+arkimeUser=true
+wiseUser=(vals['x-forwarded-roles'] || '').split(',').map(s => s.trim()).includes('arkime_wise_read_access')
+wiseAdmin=(vals['x-forwarded-roles'] || '').split(',').map(s => s.trim()).includes('arkime_wise_read_write_access')
 
 [malcolm]
-key=enabled 
+key=enabled
