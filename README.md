@@ -193,7 +193,7 @@ installation initiale en Basic avant activation controlee de Keycloak :
 | Generate NetBox passwords | `Yes` | secrets internes uniques |
 | Generate PostgreSQL passwords | `Yes` | secrets internes uniques |
 | Generate Valkey passwords | `Yes` | secrets internes uniques |
-| Arkime viewer cluster secret | `Yes` | secret interne Arkime |
+| Arkime viewer cluster secret | `Yes` | secret partage avec les Collecteurs pour ouvrir les PCAP distants ; conserver la valeur |
 | Transfer certificates with `croc` | `No` | les bundles Oculox sont utilises separement |
 
 Pour le compte Basic, saisir un nom de 4 a 32 caracteres puis deux fois un mot
@@ -368,7 +368,11 @@ cd ~/oculox-bundles/<NOM_COLLECTEUR>
 sha256sum -c SHA256SUMS
 ```
 
-Chaque collecteur doit recevoir son propre bundle.
+Chaque collecteur doit recevoir son propre bundle. Il contient aussi
+`arkime-viewer.env` avec le secret de cluster Arkime du Core ; le Collecteur
+l'importe automatiquement apres `auth_setup`. Transferez ce repertoire par un
+canal securise et limitez son acces. N'envoyez jamais la cle privee de la CA
+Beats (`ca.key`).
 
 ## 11. Exploitation
 

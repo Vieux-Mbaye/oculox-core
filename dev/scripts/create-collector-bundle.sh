@@ -5,6 +5,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd -- "${SCRIPT_DIR}/../.." && pwd)"
 PKI_DIR="${PROJECT_DIR}/dev/generated/pki"
+ARKIME_SECRET_FILE="${PROJECT_DIR}/config/arkime-secret.env"
 
 usage() {
     printf 'Usage: %s <nom-collecteur> <nom-ou-ip-principal> [repertoire-sortie]\n' "$0" >&2
@@ -23,6 +24,19 @@ for file in ca.crt ca.key server.crt; do
         exit 1
     }
 done
+
+[[ -s "$ARKIME_SECRET_FILE" ]] || {
+    printf 'Configuration Arkime absente : %s. Exécutez d’abord auth_setup sur le Core.\n' "$ARKIME_SECRET_FILE" >&2
+    exit 1
+}
+ARKIME_PASSWORD_SECRET="$(sed -n 's/^ARKIME_PASSWORD_SECRET=//p' "$ARKIME_SECRET_FILE" | head -n 1)"
+[[ -n "$ARKIME_PASSWORD_SECRET" ]] || {
+    printf 'Secret Arkime absent dans %s. Exécutez d’abord auth_setup sur le Core.\n' "$ARKIME_SECRET_FILE" >&2
+    exit 1
+}
+if (( ${#ARKIME_PASSWORD_SECRET} < 16 )); then
+    printf 'AVERTISSEMENT : le secret Arkime existant fait moins de 16 caractères ; conservez-le pour la compatibilité et planifiez sa rotation coordonnée.\n' >&2
+fi
 
 if python3 - "$PRINCIPAL_HOST" <<'PY'
 import ipaddress
@@ -75,6 +89,8 @@ openssl x509 -req -sha256 -days 825 \
 install -m 0644 "${PKI_DIR}/ca.crt" "${OUTPUT_DIR}/ca.crt"
 install -m 0644 "${WORK_DIR}/client.crt" "${OUTPUT_DIR}/client.crt"
 install -m 0600 "${WORK_DIR}/client.key" "${OUTPUT_DIR}/client.key"
+printf 'ARKIME_PASSWORD_SECRET=%s\n' "$ARKIME_PASSWORD_SECRET" >"${OUTPUT_DIR}/arkime-viewer.env"
+chmod 0600 "${OUTPUT_DIR}/arkime-viewer.env"
 cat >"${OUTPUT_DIR}/endpoints.env" <<EOF
 OCULOX_COLLECTOR_NAME=${COLLECTOR_NAME}
 OCULOX_PRINCIPAL_HOST=${PRINCIPAL_HOST}
@@ -85,7 +101,7 @@ chmod 0600 "${OUTPUT_DIR}/endpoints.env"
 
 (
     cd "$OUTPUT_DIR"
-    sha256sum ca.crt client.crt client.key endpoints.env > SHA256SUMS
+    sha256sum ca.crt client.crt client.key endpoints.env arkime-viewer.env > SHA256SUMS
     chmod 0600 SHA256SUMS
 )
 
